@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Krishi Connect{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-green-800 mb-2">Welcome to Your Dashboard</h1>
+        <p class="text-gray-600">Access all your farming tools and resources</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Crops -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div class="h-32 bg-cover bg-center" style="background-image: url('{% static 'blog/organic_benefits.jpg' %}')"></div>
+            <div class="p-6">
+                <div class="flex items-center mb-4">
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-leaf text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 ml-4">Crops</h3>
+                </div>
+                <p class="text-gray-600 mb-4">Manage your crop cultivation and tracking</p>
+                <a href="#" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">View Crops</a>
+            </div>
+        </div>
+
+        <!-- AI Recommendations -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div class="h-32 bg-cover bg-center" style="background-image: url('{% static 'blog/technology.jpg' %}')"></div>
+            <div class="p-6">
+                <div class="flex items-center mb-4">
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fas fa-robot text-blue-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 ml-4">AI Recommendations</h3>
+                </div>
+                <p class="text-gray-600 mb-4">Get smart crop recommendations powered by AI</p>
+                <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">Get Recommendations</a>
+            </div>
+        </div>
+
+        <!-- Weather -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div class="h-32 bg-cover bg-center" style="background-image: url('{% static 'blog/climate_change.jpg' %}')"></div>
+            <div class="p-6">
+                <div class="flex items-center mb-4">
+                    <div class="bg-yellow-100 p-3 rounded-full">
+                        <i class="fas fa-cloud-sun text-yellow-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 ml-4">Weather</h3>
+                </div>
+                <p class="text-gray-600 mb-4">Check weather forecasts for your location</p>
+                <a href="#" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors">View Weather</a>
+            </div>
+        </div>
+
+        <!-- Market -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div class="h-32 bg-cover bg-center" style="background-image: url('{% static 'about/impact.jpg' %}')"></div>
+            <div class="p-6">
+                <div class="flex items-center mb-4">
+                    <div class="bg-purple-100 p-3 rounded-full">
+                        <i class="fas fa-chart-line text-purple-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 ml-4">Market</h3>
+                </div>
+                <p class="text-gray-600 mb-4">Check current market prices and trends</p>
+                <a href="#" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">View Market</a>
+            </div>
+        </div>
+
+        <!-- Products -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div class="h-32 bg-cover bg-center" style="background-image: url('{% static 'blog/sustainable.jpg' %}')"></div>
+            <div class="p-6">
+                <div class="flex items-center mb-4">
+                    <div class="bg-red-100 p-3 rounded-full">
+                        <i class="fas fa-shopping-cart text-red-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 ml-4">Products</h3>
+                </div>
+                <p class="text-gray-600 mb-4">Browse and list agricultural products</p>
+                <a href="#" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">View Products</a>
+            </div>
+        </div>
+
+        <!-- Expert Advice -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div class="h-32 bg-cover bg-center" style="background-image: url('{% static 'blog/irrigation_tech.jpg' %}')"></div>
+            <div class="p-6">
+                <div class="flex items-center mb-4">
+                    <div class="bg-indigo-100 p-3 rounded-full">
+                        <i class="fas fa-user-tie text-indigo-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 ml-4">Expert Advice</h3>
+                </div>
+                <p class="text-gray-600 mb-4">Access expert advice and guidance</p>
+                <a href="#" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">View Advice</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

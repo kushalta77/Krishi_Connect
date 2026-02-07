@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us - Krishi Connect{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative py-20 bg-gradient-to-r from-green-600 to-green-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-5xl font-bold text-white mb-6" data-en="About Krishi Connect" data-ne="कृषि कनेक्टको बारेमा">कृषि कनेक्टको बारेमा</h1>
+        <p class="text-xl text-green-100 max-w-3xl mx-auto" data-en="Empowering Nepali farmers through technology and traditional wisdom" data-ne="प्रविधि र परम्परागत बुद्धिमार्फत नेपाली किसानहरूलाई सशक्त बनाउँदै">प्रविधि र परम्परागत बुद्धिमार्फत नेपाली किसानहरूलाई सशक्त बनाउँदै</p>
+    </div>
+</section>
+
+<!-- Mission Section -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <img src="{{ MEDIA_URL }}about/mission.jpg" alt="Our Mission" class="w-full h-96 object-cover rounded-lg shadow-lg">
+            </div>
+            <div>
+                <h2 class="text-4xl font-bold text-green-800 mb-6" data-en="Our Mission" data-ne="हाम्रो मिशन">हाम्रो मिशन</h2>
+                <p class="text-gray-600 text-lg mb-6" data-en="To revolutionize agriculture in Nepal by integrating modern technology with traditional farming wisdom, creating sustainable and prosperous farming communities across the nation." data-ne="आधुनिक प्रविधिलाई परम्परागत कृषि बुद्धिसँग एकीकरण गरेर नेपालमा कृषि क्रान्ति ल्याउनु, राष्ट्रभर दिगो र समृद्ध कृषि समुदायहरू सिर्जना गर्नु।">आधुनिक प्रविधिलाई परम्परागत कृषि बुद्धिसँग एकीकरण गरेर नेपालमा कृषि क्रान्ति ल्याउनु, राष्ट्रभर दिगो र समृद्ध कृषि समुदायहरू सिर्जना गर्नु।</p>
+                <ul class="space-y-3 text-gray-600">
+                    <li class="flex items-center" data-en="✓ Increase crop productivity through smart farming" data-ne="✓ स्मार्ट खेतीमार्फत बाली उत्पादकत्व वृद्धि">✓ स्मार्ट खेतीमार्फत बाली उत्पादकत्व वृद्धि</li>
+                    <li class="flex items-center" data-en="✓ Connect farmers with markets and experts" data-ne="✓ किसानहरूलाई बजार र विशेषज्ञहरूसँग जोड्ने">✓ किसानहरूलाई बजार र विशेषज्ञहरूसँग जोड्ने</li>
+                    <li class="flex items-center" data-en="✓ Promote sustainable farming practices" data-ne="✓ दिगो कृषि अभ्यासहरूको प्रवर्द्धन">✓ दिगो कृषि अभ्यासहरूको प्रवर्द्धन</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Vision Section -->
+<section class="py-16 bg-green-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="order-2 lg:order-1">
+                <h2 class="text-4xl font-bold text-green-800 mb-6" data-en="Our Vision" data-ne="हाम्रो दृष्टिकोण">हाम्रो दृष्टिकोण</h2>
+                <p class="text-gray-600 text-lg mb-6" data-en="To become Nepal's leading agricultural technology platform, where every farmer has access to modern tools, expert knowledge, and fair market opportunities, ensuring food security and prosperity for all." data-ne="नेपालको अग्रणी कृषि प्रविधि प्लेटफर्म बन्नु, जहाँ हरेक किसानको आधुनिक उपकरण, विशेषज्ञ ज्ञान र निष्पक्ष बजार अवसरहरूमा पहुँच छ, सबैका लागि खाद्य सुरक्षा र समृद्धि सुनिश्चित गर्दै।">नेपालको अग्रणी कृषि प्रविधि प्लेटफर्म बन्नु, जहाँ हरेक किसानको आधुनिक उपकरण, विशेषज्ञ ज्ञान र निष्पक्ष बजार अवसरहरूमा पहुँच छ, सबैका लागि खाद्य सुरक्षा र समृद्धि सुनिश्चित गर्दै।</p>
+            </div>
+            <div class="order-1 lg:order-2">
+                <img src="{{ MEDIA_URL }}about/vision.jpg" alt="Our Vision" class="w-full h-96 object-cover rounded-lg shadow-lg">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Values Section -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-green-800 mb-4" data-en="Our Values" data-ne="हाम्रो मूल्यमान्यता">हाम्रो मूल्यमान्यता</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="text-center">
+                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-lightbulb text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3" data-en="Innovation" data-ne="नवाचार">नवाचार</h3>
+                <p class="text-gray-600" data-en="Embracing new technologies and methods" data-ne="नयाँ प्रविधि र विधिहरूको अंगीकार">नयाँ प्रविधि र विधिहरूको अंगीकार</p>
+            </div>
+            <div class="text-center">
+                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-leaf text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3" data-en="Sustainability" data-ne="दिगोपन">दिगोपन</h3>
+                <p class="text-gray-600" data-en="Protecting our environment for future generations" data-ne="भावी पुस्ताका लागि हाम्रो वातावरणको संरक्षण">भावी पुस्ताका लागि हाम्रो वातावरणको संरक्षण</p>
+            </div>
+            <div class="text-center">
+                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-users text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3" data-en="Community" data-ne="समुदाय">समुदाय</h3>
+                <p class="text-gray-600" data-en="Building strong farming communities" data-ne="बलियो कृषि समुदायहरूको निर्माण">बलियो कृषि समुदायहरूको निर्माण</p>
+            </div>
+            <div class="text-center">
+                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-heart text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3" data-en="Respect" data-ne="सम्मान">सम्मान</h3>
+                <p class="text-gray-600" data-en="Honoring traditional farming wisdom" data-ne="परम्परागत कृषि बुद्धिको सम्मान">परम्परागत कृषि बुद्धिको सम्मान</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="py-16 bg-green-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-green-800 mb-4" data-en="Our Impact" data-ne="हाम्रो प्रभाव">हाम्रो प्रभाव</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center">
+                <img src="{{ MEDIA_URL }}about/impact.jpg" alt="Our Impact" class="w-full h-64 object-cover rounded-lg shadow-lg mb-4">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-3xl font-bold text-green-600 mb-2">10,000+</h3>
+                    <p class="text-gray-600" data-en="Farmers Connected" data-ne="जोडिएका किसानहरू">जोडिएका किसानहरू</p>
+                </div>
+            </div>
+            <div class="text-center">
+                <img src="{{ MEDIA_URL }}about/team.jpg" alt="Our Team" class="w-full h-64 object-cover rounded-lg shadow-lg mb-4">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-3xl font-bold text-green-600 mb-2">500+</h3>
+                    <p class="text-gray-600" data-en="Expert Advisors" data-ne="विशेषज्ञ सल्लाहकारहरू">विशेषज्ञ सल्लाहकारहरू</p>
+                </div>
+            </div>
+            <div class="text-center">
+                <img src="{{ MEDIA_URL }}about/values.jpg" alt="Our Values" class="w-full h-64 object-cover rounded-lg shadow-lg mb-4">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-3xl font-bold text-green-600 mb-2">75+</h3>
+                    <p class="text-gray-600" data-en="Districts Covered" data-ne="कभर गरिएका जिल्लाहरू">कभर गरिएका जिल्लाहरू</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

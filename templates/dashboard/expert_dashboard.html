@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Expert Dashboard - Krishi Connect{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Welcome Section -->
+    <div class="mb-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg p-6 text-white">
+        <h1 class="text-3xl font-bold mb-2">स्वागतम्, Dr. {{ user.first_name }}!</h1>
+        <p class="text-blue-100">विशेषज्ञ ड्यासबोर्डमा तपाईंका सल्लाह र परामर्श उपकरणहरू</p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="flex items-center">
+                <div class="bg-blue-100 p-3 rounded-full">
+                    <i class="fas fa-users text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <h3 class="text-2xl font-bold text-gray-800">127</h3>
+                    <p class="text-gray-600">Farmers Helped</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="flex items-center">
+                <div class="bg-green-100 p-3 rounded-full">
+                    <i class="fas fa-comments text-green-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <h3 class="text-2xl font-bold text-gray-800">23</h3>
+                    <p class="text-gray-600">Pending Queries</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="flex items-center">
+                <div class="bg-yellow-100 p-3 rounded-full">
+                    <i class="fas fa-star text-yellow-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <h3 class="text-2xl font-bold text-gray-800">4.8</h3>
+                    <p class="text-gray-600">Expert Rating</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="flex items-center">
+                <div class="bg-purple-100 p-3 rounded-full">
+                    <i class="fas fa-calendar text-purple-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <h3 class="text-2xl font-bold text-gray-800">5</h3>
+                    <p class="text-gray-600">Consultations Today</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Farmer Queries -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div class="h-32 bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center">
+                <i class="fas fa-question-circle text-white text-4xl"></i>
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">किसान प्रश्नहरू</h3>
+                <p class="text-gray-600 mb-4">किसानहरूका प्रश्नहरूको जवाफ दिनुहोस्</p>
+                <a href="/advice/" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    Answer Queries
+                </a>
+            </div>
+        </div>
+
+        <!-- Write Articles -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div class="h-32 bg-gradient-to-r from-green-400 to-green-600 flex items-center justify-center">
+                <i class="fas fa-edit text-white text-4xl"></i>
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">लेख लेख्नुहोस्</h3>
+                <p class="text-gray-600 mb-4">कृषि विषयमा ज्ञानवर्धक लेखहरू</p>
+                <a href="/blog/" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                    Write Article
+                </a>
+            </div>
+        </div>
+
+        <!-- Video Consultations -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div class="h-32 bg-gradient-to-r from-purple-400 to-purple-600 flex items-center justify-center">
+                <i class="fas fa-video text-white text-4xl"></i>
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">भिडियो परामर्श</h3>
+                <p class="text-gray-600 mb-4">किसानहरूसँग प्रत्यक्ष भिडियो कल</p>
+                <a href="#" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                    Start Session
+                </a>
+            </div>
+        </div>
+
+        <!-- Knowledge Base -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div class="h-32 bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center">
+                <i class="fas fa-book text-white text-4xl"></i>
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">ज्ञान भण्डार</h3>
+                <p class="text-gray-600 mb-4">कृषि गाइड र संसाधनहरू</p>
+                <a href="/guides/" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors">
+                    Manage Guides
+                </a>
+            </div>
+        </div>
+
+        <!-- Expert Network -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div class="h-32 bg-gradient-to-r from-indigo-400 to-indigo-600 flex items-center justify-center">
+                <i class="fas fa-user-tie text-white text-4xl"></i>
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">विशेषज्ञ नेटवर्क</h3>
+                <p class="text-gray-600 mb-4">अन्य विशेषज्ञहरूसँग सहकार्य</p>
+                <a href="/forum/" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                    Connect Experts
+                </a>
+            </div>
+        </div>
+
+        <!-- Analytics -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div class="h-32 bg-gradient-to-r from-red-400 to-red-600 flex items-center justify-center">
+                <i class="fas fa-chart-bar text-white text-4xl"></i>
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">विश्लेषण</h3>
+                <p class="text-gray-600 mb-4">तपाईंको प्रभाव र प्रदर्शन</p>
+                <a href="/reports/" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                    View Analytics
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="mt-8 bg-white rounded-lg shadow-lg p-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">हालैका गतिविधिहरू</h3>
+        <div class="space-y-4">
+            <div class="flex items-center p-3 bg-blue-50 rounded-lg">
+                <i class="fas fa-comment text-blue-600 mr-3"></i>
+                <div>
+                    <p class="font-medium">Answered query about rice diseases</p>
+                    <p class="text-sm text-gray-600">1 hour ago</p>
+                </div>
+            </div>
+            <div class="flex items-center p-3 bg-green-50 rounded-lg">
+                <i class="fas fa-edit text-green-600 mr-3"></i>
+                <div>
+                    <p class="font-medium">Published article on organic farming</p>
+                    <p class="text-sm text-gray-600">3 hours ago</p>
+                </div>
+            </div>
+            <div class="flex items-center p-3 bg-purple-50 rounded-lg">
+                <i class="fas fa-video text-purple-600 mr-3"></i>
+                <div>
+                    <p class="font-medium">Completed video consultation</p>
+                    <p class="text-sm text-gray-600">5 hours ago</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,275 @@
+{% load static %}
+<div id="sidebar" class="fixed inset-y-0 left-0 z-50 bg-gray-300 min-h-screen h-full shadow-lg transform -translate-x-full transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 w-64 lg:w-64">
+    <!-- Sidebar Header -->
+    <div class="flex items-center justify-between h-16 px-6 bg-gradient-to-r from-green-600 to-green-700">
+        <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center shrink-0">
+                <i class="fas fa-seedling text-green-600 text-sm"></i>
+            </div>
+            <span id="sidebar-title" class="text-white font-semibold text-lg whitespace-nowrap transition-opacity duration-300">Krishi Connect</span>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button id="sidebar-expand-toggle" class="hidden lg:block text-white hover:text-green-200 transition-colors">
+                <i class="fas fa-chevron-left text-lg"></i>
+            </button>
+            <button id="sidebar-close" class="lg:hidden text-white hover:text-green-200 transition-colors">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- User Profile -->
+    {% if user.is_authenticated %}
+    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+        <a href="/users/profile/" class="flex items-center space-x-3 hover:bg-gray-100 rounded-lg p-2 -m-2 transition-colors">
+            <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shrink-0">
+                <span class="text-white font-semibold text-sm">{{ user.first_name|first|upper }}{{ user.last_name|first|upper }}</span>
+            </div>
+            <div class="sidebar-text flex-1 min-w-0 transition-opacity duration-300">
+                <p class="text-sm font-medium text-gray-900 truncate hover:text-green-700 transition-colors">{{ user.get_full_name|default:user.username }}</p>
+                <p class="text-xs text-gray-500 capitalize truncate hover:text-green-600 transition-colors">{{ user.role }}</p>
+            </div>
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Navigation Menu -->
+    <nav class="flex-1 px-3 py-6 space-y-1 overflow-y-auto  bg-gray-300 min-h-screen h-full shadow-lg">
+        {% if user.is_authenticated %}
+        <a href="/dashboard/" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-xl hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-gray-900 transition-all duration-300 group">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-blue-100 text-blue-600 group-hover:bg-blue-200 shrink-0">
+                <i class="fas fa-tachometer-alt text-base"></i>
+            </div>
+            <span class="sidebar-text ml-3 flex-1 whitespace-nowrap overflow-hidden text-ellipsis transition-opacity duration-300">Dashboard</span>
+            <i class="sidebar-text fas fa-chevron-right text-xs text-gray-400 ml-2 group-hover:opacity-100 opacity-0 transition-all duration-300"></i>
+        </a>
+        {% endif %}
+
+        <a href="/" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-xl hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-gray-900 transition-all duration-300 group">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-emerald-100 text-emerald-600 group-hover:bg-emerald-200 shrink-0">
+                <i class="fas fa-home text-base"></i>
+            </div>
+            <span class="sidebar-text ml-3 flex-1 whitespace-nowrap overflow-hidden text-ellipsis transition-opacity duration-300">Home</span>
+            <i class="sidebar-text fas fa-chevron-right text-xs text-gray-400 ml-2 group-hover:opacity-100 opacity-0 transition-all duration-300"></i>
+        </a>
+
+        <!-- Smart Farming Section -->
+        {% if user.is_authenticated and user.role in 'farmer,expert' %}
+        <div class="pt-6">
+            <h3 class="sidebar-text px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center whitespace-nowrap transition-opacity duration-300">
+                <span class="mr-2">🌱</span> Smart Farming
+            </h3>
+            
+            <a href="/crops/" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-xl hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-gray-900 transition-all duration-300 group">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-green-100 text-green-600 group-hover:bg-green-200 shrink-0">
+                    <i class="fas fa-leaf text-base"></i>
+                </div>
+                <span class="sidebar-text ml-3 flex-1 whitespace-nowrap overflow-hidden text-ellipsis transition-opacity duration-300">My Crops</span>
+                <i class="sidebar-text fas fa-chevron-right text-xs text-gray-400 ml-2 group-hover:opacity-100 opacity-0 transition-all duration-300"></i>
+            </a>
+
+            <a href="/crops/recommendations/" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-xl hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-gray-900 transition-all duration-300 group">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-violet-100 text-violet-600 group-hover:bg-violet-200 shrink-0">
+                    <i class="fas fa-robot text-base"></i>
+                </div>
+                <span class="sidebar-text ml-3 flex-1 whitespace-nowrap overflow-hidden text-ellipsis transition-opacity duration-300">AI Recommendations</span>
+                <span class="sidebar-text ml-2 px-2 py-1 text-xs font-semibold rounded-full bg-violet-100 text-violet-600 shrink-0 transition-opacity duration-300">AI</span>
+                <i class="sidebar-text fas fa-chevron-right text-xs text-gray-400 ml-2 group-hover:opacity-100 opacity-0 transition-all duration-300"></i>
+            </a>
+
+            <a href="/weather/" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-xl hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-gray-900 transition-all duration-300 group">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-sky-100 text-sky-600 group-hover:bg-sky-200 shrink-0">
+                    <i class="fas fa-cloud-sun text-base"></i>
+                </div>
+                <span class="sidebar-text ml-3 flex-1 whitespace-nowrap overflow-hidden text-ellipsis transition-opacity duration-300">Weather</span>
+                <i class="sidebar-text fas fa-chevron-right text-xs text-gray-400 ml-2 group-hover:opacity-100 opacity-0 transition-all duration-300"></i>
+            </a>
+
+            <a href="/market/" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-xl hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-gray-900 transition-all duration-300 group">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-amber-100 text-amber-600 group-hover:bg-amber-200 shrink-0">
+                    <i class="fas fa-chart-line text-base"></i>
+                </div>
+                <span class="sidebar-text ml-3 flex-1 whitespace-nowrap overflow-hidden text-ellipsis transition-opacity duration-300">Market Prices</span>
+                <i class="sidebar-text fas fa-chevron-right text-xs text-gray-400 ml-2 group-hover:opacity-100 opacity-0 transition-all duration-300"></i>
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- Knowledge Hub Section -->
+        <div class="pt-6">
+            <h3 class="sidebar-text px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center whitespace-nowrap transition-opacity duration-300">
+                <span class="mr-2">📚</span> Knowledge Hub
+            </h3>
+            
+            <a href="/advice/" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-xl hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-gray-900 transition-all duration-300 group">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-indigo-100 text-indigo-600 group-hover:bg-indigo-200 shrink-0">
+                    <i class="fas fa-user-tie text-base"></i>
+                </div>
+                <span class="sidebar-text ml-3 flex-1 whitespace-nowrap overflow-hidden text-ellipsis transition-opacity duration-300">Expert Advice</span>
+                <i class="sidebar-text fas fa-chevron-right text-xs text-gray-400 ml-2 group-hover:opacity-100 opacity-0 transition-all duration-300"></i>
+            </a>
+
+            <a href="/forum/" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-xl hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-gray-900 transition-all duration-300 group">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-rose-100 text-rose-600 group-hover:bg-rose-200 shrink-0">
+                    <i class="fas fa-comments text-base"></i>
+                </div>
+                <span class="sidebar-text ml-3 flex-1 whitespace-nowrap overflow-hidden text-ellipsis transition-opacity duration-300">Community Forum</span>
+                <i class="sidebar-text fas fa-chevron-right text-xs text-gray-400 ml-2 group-hover:opacity-100 opacity-0 transition-all duration-300"></i>
+            </a>
+
+            <a href="/guides/" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-xl hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-gray-900 transition-all duration-300 group">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-teal-100 text-teal-600 group-hover:bg-teal-200 shrink-0">
+                    <i class="fas fa-book-open text-base"></i>
+                </div>
+                <span class="sidebar-text ml-3 flex-1 whitespace-nowrap overflow-hidden text-ellipsis transition-opacity duration-300">Learning Resources</span>
+                <i class="sidebar-text fas fa-chevron-right text-xs text-gray-400 ml-2 group-hover:opacity-100 opacity-0 transition-all duration-300"></i>
+            </a>
+        </div>
+
+        <!-- Marketplace Section -->
+        {% if user.is_authenticated %}
+        <div class="pt-6">
+            <h3 class="sidebar-text px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center whitespace-nowrap transition-opacity duration-300">
+                <span class="mr-2">🛒</span> Marketplace
+            </h3>
+            
+            <a href="/products/" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-xl hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-gray-900 transition-all duration-300 group">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-orange-100 text-orange-600 group-hover:bg-orange-200 shrink-0">
+                    <i class="fas fa-shopping-cart text-base"></i>
+                </div>
+                <span class="sidebar-text ml-3 flex-1 whitespace-nowrap overflow-hidden text-ellipsis transition-opacity duration-300">Buy & Sell</span>
+                <i class="sidebar-text fas fa-chevron-right text-xs text-gray-400 ml-2 group-hover:opacity-100 opacity-0 transition-all duration-300"></i>
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- Account Section -->
+        <div class="pt-6 border-t border-gray-200 mt-6">
+            <h3 class="sidebar-text px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center whitespace-nowrap transition-opacity duration-300">
+                <span class="mr-2">👤</span> Account
+            </h3>
+            
+            {% if user.is_authenticated %}
+            <a href="/users/profile/" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-xl hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-gray-900 transition-all duration-300 group">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-slate-100 text-slate-600 group-hover:bg-slate-200 shrink-0">
+                    <i class="fas fa-user-circle text-base"></i>
+                </div>
+                <span class="sidebar-text ml-3 flex-1 whitespace-nowrap overflow-hidden text-ellipsis transition-opacity duration-300">My Profile</span>
+                <i class="sidebar-text fas fa-chevron-right text-xs text-gray-400 ml-2 group-hover:opacity-100 opacity-0 transition-all duration-300"></i>
+            </a>
+
+            <a href="/users/logout/" class="flex items-center px-4 py-3 text-sm font-medium text-red-600 rounded-xl hover:bg-red-50 hover:text-red-700 transition-all duration-300 group">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-red-100 text-red-600 group-hover:bg-red-200 shrink-0">
+                    <i class="fas fa-sign-out-alt text-base"></i>
+                </div>
+                <span class="sidebar-text ml-3 flex-1 whitespace-nowrap overflow-hidden text-ellipsis transition-opacity duration-300">Sign Out</span>
+                <i class="sidebar-text fas fa-chevron-right text-xs text-red-400 ml-2 group-hover:opacity-100 opacity-0 transition-all duration-300"></i>
+            </a>
+            {% else %}
+            <a href="/users/login/" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-xl hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-gray-900 transition-all duration-300 group">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-green-100 text-green-600 group-hover:bg-green-200 shrink-0">
+                    <i class="fas fa-sign-in-alt text-base"></i>
+                </div>
+                <span class="sidebar-text ml-3 flex-1 whitespace-nowrap overflow-hidden text-ellipsis transition-opacity duration-300">Sign In</span>
+                <i class="sidebar-text fas fa-chevron-right text-xs text-gray-400 ml-2 group-hover:opacity-100 opacity-0 transition-all duration-300"></i>
+            </a>
+
+            <a href="/users/register/" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-xl hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-gray-900 transition-all duration-300 group">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-blue-100 text-blue-600 group-hover:bg-blue-200 shrink-0">
+                    <i class="fas fa-user-plus text-base"></i>
+                </div>
+                <span class="sidebar-text ml-3 flex-1 whitespace-nowrap overflow-hidden text-ellipsis transition-opacity duration-300">Join Now</span>
+                <i class="sidebar-text fas fa-chevron-right text-xs text-gray-400 ml-2 group-hover:opacity-100 opacity-0 transition-all duration-300"></i>
+            </a>
+            {% endif %}
+        </div>
+    </nav>
+</div>
+
+<!-- Mobile Overlay -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
+
+<!-- Mobile Toggle Button -->
+<button id="sidebar-toggle" class="fixed top-4 left-4 z-50 lg:hidden bg-white shadow-lg rounded-lg p-3 text-gray-600 hover:text-gray-900 transition-colors">
+    <i class="fas fa-bars text-lg"></i>
+</button>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebarClose = document.getElementById('sidebar-close');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const expandToggle = document.getElementById('sidebar-expand-toggle');
+    const sidebarTitle = document.getElementById('sidebar-title');
+    const sidebarTexts = document.querySelectorAll('.sidebar-text');
+    
+    let isExpanded = true;
+
+    function toggleSidebar() {
+        isExpanded = !isExpanded;
+        const navLinks = document.querySelectorAll('nav a');
+        
+        if (isExpanded) {
+            sidebar.classList.remove('lg:w-16');
+            sidebar.classList.add('lg:w-64');
+            expandToggle.innerHTML = '<i class="fas fa-chevron-left text-lg"></i>';
+            sidebarTitle.style.opacity = '1';
+            sidebarTexts.forEach(text => text.style.opacity = '1');
+            navLinks.forEach(link => {
+                link.classList.remove('justify-center');
+                link.classList.add('px-4');
+            });
+        } else {
+            sidebar.classList.remove('lg:w-64');
+            sidebar.classList.add('lg:w-16');
+            expandToggle.innerHTML = '<i class="fas fa-chevron-right text-lg"></i>';
+            sidebarTitle.style.opacity = '0';
+            sidebarTexts.forEach(text => text.style.opacity = '0');
+            navLinks.forEach(link => {
+                link.classList.add('justify-center');
+                link.classList.remove('px-4');
+            });
+        }
+    }
+
+    function openSidebar() {
+        sidebar.classList.remove('-translate-x-full');
+        sidebarOverlay.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+
+    function closeSidebar() {
+        sidebar.classList.add('-translate-x-full');
+        sidebarOverlay.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
+
+    expandToggle?.addEventListener('click', toggleSidebar);
+    sidebarToggle?.addEventListener('click', openSidebar);
+    sidebarClose?.addEventListener('click', closeSidebar);
+    sidebarOverlay?.addEventListener('click', closeSidebar);
+
+    function setActiveLink() {
+        const currentPath = window.location.pathname;
+        const links = document.querySelectorAll('nav a');
+        
+        links.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && (currentPath === href || (href !== '/' && currentPath.startsWith(href)))) {
+                link.classList.add('bg-gradient-to-r', 'from-green-50', 'to-emerald-50', 'text-green-700', 'border', 'border-green-200', 'shadow-sm');
+                const chevron = link.querySelector('i.fa-chevron-right');
+                if (chevron) chevron.classList.remove('opacity-0');
+            }
+        });
+    }
+
+    setActiveLink();
+
+    window.addEventListener('resize', function() {
+        if (window.innerWidth >= 1024) {
+            closeSidebar();
+        }
+    });
+});
+</script>

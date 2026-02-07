@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Solutions - Krishi Connect{% endblock %}
+
+{% block content %}
+<!-- Solutions Header -->
+<section class="bg-gradient-to-r from-green-600 to-green-800 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4" data-en="Our Solutions" data-ne="हाम्रो समाधान">हाम्रो समाधान</h1>
+        <p class="text-xl text-green-100" data-en="Innovative agricultural solutions combining traditional knowledge with modern technology" data-ne="परम्परागत ज्ञान र आधुनिक प्रविधिको संयोजनमा नवाचार कृषि समाधान">परम्परागत ज्ञान र आधुनिक प्रविधिको संयोजनमा नवाचार कृषि समाधान</p>
+    </div>
+</section>
+
+<!-- Solutions Grid -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12">
+            <!-- Smart Farming Technology -->
+            <div class="bg-white rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-shadow">
+                <div class="bg-gradient-to-br from-green-400 to-green-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-cog text-white text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-green-800" data-en="Smart Farming Technology" data-ne="स्मार्ट बाली सिंगारिस">स्मार्ट बाली सिंगारिस</h3>
+                <p class="text-gray-600 mb-6" data-en="Modern sensors and automated irrigation systems for optimal crop management. Monitor soil moisture, temperature, and nutrient levels in real-time." data-ne="आधुनिक सेन्सर र स्वचालित सिंचाई प्रणाली उत्तम बाली व्यवस्थापनका लागि। माटोको नमी, तापक्रम र पोषक तत्वहरूको वास्तविक समयमा निगरानी गर्नुहोस्।">आधुनिक सेन्सर र स्वचालित सिंचाई प्रणाली उत्तम बाली व्यवस्थापनका लागि। माटोको नमी, तापक्रम र पोषक तत्वहरूको वास्तविक समयमा निगरानी गर्नुहोस्।</p>
+                <ul class="text-left text-gray-600 mb-6 space-y-2">
+                    <li class="flex items-center"><i class="fas fa-check text-green-600 mr-2"></i> <span data-en="Automated irrigation systems" data-ne="स्वचालित सिंचाई प्रणाली">स्वचालित सिंचाई प्रणाली</span></li>
+                    <li class="flex items-center"><i class="fas fa-check text-green-600 mr-2"></i> <span data-en="Soil monitoring sensors" data-ne="माटो निगरानी सेन्सर">माटो निगरानी सेन्सर</span></li>
+                    <li class="flex items-center"><i class="fas fa-check text-green-600 mr-2"></i> <span data-en="Real-time data analytics" data-ne="वास्तविक समय डाटा विश्लेषण">वास्तविक समय डाटा विश्लेषण</span></li>
+                </ul>
+                <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                    <span data-en="Learn More" data-ne="थप जान्नुहोस्">थप जान्नुहोस्</span>
+                </a>
+            </div>
+
+            <!-- Market Intelligence -->
+            <div class="bg-white rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-shadow">
+                <div class="bg-gradient-to-br from-green-400 to-green-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-chart-bar text-white text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-green-800" data-en="Market Intelligence" data-ne="बजार बुद्धिमत्ता">बजार बुद्धिमत्ता</h3>
+                <p class="text-gray-600 mb-6" data-en="Real-time market prices and demand forecasting for better profits. Get insights into market trends and make informed selling decisions." data-ne="राम्रो नाफाका लागि वास्तविक समयमा बजार मूल्य र माग पूर्वानुमान। बजार प्रवृत्तिमा अन्तर्दृष्टि प्राप्त गर्नुहोस् र सूचित बिक्री निर्णयहरू गर्नुहोस्।">राम्रो नाफाका लागि वास्तविक समयमा बजार मूल्य र माग पूर्वानुमान। बजार प्रवृत्तिमा अन्तर्दृष्टि प्राप्त गर्नुहोस् र सूचित बिक्री निर्णयहरू गर्नुहोस्।</p>
+                <ul class="text-left text-gray-600 mb-6 space-y-2">
+                    <li class="flex items-center"><i class="fas fa-check text-green-600 mr-2"></i> <span data-en="Real-time price tracking" data-ne="वास्तविक समय मूल्य ट्र्याकिङ">वास्तविक समय मूल्य ट्र्याकिङ</span></li>
+                    <li class="flex items-center"><i class="fas fa-check text-green-600 mr-2"></i> <span data-en="Demand forecasting" data-ne="माग पूर्वानुमान">माग पूर्वानुमान</span></li>
+                    <li class="flex items-center"><i class="fas fa-check text-green-600 mr-2"></i> <span data-en="Market trend analysis" data-ne="बजार प्रवृत्ति विश्लेषण">बजार प्रवृत्ति विश्लेषण</span></li>
+                </ul>
+                <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                    <span data-en="Learn More" data-ne="थप जान्नुहोस्">थप जान्नुहोस्</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="bg-green-600 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl font-bold mb-4" data-en="Ready to Transform Your Farming?" data-ne="आफ्नो खेती रूपान्तरण गर्न तयार हुनुहुन्छ?">आफ्नो खेती रूपान्तरण गर्न तयार हुनुहुन्छ?</h2>
+        <p class="text-xl mb-8 text-green-100" data-en="Join thousands of farmers already using Krishi Connect" data-ne="पहिले नै Krishi Connect प्रयोग गरिरहेका हजारौं किसानहरूसँग सामेल हुनुहोस्">पहिले नै Krishi Connect प्रयोग गरिरहेका हजारौं किसानहरूसँग सामेल हुनुहोस्</p>
+        {% if not user.is_authenticated %}
+        <a href="{% url 'register' %}" class="bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-green-50 transition-colors">
+            <span data-en="Get Started Today" data-ne="आज नै सुरु गर्नुहोस्">आज नै सुरु गर्नुहोस्</span>
+        </a>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
