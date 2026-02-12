@@ -95,7 +95,7 @@ def register_view(request):
         elif not re.match(r'^[a-zA-Z\s]+$', last_name):
             errors.append('Last name can only contain letters and spaces.')
         
-        if role not in ['farmer', 'expert']:
+        if role not in ['farmer', 'expert', 'supplier', 'customer']:
             errors.append('Invalid role selected.')
         
         if profile_image:
@@ -167,7 +167,11 @@ def dashboard(request):
     if user_profile.role == 'farmer':
         return render(request, 'dashboard/farmer_dashboard.html', context)
     elif user_profile.role == 'expert':
+        return render(request, 'dashboard/expert_dashboard.html', context)
+    elif user_profile.role == 'supplier':
         return render(request, 'dashboard/supplier_dashboard.html', context)
+    elif user_profile.role == 'customer':
+        return render(request, 'dashboard/customer_dashboard.html', context)
     else:
         return render(request, 'dashboard.html', context)
 
