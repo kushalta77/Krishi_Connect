@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Marketplace | Customer Portal{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 py-12 px-4">
+    <div class="max-w-7xl mx-auto">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Supplier Marketplace</h1>
+            <p class="text-gray-600">Order fresh vegetables from verified suppliers</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for item in inventory %}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.vegetable_name }}" class="w-full h-48 object-cover">
+                {% else %}
+                <div class="w-full h-48 bg-purple-100 flex items-center justify-center">
+                    <i class="fas fa-carrot text-6xl text-purple-600"></i>
+                </div>
+                {% endif %}
+                
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">{{ item.vegetable_name }}</h3>
+                    <p class="text-gray-600 text-sm mb-4">Supplier: {{ item.supplier.first_name }} {{ item.supplier.last_name }}</p>
+                    
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Available:</span>
+                            <span class="font-medium">{{ item.quantity }} {{ item.unit }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Price:</span>
+                            <span class="font-bold text-purple-600">₹{{ item.price_per_unit }}/{{ item.unit }}</span>
+                        </div>
+                    </div>
+                    
+                    <a href="{% url 'order_from_supplier' item.pk %}" class="block w-full bg-purple-600 hover:bg-purple-700 text-white text-center font-medium py-3 rounded-lg transition-colors">
+                        <i class="fas fa-shopping-cart mr-2"></i>Order Now
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-3 text-center py-12">
+                <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
+                <p class="text-gray-600 text-lg">No products available at the moment</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="mt-8">
+            <a href="{% url 'dashboard' %}" class="inline-block bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-3 rounded-lg transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

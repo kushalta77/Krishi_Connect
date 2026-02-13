@@ -26,9 +26,9 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/crops/" class="flex items-center space-x-3 px-4 py-3 hover:bg-green-700 rounded-lg transition-colors">
+                    <a href="{% url 'add_vegetable' %}" class="flex items-center space-x-3 px-4 py-3 hover:bg-green-700 rounded-lg transition-colors">
                         <i class="fas fa-leaf"></i>
-                        <span>My Crops</span>
+                        <span>My Vegetables</span>
                     </a>
                 </li>
                 <li>
@@ -134,64 +134,53 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Recent Orders -->
+                <!-- My Vegetables -->
                 <div class="lg:col-span-2 bg-white rounded-lg shadow-sm border">
                     <div class="p-6 border-b">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-semibold text-gray-800">Recent Orders</h3>
-                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm font-medium">View All</a>
+                            <h3 class="text-lg font-semibold text-gray-800">My Vegetables</h3>
+                            <a href="{% url 'add_vegetable' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                                <i class="fas fa-plus mr-2"></i>Add Vegetable
+                            </a>
                         </div>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Order ID</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Quantity</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price/Unit</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
+                                {% for veg in vegetables %}
                                 <tr>
-                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">#ORD-001</td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">
-                                        <div class="flex items-center space-x-2">
-                                            <span class="text-orange-500">🥕</span>
-                                            <span>Fresh Carrots</span>
-                                        </div>
+                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ veg.name }}</td>
+                                    <td class="px-6 py-4 text-sm text-gray-600">{{ veg.quantity }} {{ veg.unit }}</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">₹{{ veg.price_per_unit }}</td>
+                                    <td class="px-6 py-4">
+                                        {% if veg.available %}
+                                        <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Available</span>
+                                        {% else %}
+                                        <span class="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">Sold Out</span>
+                                        {% endif %}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Completed</span>
+                                        <a href="{% url 'delete_vegetable' veg.pk %}" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-900">₹ 450</td>
                                 </tr>
+                                {% empty %}
                                 <tr>
-                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">#ORD-002</td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">
-                                        <div class="flex items-center space-x-2">
-                                            <span class="text-red-500">🍅</span>
-                                            <span>Tomatoes</span>
-                                        </div>
+                                    <td colspan="5" class="px-6 py-8 text-center text-gray-500">
+                                        No vegetables listed yet. <a href="{% url 'add_vegetable' %}" class="text-green-600 hover:underline">Add your first vegetable</a>
                                     </td>
-                                    <td class="px-6 py-4">
-                                        <span class="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">Processing</span>
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-gray-900">₹ 1,200</td>
                                 </tr>
-                                <tr>
-                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">#ORD-003</td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">
-                                        <div class="flex items-center space-x-2">
-                                            <span class="text-green-500">🥦</span>
-                                            <span>Broccoli</span>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">Shipped</span>
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-gray-900">₹ 850</td>
-                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -203,15 +192,15 @@
                         <h3 class="text-lg font-semibold text-gray-800">Quick Actions</h3>
                     </div>
                     <div class="p-6 space-y-4">
-                        <button class="w-full flex items-center space-x-3 p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
+                        <a href="{% url 'add_vegetable' %}" class="w-full flex items-center space-x-3 p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
                             <div class="bg-green-500 p-2 rounded-full">
                                 <i class="fas fa-plus text-white"></i>
                             </div>
                             <div class="text-left">
-                                <p class="font-medium text-gray-800">Add New Product</p>
-                                <p class="text-sm text-gray-600">List new item for sale</p>
+                                <p class="font-medium text-gray-800">Add New Vegetable</p>
+                                <p class="text-sm text-gray-600">List vegetable for sale</p>
                             </div>
-                        </button>
+                        </a>
                         
                         <button class="w-full flex items-center space-x-3 p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
                             <div class="bg-blue-500 p-2 rounded-full">

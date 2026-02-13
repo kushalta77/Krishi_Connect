@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import UserProfile
+from .models import UserProfile, Vegetable, SupplierPurchase, SupplierInventory, CustomerOrder
 
 # Inline for UserProfile in User admin
 class UserProfileInline(admin.StackedInline):
@@ -38,6 +38,30 @@ class UserProfileAdmin(admin.ModelAdmin):
 # Re-register User admin
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+
+@admin.register(Vegetable)
+class VegetableAdmin(admin.ModelAdmin):
+    list_display = ['name', 'farmer', 'quantity', 'unit', 'price_per_unit', 'available', 'created_at']
+    list_filter = ['available', 'unit', 'created_at']
+    search_fields = ['name', 'farmer__username']
+
+@admin.register(SupplierPurchase)
+class SupplierPurchaseAdmin(admin.ModelAdmin):
+    list_display = ['supplier', 'vegetable', 'quantity', 'total_price', 'status', 'purchased_at']
+    list_filter = ['status', 'purchased_at']
+    search_fields = ['supplier__username', 'vegetable__name']
+
+@admin.register(SupplierInventory)
+class SupplierInventoryAdmin(admin.ModelAdmin):
+    list_display = ['vegetable_name', 'supplier', 'quantity', 'unit', 'price_per_unit', 'available']
+    list_filter = ['available', 'unit']
+    search_fields = ['vegetable_name', 'supplier__username']
+
+@admin.register(CustomerOrder)
+class CustomerOrderAdmin(admin.ModelAdmin):
+    list_display = ['customer', 'supplier_inventory', 'quantity', 'total_price', 'status', 'ordered_at']
+    list_filter = ['status', 'ordered_at']
+    search_fields = ['customer__username', 'supplier_inventory__vegetable_name']
 
 # Customize admin site
 admin.site.site_header = 'Krishi Admin Panel'

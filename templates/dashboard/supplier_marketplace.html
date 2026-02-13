@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Marketplace | Supplier Portal{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 py-12 px-4">
+    <div class="max-w-7xl mx-auto">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Farmer Marketplace</h1>
+            <p class="text-gray-600">Purchase fresh vegetables directly from farmers</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for veg in vegetables %}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                {% if veg.image %}
+                <img src="{{ veg.image.url }}" alt="{{ veg.name }}" class="w-full h-48 object-cover">
+                {% else %}
+                <div class="w-full h-48 bg-green-100 flex items-center justify-center">
+                    <i class="fas fa-leaf text-6xl text-green-600"></i>
+                </div>
+                {% endif %}
+                
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">{{ veg.name }}</h3>
+                    <p class="text-gray-600 text-sm mb-4">By {{ veg.farmer.first_name }} {{ veg.farmer.last_name }}</p>
+                    
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Available:</span>
+                            <span class="font-medium">{{ veg.quantity }} {{ veg.unit }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Price:</span>
+                            <span class="font-bold text-green-600">₹{{ veg.price_per_unit }}/{{ veg.unit }}</span>
+                        </div>
+                    </div>
+                    
+                    {% if veg.description %}
+                    <p class="text-gray-600 text-sm mb-4">{{ veg.description|truncatewords:20 }}</p>
+                    {% endif %}
+                    
+                    <a href="{% url 'purchase_from_farmer' veg.pk %}" class="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center font-medium py-3 rounded-lg transition-colors">
+                        <i class="fas fa-shopping-cart mr-2"></i>Purchase
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-3 text-center py-12">
+                <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
+                <p class="text-gray-600 text-lg">No vegetables available at the moment</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="mt-8">
+            <a href="{% url 'dashboard' %}" class="inline-block bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-3 rounded-lg transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

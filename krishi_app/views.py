@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -6,7 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 import re
-from .models import UserProfile
+from .models import UserProfile, Vegetable, SupplierPurchase, SupplierInventory, CustomerOrder
+from django.db.models import Sum
 
 def home(request):
     return render(request, 'home.html')
@@ -165,12 +166,20 @@ def dashboard(request):
     }
     
     if user_profile.role == 'farmer':
+        vegetables = Vegetable.objects.filter(farmer=request.user)
+        context['vegetables'] = vegetables
         return render(request, 'dashboard/farmer_dashboard.html', context)
     elif user_profile.role == 'expert':
         return render(request, 'dashboard/expert_dashboard.html', context)
     elif user_profile.role == 'supplier':
+        purchases = SupplierPurchase.objects.filter(supplier=request.user)
+        inventory = SupplierInventory.objects.filter(supplier=request.user)
+        context['purchases'] = purchases
+        context['inventory'] = inventory
         return render(request, 'dashboard/supplier_dashboard.html', context)
     elif user_profile.role == 'customer':
+        orders = CustomerOrder.objects.filter(customer=request.user)
+        context['orders'] = orders
         return render(request, 'dashboard/customer_dashboard.html', context)
     else:
         return render(request, 'dashboard.html', context)
@@ -183,3 +192,119 @@ def blog(request):
 
 def solutions(request):
     return render(request, 'solutions.html')
+
+
+# Farmer Views
+@login_required
+def add_vegetable(request):
+    if request.user.userprofile.role != 'farmer':
+        messages.error(request, 'Only farmers can add vegetables')
+        return redirect('dashboard')
+    
+    if request.method == 'POST':
+        Vegetable.objects.create(
+            farmer=request.user,
+            name=request.POST['name'],
+            quantity=request.POST['quantity'],
+            unit=request.POST['unit'],
+            price_per_unit=request.POST['price_per_unit'],
+            description=request.POST.get('description', ''),
+            image=request.FILES.get('image')
+        )
+        messages.success(request, 'Vegetable added successfully')
+        return redirect('dashboard')
+    return render(request, 'dashboard/add_vegetable.html')
+
+@login_required
+def delete_vegetable(request, pk):
+    vegetable = get_object_or_404(Vegetable, pk=pk, farmer=request.user)
+    vegetable.delete()
+    messages.success(request, 'Vegetable deleted successfully')
+    return redirect('dashboard')
+
+# Supplier Views
+@login_required
+def supplier_marketplace(request):
+    if request.user.userprofile.role != 'supplier':
+        messages.error(request, 'Only suppliers can access this page')
+        return redirect('dashboard')
+    
+    vegetables = Vegetable.objects.filter(available=True)
+    return render(request, 'dashboard/supplier_marketplace.html', {'vegetables': vegetables})
+
+@login_required
+def purchase_from_farmer(request, pk):
+    if request.user.userprofile.role != 'supplier':
+        messages.error(request, 'Only suppliers can purchase')
+        return redirect('dashboard')
+    
+    vegetable = get_object_or_404(Vegetable, pk=pk)
+    
+    if request.method == 'POST':
+        quantity = float(request.POST['quantity'])
+        total_price = quantity * float(vegetable.price_per_unit)
+        
+        SupplierPurchase.objects.create(
+            supplier=request.user,
+            vegetable=vegetable,
+            quantity=quantity,
+            total_price=total_price
+        )
+        
+        SupplierInventory.objects.create(
+            supplier=request.user,
+            vegetable_name=vegetable.name,
+            quantity=quantity,
+            unit=vegetable.unit,
+            price_per_unit=float(vegetable.price_per_unit) * 1.2,
+            image=vegetable.image
+        )
+        
+        vegetable.quantity -= quantity
+        if vegetable.quantity <= 0:
+            vegetable.available = False
+        vegetable.save()
+        
+        messages.success(request, 'Purchase successful')
+        return redirect('supplier_marketplace')
+    
+    return render(request, 'dashboard/purchase_vegetable.html', {'vegetable': vegetable})
+
+# Customer Views
+@login_required
+def customer_marketplace(request):
+    if request.user.userprofile.role != 'customer':
+        messages.error(request, 'Only customers can access this page')
+        return redirect('dashboard')
+    
+    inventory = SupplierInventory.objects.filter(available=True)
+    return render(request, 'dashboard/customer_marketplace.html', {'inventory': inventory})
+
+@login_required
+def order_from_supplier(request, pk):
+    if request.user.userprofile.role != 'customer':
+        messages.error(request, 'Only customers can order')
+        return redirect('dashboard')
+    
+    inventory = get_object_or_404(SupplierInventory, pk=pk)
+    
+    if request.method == 'POST':
+        quantity = float(request.POST['quantity'])
+        total_price = quantity * float(inventory.price_per_unit)
+        
+        CustomerOrder.objects.create(
+            customer=request.user,
+            supplier_inventory=inventory,
+            quantity=quantity,
+            total_price=total_price
+        )
+        
+        inventory.quantity -= quantity
+        if inventory.quantity <= 0:
+            inventory.available = False
+        inventory.save()
+        
+        messages.success(request, 'Order placed successfully')
+        return redirect('customer_marketplace')
+    
+    return render(request, 'dashboard/order_vegetable.html', {'inventory': inventory})
