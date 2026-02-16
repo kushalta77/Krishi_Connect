@@ -146,6 +146,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Weather API
+WEATHER_API_KEY = '377e71eda40ad3d927fb1e2c4d001e3e'  
+
 # Jazzmin settings
 JAZZMIN_SETTINGS = {
     "site_title": "Krishi Admin",

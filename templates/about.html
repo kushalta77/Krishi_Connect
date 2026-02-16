@@ -5,115 +5,212 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="relative py-20 bg-gradient-to-r from-green-600 to-green-700">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-5xl font-bold text-white mb-6" data-en="About Krishi Connect" data-ne="कृषि कनेक्टको बारेमा">कृषि कनेक्टको बारेमा</h1>
-        <p class="text-xl text-green-100 max-w-3xl mx-auto" data-en="Empowering Nepali farmers through technology and traditional wisdom" data-ne="प्रविधि र परम्परागत बुद्धिमार्फत नेपाली किसानहरूलाई सशक्त बनाउँदै">प्रविधि र परम्परागत बुद्धिमार्फत नेपाली किसानहरूलाई सशक्त बनाउँदै</p>
+<section class="relative py-32 bg-gradient-to-br from-green-600 via-green-700 to-emerald-800 overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
     </div>
-</section>
-
-<!-- Mission Section -->
-<section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-                <img src="{{ MEDIA_URL }}about/mission.jpg" alt="Our Mission" class="w-full h-96 object-cover rounded-lg shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        <div class="inline-block mb-6 px-6 py-2 bg-white/20 backdrop-blur-sm rounded-full">
+            <span class="text-white font-semibold">🌾 Connecting Farmers to Future</span>
+        </div>
+        <h1 class="text-6xl md:text-7xl font-extrabold text-white mb-6 leading-tight">About Krishi Connect</h1>
+        <p class="text-2xl text-green-50 max-w-4xl mx-auto leading-relaxed">Revolutionizing agriculture through technology, connecting farmers, suppliers, and customers in one seamless marketplace</p>
+        <div class="mt-12 flex justify-center gap-4">
+            <div class="bg-white/20 backdrop-blur-sm px-8 py-4 rounded-xl">
+                <p class="text-4xl font-bold text-white">10K+</p>
+                <p class="text-green-100">Farmers</p>
             </div>
-            <div>
-                <h2 class="text-4xl font-bold text-green-800 mb-6" data-en="Our Mission" data-ne="हाम्रो मिशन">हाम्रो मिशन</h2>
-                <p class="text-gray-600 text-lg mb-6" data-en="To revolutionize agriculture in Nepal by integrating modern technology with traditional farming wisdom, creating sustainable and prosperous farming communities across the nation." data-ne="आधुनिक प्रविधिलाई परम्परागत कृषि बुद्धिसँग एकीकरण गरेर नेपालमा कृषि क्रान्ति ल्याउनु, राष्ट्रभर दिगो र समृद्ध कृषि समुदायहरू सिर्जना गर्नु।">आधुनिक प्रविधिलाई परम्परागत कृषि बुद्धिसँग एकीकरण गरेर नेपालमा कृषि क्रान्ति ल्याउनु, राष्ट्रभर दिगो र समृद्ध कृषि समुदायहरू सिर्जना गर्नु।</p>
-                <ul class="space-y-3 text-gray-600">
-                    <li class="flex items-center" data-en="✓ Increase crop productivity through smart farming" data-ne="✓ स्मार्ट खेतीमार्फत बाली उत्पादकत्व वृद्धि">✓ स्मार्ट खेतीमार्फत बाली उत्पादकत्व वृद्धि</li>
-                    <li class="flex items-center" data-en="✓ Connect farmers with markets and experts" data-ne="✓ किसानहरूलाई बजार र विशेषज्ञहरूसँग जोड्ने">✓ किसानहरूलाई बजार र विशेषज्ञहरूसँग जोड्ने</li>
-                    <li class="flex items-center" data-en="✓ Promote sustainable farming practices" data-ne="✓ दिगो कृषि अभ्यासहरूको प्रवर्द्धन">✓ दिगो कृषि अभ्यासहरूको प्रवर्द्धन</li>
-                </ul>
+            <div class="bg-white/20 backdrop-blur-sm px-8 py-4 rounded-xl">
+                <p class="text-4xl font-bold text-white">500+</p>
+                <p class="text-green-100">Suppliers</p>
+            </div>
+            <div class="bg-white/20 backdrop-blur-sm px-8 py-4 rounded-xl">
+                <p class="text-4xl font-bold text-white">75+</p>
+                <p class="text-green-100">Districts</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Vision Section -->
-<section class="py-16 bg-green-50">
+<!-- Mission Section -->
+<section class="py-24 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div class="order-2 lg:order-1">
-                <h2 class="text-4xl font-bold text-green-800 mb-6" data-en="Our Vision" data-ne="हाम्रो दृष्टिकोण">हाम्रो दृष्टिकोण</h2>
-                <p class="text-gray-600 text-lg mb-6" data-en="To become Nepal's leading agricultural technology platform, where every farmer has access to modern tools, expert knowledge, and fair market opportunities, ensuring food security and prosperity for all." data-ne="नेपालको अग्रणी कृषि प्रविधि प्लेटफर्म बन्नु, जहाँ हरेक किसानको आधुनिक उपकरण, विशेषज्ञ ज्ञान र निष्पक्ष बजार अवसरहरूमा पहुँच छ, सबैका लागि खाद्य सुरक्षा र समृद्धि सुनिश्चित गर्दै।">नेपालको अग्रणी कृषि प्रविधि प्लेटफर्म बन्नु, जहाँ हरेक किसानको आधुनिक उपकरण, विशेषज्ञ ज्ञान र निष्पक्ष बजार अवसरहरूमा पहुँच छ, सबैका लागि खाद्य सुरक्षा र समृद्धि सुनिश्चित गर्दै।</p>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="relative">
+                <div class="absolute -top-6 -left-6 w-72 h-72 bg-green-200 rounded-full blur-3xl opacity-30"></div>
+                <img src="{{ MEDIA_URL }}about/mission.jpg" alt="Our Mission" class="relative w-full h-[500px] object-cover rounded-2xl shadow-2xl">
             </div>
-            <div class="order-1 lg:order-2">
-                <img src="{{ MEDIA_URL }}about/vision.jpg" alt="Our Vision" class="w-full h-96 object-cover rounded-lg shadow-lg">
+            <div>
+                <div class="inline-block mb-4 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
+                    OUR MISSION
+                </div>
+                <h2 class="text-5xl font-extrabold text-gray-900 mb-6 leading-tight">Empowering Agriculture Through Innovation</h2>
+                <p class="text-gray-600 text-lg mb-8 leading-relaxed">We're revolutionizing agriculture by creating a seamless three-tier marketplace that connects farmers directly with suppliers and customers, eliminating middlemen and ensuring fair prices for everyone.</p>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4 p-4 bg-green-50 rounded-xl">
+                        <div class="bg-green-600 p-2 rounded-lg">
+                            <i class="fas fa-chart-line text-white"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-900 mb-1">Increase Productivity</h4>
+                            <p class="text-gray-600 text-sm">Smart farming tools and expert guidance</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 bg-blue-50 rounded-xl">
+                        <div class="bg-blue-600 p-2 rounded-lg">
+                            <i class="fas fa-handshake text-white"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-900 mb-1">Direct Market Access</h4>
+                            <p class="text-gray-600 text-sm">Connect with suppliers and customers instantly</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 bg-purple-50 rounded-xl">
+                        <div class="bg-purple-600 p-2 rounded-lg">
+                            <i class="fas fa-leaf text-white"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-900 mb-1">Sustainable Practices</h4>
+                            <p class="text-gray-600 text-sm">Promote eco-friendly farming methods</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-24 bg-gradient-to-br from-gray-50 to-green-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <div class="inline-block mb-4 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
+                HOW IT WORKS
+            </div>
+            <h2 class="text-5xl font-extrabold text-gray-900 mb-4">Three-Tier Marketplace</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">A seamless flow from farm to table</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="relative">
+                <div class="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow">
+                    <div class="absolute -top-6 left-8 bg-gradient-to-br from-green-500 to-green-600 w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                        1
+                    </div>
+                    <div class="mt-4 mb-6">
+                        <div class="bg-green-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-4">
+                            <i class="fas fa-tractor text-green-600 text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Farmers List</h3>
+                        <p class="text-gray-600">Farmers list their fresh vegetables with prices and quantities on the platform</p>
+                    </div>
+                </div>
+                <div class="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
+                    <i class="fas fa-arrow-right text-green-400 text-3xl"></i>
+                </div>
+            </div>
+            <div class="relative">
+                <div class="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow">
+                    <div class="absolute -top-6 left-8 bg-gradient-to-br from-blue-500 to-blue-600 w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                        2
+                    </div>
+                    <div class="mt-4 mb-6">
+                        <div class="bg-blue-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-4">
+                            <i class="fas fa-truck text-blue-600 text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Suppliers Buy</h3>
+                        <p class="text-gray-600">Suppliers purchase vegetables from farmers and add to their inventory with markup</p>
+                    </div>
+                </div>
+                <div class="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
+                    <i class="fas fa-arrow-right text-blue-400 text-3xl"></i>
+                </div>
+            </div>
+            <div class="relative">
+                <div class="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow">
+                    <div class="absolute -top-6 left-8 bg-gradient-to-br from-purple-500 to-purple-600 w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                        3
+                    </div>
+                    <div class="mt-4 mb-6">
+                        <div class="bg-purple-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-4">
+                            <i class="fas fa-shopping-cart text-purple-600 text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Customers Order</h3>
+                        <p class="text-gray-600">Customers browse and order fresh vegetables from supplier inventory</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Values Section -->
-<section class="py-16 bg-white">
+<section class="py-24 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-4xl font-bold text-green-800 mb-4" data-en="Our Values" data-ne="हाम्रो मूल्यमान्यता">हाम्रो मूल्यमान्यता</h2>
+        <div class="text-center mb-16">
+            <div class="inline-block mb-4 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
+                OUR VALUES
+            </div>
+            <h2 class="text-5xl font-extrabold text-gray-900 mb-4">What Drives Us</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">Core principles that guide everything we do</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div class="text-center">
-                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-lightbulb text-green-600 text-2xl"></i>
+            <div class="group hover:scale-105 transition-transform">
+                <div class="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-2xl text-center h-full">
+                    <div class="bg-gradient-to-br from-green-500 to-green-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform">
+                        <i class="fas fa-lightbulb text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Innovation</h3>
+                    <p class="text-gray-600">Embracing cutting-edge technology to transform traditional farming</p>
                 </div>
-                <h3 class="text-xl font-semibold mb-3" data-en="Innovation" data-ne="नवाचार">नवाचार</h3>
-                <p class="text-gray-600" data-en="Embracing new technologies and methods" data-ne="नयाँ प्रविधि र विधिहरूको अंगीकार">नयाँ प्रविधि र विधिहरूको अंगीकार</p>
             </div>
-            <div class="text-center">
-                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-leaf text-green-600 text-2xl"></i>
+            <div class="group hover:scale-105 transition-transform">
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl text-center h-full">
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform">
+                        <i class="fas fa-leaf text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Sustainability</h3>
+                    <p class="text-gray-600">Protecting our environment for future generations</p>
                 </div>
-                <h3 class="text-xl font-semibold mb-3" data-en="Sustainability" data-ne="दिगोपन">दिगोपन</h3>
-                <p class="text-gray-600" data-en="Protecting our environment for future generations" data-ne="भावी पुस्ताका लागि हाम्रो वातावरणको संरक्षण">भावी पुस्ताका लागि हाम्रो वातावरणको संरक्षण</p>
             </div>
-            <div class="text-center">
-                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-users text-green-600 text-2xl"></i>
+            <div class="group hover:scale-105 transition-transform">
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-2xl text-center h-full">
+                    <div class="bg-gradient-to-br from-purple-500 to-purple-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform">
+                        <i class="fas fa-users text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Community</h3>
+                    <p class="text-gray-600">Building strong, connected farming communities</p>
                 </div>
-                <h3 class="text-xl font-semibold mb-3" data-en="Community" data-ne="समुदाय">समुदाय</h3>
-                <p class="text-gray-600" data-en="Building strong farming communities" data-ne="बलियो कृषि समुदायहरूको निर्माण">बलियो कृषि समुदायहरूको निर्माण</p>
             </div>
-            <div class="text-center">
-                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-heart text-green-600 text-2xl"></i>
+            <div class="group hover:scale-105 transition-transform">
+                <div class="bg-gradient-to-br from-pink-50 to-pink-100 p-8 rounded-2xl text-center h-full">
+                    <div class="bg-gradient-to-br from-pink-500 to-pink-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform">
+                        <i class="fas fa-heart text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Integrity</h3>
+                    <p class="text-gray-600">Fair prices and transparent transactions for everyone</p>
                 </div>
-                <h3 class="text-xl font-semibold mb-3" data-en="Respect" data-ne="सम्मान">सम्मान</h3>
-                <p class="text-gray-600" data-en="Honoring traditional farming wisdom" data-ne="परम्परागत कृषि बुद्धिको सम्मान">परम्परागत कृषि बुद्धिको सम्मान</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Team Section -->
-<section class="py-16 bg-green-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-4xl font-bold text-green-800 mb-4" data-en="Our Impact" data-ne="हाम्रो प्रभाव">हाम्रो प्रभाव</h2>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="text-center">
-                <img src="{{ MEDIA_URL }}about/impact.jpg" alt="Our Impact" class="w-full h-64 object-cover rounded-lg shadow-lg mb-4">
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-3xl font-bold text-green-600 mb-2">10,000+</h3>
-                    <p class="text-gray-600" data-en="Farmers Connected" data-ne="जोडिएका किसानहरू">जोडिएका किसानहरू</p>
-                </div>
-            </div>
-            <div class="text-center">
-                <img src="{{ MEDIA_URL }}about/team.jpg" alt="Our Team" class="w-full h-64 object-cover rounded-lg shadow-lg mb-4">
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-3xl font-bold text-green-600 mb-2">500+</h3>
-                    <p class="text-gray-600" data-en="Expert Advisors" data-ne="विशेषज्ञ सल्लाहकारहरू">विशेषज्ञ सल्लाहकारहरू</p>
-                </div>
-            </div>
-            <div class="text-center">
-                <img src="{{ MEDIA_URL }}about/values.jpg" alt="Our Values" class="w-full h-64 object-cover rounded-lg shadow-lg mb-4">
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-3xl font-bold text-green-600 mb-2">75+</h3>
-                    <p class="text-gray-600" data-en="Districts Covered" data-ne="कभर गरिएका जिल्लाहरू">कभर गरिएका जिल्लाहरू</p>
-                </div>
-            </div>
+<!-- CTA Section -->
+<section class="py-24 bg-gradient-to-br from-green-600 to-emerald-700 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        <h2 class="text-5xl font-extrabold text-white mb-6">Join the Agricultural Revolution</h2>
+        <p class="text-2xl text-green-50 mb-12 max-w-3xl mx-auto">Whether you're a farmer, supplier, or customer, there's a place for you in our marketplace</p>
+        <div class="flex flex-wrap justify-center gap-6">
+            <a href="{% url 'register' %}" class="bg-white text-green-600 px-10 py-5 rounded-xl font-bold text-lg hover:bg-green-50 transition-colors shadow-2xl hover:scale-105 transform">
+                <i class="fas fa-user-plus mr-2"></i>Get Started Today
+            </a>
+            <a href="{% url 'home' %}" class="bg-green-800 text-white px-10 py-5 rounded-xl font-bold text-lg hover:bg-green-900 transition-colors shadow-2xl hover:scale-105 transform">
+                <i class="fas fa-home mr-2"></i>Back to Home
+            </a>
         </div>
     </div>
 </section>

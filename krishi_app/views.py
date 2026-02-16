@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 import re
+import requests
+from django.conf import settings
 from .models import UserProfile, Vegetable, SupplierPurchase, SupplierInventory, CustomerOrder
 from django.db.models import Sum
 
@@ -308,3 +310,50 @@ def order_from_supplier(request, pk):
         return redirect('customer_marketplace')
     
     return render(request, 'dashboard/order_vegetable.html', {'inventory': inventory})
+
+# Weather View
+def weather_view(request):
+    weather_data = None
+    error = None
+    
+    if request.method == 'POST':
+        city = request.POST.get('city', '').strip()
+        
+        if city:
+            api_key = settings.WEATHER_API_KEY
+            url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric'
+            
+            try:
+                response = requests.get(url, timeout=10)
+                data = response.json()
+                
+                if response.status_code == 200:
+                    weather_data = {
+                        'city': data['name'],
+                        'country': data['sys']['country'],
+                        'temperature': round(data['main']['temp']),
+                        'feels_like': round(data['main']['feels_like']),
+                        'humidity': data['main']['humidity'],
+                        'pressure': data['main']['pressure'],
+                        'wind_speed': data['wind']['speed'],
+                        'description': data['weather'][0]['description'].title(),
+                        'icon': data['weather'][0]['icon'],
+                        'temp_min': round(data['main']['temp_min']),
+                        'temp_max': round(data['main']['temp_max']),
+                    }
+                elif response.status_code == 401:
+                    error = 'Invalid API key. Please check your OpenWeatherMap API key in settings.py'
+                elif response.status_code == 404:
+                    error = f'City "{city}" not found. Try: Kathmandu, Delhi, Mumbai, London, New York'
+                else:
+                    error = f'Error: {data.get("message", "Unable to fetch weather data")}'
+            except requests.exceptions.Timeout:
+                error = 'Request timeout. Please try again.'
+            except requests.exceptions.ConnectionError:
+                error = 'Connection error. Please check your internet connection.'
+            except Exception as e:
+                error = f'Error: {str(e)}'
+        else:
+            error = 'Please enter a city name.'
+    
+    return render(request, 'weather.html', {'weather_data': weather_data, 'error': error})

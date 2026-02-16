@@ -22,4 +22,7 @@ urlpatterns = [
     # Customer URLs
     path('customer/marketplace/', views.customer_marketplace, name='customer_marketplace'),
     path('customer/order/<int:pk>/', views.order_from_supplier, name='order_from_supplier'),
+    
+    # Weather URL
+    path('weather/', views.weather_view, name='weather'),
 ]
