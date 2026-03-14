@@ -169,7 +169,19 @@ def dashboard(request):
     
     if user_profile.role == 'farmer':
         vegetables = Vegetable.objects.filter(farmer=request.user)
-        context['vegetables'] = vegetables
+        total_vegetables = vegetables.count()
+        available_vegetables = vegetables.filter(available=True).count()
+        sold_out = vegetables.filter(available=False).count()
+        total_earnings = SupplierPurchase.objects.filter(vegetable__farmer=request.user).aggregate(total=Sum('total_price'))['total'] or 0
+        recent_purchases = SupplierPurchase.objects.filter(vegetable__farmer=request.user).order_by('-purchased_at')[:5]
+        context.update({
+            'vegetables': vegetables,
+            'total_vegetables': total_vegetables,
+            'available_vegetables': available_vegetables,
+            'sold_out': sold_out,
+            'total_earnings': total_earnings,
+            'recent_purchases': recent_purchases,
+        })
         return render(request, 'dashboard/farmer_dashboard.html', context)
     elif user_profile.role == 'expert':
         return render(request, 'dashboard/expert_dashboard.html', context)
