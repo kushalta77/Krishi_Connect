@@ -8,70 +8,73 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-size: 16px; }
+    </style>
 </head>
 <body class="bg-gray-50">
 <div class="flex h-screen bg-gray-50 overflow-hidden">
 
-    <!-- ── Sidebar ─────────────────────────────────────────────────────── -->
-    <aside class="w-64 bg-gradient-to-b from-green-900 via-green-800 to-green-700 text-white flex flex-col shadow-2xl flex-shrink-0">
+    <!-- ── Sidebar ──────────────────────────────────────────────────────── -->
+    <aside class="w-72 bg-gradient-to-b from-green-900 via-green-800 to-green-700 text-white flex flex-col shadow-2xl flex-shrink-0">
 
         <!-- Brand -->
-        <div class="px-6 py-5 border-b border-green-600/50">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-white/15 rounded-xl flex items-center justify-center">
-                    <i class="fas fa-seedling text-xl text-green-200"></i>
+        <div class="px-6 py-6 border-b border-green-600/50">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-white/15 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-seedling text-2xl text-green-200"></i>
                 </div>
                 <div>
-                    <p class="font-bold text-base leading-tight">Krishi Connect</p>
-                    <p class="text-green-300 text-xs">Farmer Portal</p>
+                    <p class="font-bold text-xl leading-tight">Krishi Connect</p>
+                    <p class="text-green-300 text-sm mt-0.5">Farmer Portal</p>
                 </div>
             </div>
         </div>
 
         <!-- Profile Card -->
-        <div class="mx-4 my-4 bg-white/10 rounded-2xl p-4 border border-white/10">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full flex items-center justify-center text-lg font-bold text-white shadow-lg">
+        <div class="mx-4 my-5 bg-white/10 rounded-2xl p-4 border border-white/10">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg flex-shrink-0">
                     {{ user.first_name|first|upper }}
                 </div>
                 <div class="flex-1 min-w-0">
-                    <p class="font-semibold text-sm truncate">{{ user.first_name }} {{ user.last_name }}</p>
-                    <span class="inline-flex items-center gap-1 text-xs bg-green-400/20 text-green-200 px-2 py-0.5 rounded-full mt-0.5">
-                        <i class="fas fa-circle text-green-400" style="font-size:6px"></i> Active Farmer
+                    <p class="font-bold text-base truncate">{{ user.first_name }} {{ user.last_name }}</p>
+                    <span class="inline-flex items-center gap-1.5 text-sm bg-green-400/20 text-green-200 px-2.5 py-0.5 rounded-full mt-1">
+                        <i class="fas fa-circle text-green-400" style="font-size:7px"></i> Active Farmer
                     </span>
                 </div>
             </div>
         </div>
 
         <!-- Nav -->
-        <nav class="flex-1 px-3 space-y-1 overflow-y-auto pb-4">
-            <p class="text-green-400 text-xs font-semibold uppercase tracking-widest px-3 py-2">Main Menu</p>
+        <nav class="flex-1 px-4 space-y-1 overflow-y-auto pb-4">
+            <p class="text-green-400 text-xs font-bold uppercase tracking-widest px-3 py-2">Main Menu</p>
 
-            <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-3 py-2.5 bg-white/20 rounded-xl text-white font-medium text-sm">
-                <span class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-th-large text-sm"></i></span>
+            <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-4 py-3 bg-white/20 rounded-xl text-white font-semibold text-base">
+                <span class="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-th-large"></i></span>
                 Dashboard
             </a>
-            <a href="{% url 'add_product' %}" class="flex items-center gap-3 px-3 py-2.5 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-sm group">
-                <span class="w-8 h-8 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-plus-circle text-sm"></i></span>
+            <a href="{% url 'add_product' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-base group">
+                <span class="w-9 h-9 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-plus-circle"></i></span>
                 List New Product
             </a>
-            <a href="{% url 'my_products' %}" class="flex items-center gap-3 px-3 py-2.5 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-sm group">
-                <span class="w-8 h-8 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-boxes text-sm"></i></span>
+            <a href="{% url 'my_products' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-base group">
+                <span class="w-9 h-9 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-boxes"></i></span>
                 My Products
             </a>
-            <a href="{% url 'marketplace' %}" class="flex items-center gap-3 px-3 py-2.5 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-sm group">
-                <span class="w-8 h-8 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-store text-sm"></i></span>
+            <a href="{% url 'marketplace' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-base group">
+                <span class="w-9 h-9 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-store"></i></span>
                 Marketplace
             </a>
 
-            <p class="text-green-400 text-xs font-semibold uppercase tracking-widest px-3 py-2 mt-3">Tools</p>
+            <p class="text-green-400 text-xs font-bold uppercase tracking-widest px-3 py-2 mt-4">Tools</p>
 
-            <a href="{% url 'weather' %}" class="flex items-center gap-3 px-3 py-2.5 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-sm group">
-                <span class="w-8 h-8 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-cloud-sun text-sm"></i></span>
+            <a href="{% url 'weather' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-base group">
+                <span class="w-9 h-9 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-cloud-sun"></i></span>
                 Weather
             </a>
-            <a href="{% url 'home' %}" class="flex items-center gap-3 px-3 py-2.5 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-sm group">
-                <span class="w-8 h-8 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-home text-sm"></i></span>
+            <a href="{% url 'home' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-base group">
+                <span class="w-9 h-9 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-home"></i></span>
                 Home
             </a>
         </nav>
@@ -80,30 +83,30 @@
         <div class="p-4 border-t border-green-600/50">
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
-                <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 bg-red-500/20 hover:bg-red-500/40 rounded-xl text-red-200 hover:text-white transition-all text-sm">
-                    <span class="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center"><i class="fas fa-sign-out-alt text-sm"></i></span>
+                <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 bg-red-500/20 hover:bg-red-500/40 rounded-xl text-red-200 hover:text-white transition-all text-base font-medium">
+                    <span class="w-9 h-9 bg-red-500/20 rounded-lg flex items-center justify-center"><i class="fas fa-sign-out-alt"></i></span>
                     Logout
                 </button>
             </form>
         </div>
     </aside>
 
-    <!-- ── Main Content ────────────────────────────────────────────────── -->
+    <!-- ── Main Content ──────────────────────────────────────────────────── -->
     <div class="flex-1 flex flex-col overflow-hidden">
 
         <!-- Top Bar -->
-        <header class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between shadow-sm flex-shrink-0">
+        <header class="bg-white border-b border-gray-100 px-8 py-5 flex items-center justify-between shadow-sm flex-shrink-0">
             <div>
-                <h1 class="text-xl font-bold text-gray-800">
+                <h1 class="text-2xl font-bold text-gray-800">
                     Good day, <span class="text-green-600">{{ user.first_name }}</span>! 🌾
                 </h1>
-                <p class="text-gray-400 text-sm">Here's your farm overview for today</p>
+                <p class="text-gray-400 text-base mt-0.5">Here's your farm overview for today</p>
             </div>
             <div class="flex items-center gap-3">
-                <a href="{% url 'weather' %}" class="flex items-center gap-2 bg-sky-50 hover:bg-sky-100 text-sky-600 px-4 py-2 rounded-xl text-sm font-medium transition-all border border-sky-100">
+                <a href="{% url 'weather' %}" class="flex items-center gap-2 bg-sky-50 hover:bg-sky-100 text-sky-600 px-5 py-2.5 rounded-xl text-base font-medium transition-all border border-sky-100">
                     <i class="fas fa-cloud-sun"></i> Weather
                 </a>
-                <a href="{% url 'add_product' %}" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm shadow-green-200">
+                <a href="{% url 'add_product' %}" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-xl text-base font-semibold transition-all shadow-sm shadow-green-200">
                     <i class="fas fa-plus"></i> List Product
                 </a>
             </div>
@@ -114,130 +117,126 @@
 
             <!-- Flash Messages -->
             {% for message in messages %}
-            <div class="flex items-center gap-3 p-4 rounded-xl border {% if message.tags == 'success' %}bg-green-50 border-green-200 text-green-700{% else %}bg-red-50 border-red-200 text-red-700{% endif %}">
-                <i class="fas {% if message.tags == 'success' %}fa-check-circle text-green-500{% else %}fa-exclamation-circle text-red-500{% endif %}"></i>
+            <div class="flex items-center gap-3 p-4 rounded-xl border text-base {% if message.tags == 'success' %}bg-green-50 border-green-200 text-green-700{% else %}bg-red-50 border-red-200 text-red-700{% endif %}">
+                <i class="fas {% if message.tags == 'success' %}fa-check-circle text-green-500{% else %}fa-exclamation-circle text-red-500{% endif %} text-lg"></i>
                 {{ message }}
             </div>
             {% endfor %}
 
-            <!-- ── Stats Row ──────────────────────────────────────────── -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- ── Stats Row ────────────────────────────────────────────── -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
 
-                <!-- Earnings -->
-                <div class="relative bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-5 text-white overflow-hidden shadow-lg shadow-green-200">
-                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full"></div>
-                    <div class="absolute -right-2 -bottom-6 w-16 h-16 bg-white/10 rounded-full"></div>
-                    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-3">
-                        <i class="fas fa-rupee-sign text-lg"></i>
+                <div class="relative bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 text-white overflow-hidden shadow-lg shadow-green-200">
+                    <div class="absolute -right-4 -top-4 w-28 h-28 bg-white/10 rounded-full"></div>
+                    <div class="absolute -right-2 -bottom-6 w-20 h-20 bg-white/10 rounded-full"></div>
+                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-rupee-sign text-xl"></i>
                     </div>
-                    <p class="text-2xl font-bold">₹{{ total_earnings|floatformat:0 }}</p>
-                    <p class="text-green-100 text-xs mt-1 font-medium">Total Earnings</p>
-                    <div class="mt-3 flex items-center gap-1 text-green-200 text-xs">
+                    <p class="text-3xl font-bold">₹{{ total_earnings|floatformat:0 }}</p>
+                    <p class="text-green-100 text-base mt-1 font-medium">Total Earnings</p>
+                    <div class="mt-3 flex items-center gap-1.5 text-green-200 text-sm">
                         <i class="fas fa-arrow-up"></i> From all sales
                     </div>
                 </div>
 
-                <!-- Total Products -->
-                <div class="relative bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-5 text-white overflow-hidden shadow-lg shadow-blue-200">
-                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full"></div>
-                    <div class="absolute -right-2 -bottom-6 w-16 h-16 bg-white/10 rounded-full"></div>
-                    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-3">
-                        <i class="fas fa-boxes text-lg"></i>
+                <div class="relative bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-6 text-white overflow-hidden shadow-lg shadow-blue-200">
+                    <div class="absolute -right-4 -top-4 w-28 h-28 bg-white/10 rounded-full"></div>
+                    <div class="absolute -right-2 -bottom-6 w-20 h-20 bg-white/10 rounded-full"></div>
+                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-boxes text-xl"></i>
                     </div>
-                    <p class="text-2xl font-bold">{{ total_vegetables }}</p>
-                    <p class="text-blue-100 text-xs mt-1 font-medium">Total Listed</p>
-                    <div class="mt-3 flex items-center gap-1 text-blue-200 text-xs">
+                    <p class="text-3xl font-bold">{{ total_vegetables }}</p>
+                    <p class="text-blue-100 text-base mt-1 font-medium">Total Listed</p>
+                    <div class="mt-3 flex items-center gap-1.5 text-blue-200 text-sm">
                         <i class="fas fa-layer-group"></i> All products
                     </div>
                 </div>
 
-                <!-- Available -->
-                <div class="relative bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl p-5 text-white overflow-hidden shadow-lg shadow-teal-200">
-                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full"></div>
-                    <div class="absolute -right-2 -bottom-6 w-16 h-16 bg-white/10 rounded-full"></div>
-                    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-3">
-                        <i class="fas fa-check-circle text-lg"></i>
+                <div class="relative bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl p-6 text-white overflow-hidden shadow-lg shadow-teal-200">
+                    <div class="absolute -right-4 -top-4 w-28 h-28 bg-white/10 rounded-full"></div>
+                    <div class="absolute -right-2 -bottom-6 w-20 h-20 bg-white/10 rounded-full"></div>
+                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-check-circle text-xl"></i>
                     </div>
-                    <p class="text-2xl font-bold">{{ available_vegetables }}</p>
-                    <p class="text-teal-100 text-xs mt-1 font-medium">In Stock</p>
-                    <div class="mt-3 flex items-center gap-1 text-teal-200 text-xs">
-                        <i class="fas fa-circle text-teal-300" style="font-size:8px"></i> Active listings
+                    <p class="text-3xl font-bold">{{ available_vegetables }}</p>
+                    <p class="text-teal-100 text-base mt-1 font-medium">In Stock</p>
+                    <div class="mt-3 flex items-center gap-1.5 text-teal-200 text-sm">
+                        <i class="fas fa-circle text-teal-300" style="font-size:9px"></i> Active listings
                     </div>
                 </div>
 
-                <!-- Sold Out -->
-                <div class="relative bg-gradient-to-br from-orange-500 to-rose-500 rounded-2xl p-5 text-white overflow-hidden shadow-lg shadow-orange-200">
-                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full"></div>
-                    <div class="absolute -right-2 -bottom-6 w-16 h-16 bg-white/10 rounded-full"></div>
-                    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-3">
-                        <i class="fas fa-times-circle text-lg"></i>
+                <div class="relative bg-gradient-to-br from-orange-500 to-rose-500 rounded-2xl p-6 text-white overflow-hidden shadow-lg shadow-orange-200">
+                    <div class="absolute -right-4 -top-4 w-28 h-28 bg-white/10 rounded-full"></div>
+                    <div class="absolute -right-2 -bottom-6 w-20 h-20 bg-white/10 rounded-full"></div>
+                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-times-circle text-xl"></i>
                     </div>
-                    <p class="text-2xl font-bold">{{ sold_out }}</p>
-                    <p class="text-orange-100 text-xs mt-1 font-medium">Sold Out</p>
-                    <div class="mt-3 flex items-center gap-1 text-orange-200 text-xs">
+                    <p class="text-3xl font-bold">{{ sold_out }}</p>
+                    <p class="text-orange-100 text-base mt-1 font-medium">Sold Out</p>
+                    <div class="mt-3 flex items-center gap-1.5 text-orange-200 text-sm">
                         <i class="fas fa-redo"></i> Needs restock
                     </div>
                 </div>
             </div>
 
-            <!-- ── Main Grid ──────────────────────────────────────────── -->
+            <!-- ── Main Grid ────────────────────────────────────────────── -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-                <!-- Products Table (2/3 width) -->
+                <!-- Products Table -->
                 <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                    <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
                         <div>
-                            <h3 class="font-bold text-gray-800">My Listed Products</h3>
-                            <p class="text-gray-400 text-xs mt-0.5">Manage your vegetable listings</p>
+                            <h3 class="font-bold text-gray-800 text-lg">My Listed Products</h3>
+                            <p class="text-gray-400 text-sm mt-0.5">Manage your vegetable listings</p>
                         </div>
-                        <a href="{% url 'add_product' %}" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-all">
+                        <a href="{% url 'add_product' %}" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all">
                             <i class="fas fa-plus"></i> Add New
                         </a>
                     </div>
 
                     <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
+                        <table class="w-full">
                             <thead>
-                                <tr class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
-                                    <th class="px-6 py-3 text-left font-semibold">Product</th>
-                                    <th class="px-6 py-3 text-left font-semibold">Stock</th>
-                                    <th class="px-6 py-3 text-left font-semibold">Price</th>
-                                    <th class="px-6 py-3 text-left font-semibold">Status</th>
-                                    <th class="px-6 py-3 text-left font-semibold">Action</th>
+                                <tr class="bg-gray-50 text-gray-500 text-sm uppercase tracking-wider">
+                                    <th class="px-6 py-4 text-left font-semibold">Product</th>
+                                    <th class="px-6 py-4 text-left font-semibold">Stock</th>
+                                    <th class="px-6 py-4 text-left font-semibold">Price</th>
+                                    <th class="px-6 py-4 text-left font-semibold">Status</th>
+                                    <th class="px-6 py-4 text-left font-semibold">Action</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-50">
+                            <tbody class="divide-y divide-gray-100">
                                 {% for veg in vegetables %}
                                 <tr class="hover:bg-gray-50/70 transition-colors">
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-3">
-                                            <div class="w-9 h-9 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                                <i class="fas fa-leaf text-green-600 text-sm"></i>
+                                            <div class="w-11 h-11 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                                <i class="fas fa-leaf text-green-600 text-base"></i>
                                             </div>
                                             <div>
-                                                <p class="font-semibold text-gray-800">{{ veg.name }}</p>
-                                                <p class="text-gray-400 text-xs">{{ veg.created_at|date:"d M Y" }}</p>
+                                                <p class="font-semibold text-gray-800 text-base">{{ veg.name }}</p>
+                                                <p class="text-gray-400 text-sm">{{ veg.created_at|date:"d M Y" }}</p>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 text-gray-600">{{ veg.quantity }} {{ veg.unit }}</td>
-                                    <td class="px-6 py-4 font-semibold text-gray-800">₹{{ veg.price_per_unit }}/{{ veg.unit }}</td>
+                                    <td class="px-6 py-4 text-gray-600 text-base">{{ veg.quantity }} {{ veg.unit }}</td>
+                                    <td class="px-6 py-4 font-semibold text-gray-800 text-base">₹{{ veg.price_per_unit }}/{{ veg.unit }}</td>
                                     <td class="px-6 py-4">
                                         {% if veg.available %}
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-full">
-                                            <i class="fas fa-circle" style="font-size:6px"></i> Available
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold bg-green-100 text-green-700 rounded-full">
+                                            <i class="fas fa-circle" style="font-size:7px"></i> Available
                                         </span>
                                         {% else %}
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold bg-red-100 text-red-600 rounded-full">
-                                            <i class="fas fa-circle" style="font-size:6px"></i> Sold Out
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold bg-red-100 text-red-600 rounded-full">
+                                            <i class="fas fa-circle" style="font-size:7px"></i> Sold Out
                                         </span>
                                         {% endif %}
                                     </td>
                                     <td class="px-6 py-4">
                                         <a href="{% url 'delete_vegetable' veg.pk %}"
                                            onclick="return confirm('Delete {{ veg.name }}?')"
-                                           class="w-8 h-8 bg-red-50 hover:bg-red-100 text-red-400 hover:text-red-600 rounded-lg flex items-center justify-center transition-all">
-                                            <i class="fas fa-trash-alt text-xs"></i>
+                                           class="w-9 h-9 bg-red-50 hover:bg-red-100 text-red-400 hover:text-red-600 rounded-lg flex items-center justify-center transition-all">
+                                            <i class="fas fa-trash-alt text-sm"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -245,11 +244,11 @@
                                 <tr>
                                     <td colspan="5" class="px-6 py-16 text-center">
                                         <div class="flex flex-col items-center gap-3">
-                                            <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center">
-                                                <i class="fas fa-seedling text-green-300 text-3xl"></i>
+                                            <div class="w-20 h-20 bg-green-50 rounded-2xl flex items-center justify-center">
+                                                <i class="fas fa-seedling text-green-300 text-4xl"></i>
                                             </div>
-                                            <p class="text-gray-500 font-medium">No products listed yet</p>
-                                            <a href="{% url 'add_product' %}" class="text-green-600 hover:text-green-800 text-sm font-semibold hover:underline">
+                                            <p class="text-gray-500 font-semibold text-lg">No products listed yet</p>
+                                            <a href="{% url 'add_product' %}" class="text-green-600 hover:text-green-800 text-base font-semibold hover:underline">
                                                 + List your first product
                                             </a>
                                         </div>
@@ -261,99 +260,99 @@
                     </div>
                 </div>
 
-                <!-- Right Column (1/3 width) -->
+                <!-- Right Column -->
                 <div class="space-y-5">
 
                     <!-- Quick Actions -->
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-                        <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                            <span class="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-bolt text-green-600 text-xs"></i>
+                        <h3 class="font-bold text-gray-800 text-lg mb-4 flex items-center gap-2">
+                            <span class="w-7 h-7 bg-green-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-bolt text-green-600 text-sm"></i>
                             </span>
                             Quick Actions
                         </h3>
-                        <div class="space-y-2">
-                            <a href="{% url 'add_product' %}" class="flex items-center gap-3 p-3 bg-green-50 hover:bg-green-100 rounded-xl transition-all group">
-                                <div class="w-9 h-9 bg-green-500 group-hover:bg-green-600 rounded-xl flex items-center justify-center transition-all shadow-sm shadow-green-200">
-                                    <i class="fas fa-plus text-white text-sm"></i>
+                        <div class="space-y-3">
+                            <a href="{% url 'add_product' %}" class="flex items-center gap-3 p-3.5 bg-green-50 hover:bg-green-100 rounded-xl transition-all group">
+                                <div class="w-11 h-11 bg-green-500 group-hover:bg-green-600 rounded-xl flex items-center justify-center transition-all shadow-sm shadow-green-200 flex-shrink-0">
+                                    <i class="fas fa-plus text-white text-base"></i>
                                 </div>
                                 <div>
-                                    <p class="font-semibold text-gray-800 text-sm">List New Product</p>
-                                    <p class="text-gray-400 text-xs">Add to marketplace</p>
+                                    <p class="font-semibold text-gray-800 text-base">List New Product</p>
+                                    <p class="text-gray-400 text-sm">Add to marketplace</p>
                                 </div>
-                                <i class="fas fa-chevron-right text-gray-300 ml-auto text-xs"></i>
+                                <i class="fas fa-chevron-right text-gray-300 ml-auto"></i>
                             </a>
 
-                            <a href="{% url 'marketplace' %}" class="flex items-center gap-3 p-3 bg-purple-50 hover:bg-purple-100 rounded-xl transition-all group">
-                                <div class="w-9 h-9 bg-purple-500 group-hover:bg-purple-600 rounded-xl flex items-center justify-center transition-all shadow-sm shadow-purple-200">
-                                    <i class="fas fa-store text-white text-sm"></i>
+                            <a href="{% url 'marketplace' %}" class="flex items-center gap-3 p-3.5 bg-purple-50 hover:bg-purple-100 rounded-xl transition-all group">
+                                <div class="w-11 h-11 bg-purple-500 group-hover:bg-purple-600 rounded-xl flex items-center justify-center transition-all shadow-sm shadow-purple-200 flex-shrink-0">
+                                    <i class="fas fa-store text-white text-base"></i>
                                 </div>
                                 <div>
-                                    <p class="font-semibold text-gray-800 text-sm">View Marketplace</p>
-                                    <p class="text-gray-400 text-xs">Browse all products</p>
+                                    <p class="font-semibold text-gray-800 text-base">View Marketplace</p>
+                                    <p class="text-gray-400 text-sm">Browse all products</p>
                                 </div>
-                                <i class="fas fa-chevron-right text-gray-300 ml-auto text-xs"></i>
+                                <i class="fas fa-chevron-right text-gray-300 ml-auto"></i>
                             </a>
 
-                            <a href="{% url 'weather' %}" class="flex items-center gap-3 p-3 bg-sky-50 hover:bg-sky-100 rounded-xl transition-all group">
-                                <div class="w-9 h-9 bg-sky-500 group-hover:bg-sky-600 rounded-xl flex items-center justify-center transition-all shadow-sm shadow-sky-200">
-                                    <i class="fas fa-cloud-sun text-white text-sm"></i>
+                            <a href="{% url 'weather' %}" class="flex items-center gap-3 p-3.5 bg-sky-50 hover:bg-sky-100 rounded-xl transition-all group">
+                                <div class="w-11 h-11 bg-sky-500 group-hover:bg-sky-600 rounded-xl flex items-center justify-center transition-all shadow-sm shadow-sky-200 flex-shrink-0">
+                                    <i class="fas fa-cloud-sun text-white text-base"></i>
                                 </div>
                                 <div>
-                                    <p class="font-semibold text-gray-800 text-sm">Check Weather</p>
-                                    <p class="text-gray-400 text-xs">Plan your farming</p>
+                                    <p class="font-semibold text-gray-800 text-base">Check Weather</p>
+                                    <p class="text-gray-400 text-sm">Plan your farming</p>
                                 </div>
-                                <i class="fas fa-chevron-right text-gray-300 ml-auto text-xs"></i>
+                                <i class="fas fa-chevron-right text-gray-300 ml-auto"></i>
                             </a>
                         </div>
                     </div>
 
                     <!-- Recent Sales -->
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-                        <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                            <span class="w-6 h-6 bg-orange-100 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-receipt text-orange-500 text-xs"></i>
+                        <h3 class="font-bold text-gray-800 text-lg mb-4 flex items-center gap-2">
+                            <span class="w-7 h-7 bg-orange-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-receipt text-orange-500 text-sm"></i>
                             </span>
                             Recent Sales
                         </h3>
-                        <div class="space-y-2">
+                        <div class="space-y-3">
                             {% for purchase in recent_purchases %}
-                            <div class="flex items-center gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all">
-                                <div class="w-9 h-9 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                    <i class="fas fa-leaf text-green-600 text-sm"></i>
+                            <div class="flex items-center gap-3 p-3.5 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all">
+                                <div class="w-11 h-11 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-leaf text-green-600 text-base"></i>
                                 </div>
                                 <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-semibold text-gray-800 truncate">{{ purchase.vegetable.name }}</p>
-                                    <p class="text-xs text-gray-400">{{ purchase.purchased_at|date:"d M, H:i" }}</p>
+                                    <p class="text-base font-semibold text-gray-800 truncate">{{ purchase.vegetable.name }}</p>
+                                    <p class="text-sm text-gray-400">{{ purchase.purchased_at|date:"d M, H:i" }}</p>
                                 </div>
-                                <span class="text-green-600 font-bold text-sm flex-shrink-0">₹{{ purchase.total_price }}</span>
+                                <span class="text-green-600 font-bold text-base flex-shrink-0">₹{{ purchase.total_price }}</span>
                             </div>
                             {% empty %}
                             <div class="text-center py-8">
-                                <div class="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                                    <i class="fas fa-shopping-bag text-gray-300 text-xl"></i>
+                                <div class="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                                    <i class="fas fa-shopping-bag text-gray-300 text-2xl"></i>
                                 </div>
-                                <p class="text-gray-400 text-sm">No sales yet</p>
-                                <p class="text-gray-300 text-xs mt-1">List products to start selling</p>
+                                <p class="text-gray-400 text-base font-medium">No sales yet</p>
+                                <p class="text-gray-300 text-sm mt-1">List products to start selling</p>
                             </div>
                             {% endfor %}
                         </div>
                     </div>
 
-                    <!-- Farming Tip Banner -->
+                    <!-- Farming Tip -->
                     <div class="relative bg-gradient-to-br from-green-700 to-teal-700 rounded-2xl p-5 text-white overflow-hidden">
                         <div class="absolute -right-6 -top-6 w-28 h-28 bg-white/10 rounded-full"></div>
                         <div class="absolute -right-2 -bottom-8 w-20 h-20 bg-white/10 rounded-full"></div>
                         <div class="relative">
-                            <div class="flex items-center gap-2 mb-2">
-                                <i class="fas fa-lightbulb text-yellow-300 text-lg"></i>
-                                <span class="font-bold text-sm">Today's Tip</span>
+                            <div class="flex items-center gap-2 mb-3">
+                                <i class="fas fa-lightbulb text-yellow-300 text-xl"></i>
+                                <span class="font-bold text-base">Today's Tip</span>
                             </div>
-                            <p class="text-green-100 text-xs leading-relaxed">
+                            <p class="text-green-100 text-sm leading-relaxed">
                                 💧 Water crops early morning to reduce evaporation. Check the weather forecast before irrigating to save water.
                             </p>
-                            <a href="{% url 'weather' %}" class="mt-3 inline-flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white text-xs px-3 py-1.5 rounded-lg transition-all font-medium">
-                                Check Weather <i class="fas fa-arrow-right text-xs"></i>
+                            <a href="{% url 'weather' %}" class="mt-4 inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white text-sm px-4 py-2 rounded-lg transition-all font-medium">
+                                Check Weather <i class="fas fa-arrow-right"></i>
                             </a>
                         </div>
                     </div>
@@ -361,36 +360,35 @@
                 </div>
             </div>
 
-            <!-- ── Stock Progress Bars ─────────────────────────────────── -->
+            <!-- ── Stock Overview ───────────────────────────────────────── -->
             {% if vegetables %}
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <div class="flex items-center justify-between mb-5">
                     <div>
-                        <h3 class="font-bold text-gray-800">Stock Overview</h3>
-                        <p class="text-gray-400 text-xs mt-0.5">Availability at a glance</p>
+                        <h3 class="font-bold text-gray-800 text-lg">Stock Overview</h3>
+                        <p class="text-gray-400 text-sm mt-0.5">Availability at a glance</p>
                     </div>
-                    <a href="{% url 'my_products' %}" class="text-green-600 hover:text-green-800 text-xs font-semibold hover:underline">View All →</a>
+                    <a href="{% url 'my_products' %}" class="text-green-600 hover:text-green-800 text-sm font-semibold hover:underline">View All →</a>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {% for veg in vegetables|slice:":6" %}
                     <div class="p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all">
                         <div class="flex items-center justify-between mb-2">
                             <div class="flex items-center gap-2">
-                                <div class="w-7 h-7 bg-green-100 rounded-lg flex items-center justify-center">
-                                    <i class="fas fa-leaf text-green-600 text-xs"></i>
+                                <div class="w-9 h-9 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-leaf text-green-600 text-sm"></i>
                                 </div>
-                                <span class="text-sm font-semibold text-gray-700 truncate max-w-[100px]">{{ veg.name }}</span>
+                                <span class="text-base font-semibold text-gray-700 truncate max-w-[110px]">{{ veg.name }}</span>
                             </div>
-                            <span class="text-xs font-bold {% if veg.available %}text-green-600{% else %}text-red-500{% endif %}">
+                            <span class="text-sm font-bold {% if veg.available %}text-green-600{% else %}text-red-500{% endif %}">
                                 {% if veg.available %}In Stock{% else %}Out{% endif %}
                             </span>
                         </div>
-                        <div class="flex items-center justify-between text-xs text-gray-500 mt-1">
+                        <div class="flex items-center justify-between text-sm text-gray-500 mt-2">
                             <span>{{ veg.quantity }} {{ veg.unit }}</span>
                             <span class="font-semibold text-gray-700">₹{{ veg.price_per_unit }}</span>
                         </div>
-                        <!-- Visual stock bar -->
-                        <div class="mt-2 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                        <div class="mt-2 h-2 bg-gray-200 rounded-full overflow-hidden">
                             <div class="h-full rounded-full {% if veg.available %}bg-gradient-to-r from-green-400 to-emerald-500{% else %}bg-red-300{% endif %}"
                                  style="width: {% if veg.available %}70%{% else %}5%{% endif %}"></div>
                         </div>
