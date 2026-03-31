@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Product | Krishi Connect{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 py-12 px-4">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-lg shadow-md p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Edit Product</h2>
+
+            <form method="post" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %}
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                    <select name="category" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        {% for val, label in vegetable.CATEGORY_CHOICES %}
+                        <option value="{{ val }}" {% if vegetable.category == val %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
+                    <input type="text" name="name" value="{{ vegetable.name }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
+                        <input type="number" step="0.01" name="quantity" value="{{ vegetable.quantity }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Unit</label>
+                        <select name="unit" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <option value="kg" {% if vegetable.unit == 'kg' %}selected{% endif %}>Kilogram (kg)</option>
+                            <option value="ton" {% if vegetable.unit == 'ton' %}selected{% endif %}>Ton</option>
+                            <option value="quintal" {% if vegetable.unit == 'quintal' %}selected{% endif %}>Quintal</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Price per Unit (₹)</label>
+                    <input type="number" step="0.01" name="price_per_unit" value="{{ vegetable.price_per_unit }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <textarea name="description" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">{{ vegetable.description }}</textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Image</label>
+                    {% if vegetable.image %}
+                    <img src="{{ vegetable.image.url }}" alt="{{ vegetable.name }}" class="w-24 h-24 object-cover rounded-lg mb-2">
+                    {% endif %}
+                    <input type="file" name="image" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" name="available" id="available" {% if vegetable.available %}checked{% endif %} class="w-4 h-4 text-green-600 rounded">
+                    <label for="available" class="text-sm font-medium text-gray-700">Mark as Available</label>
+                </div>
+
+                <div class="flex space-x-4">
+                    <button type="submit" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-lg transition-colors">
+                        <i class="fas fa-save mr-2"></i>Save Changes
+                    </button>
+                    <a href="{% url 'dashboard' %}" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-3 rounded-lg text-center transition-colors">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

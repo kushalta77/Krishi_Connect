@@ -12,10 +12,21 @@ urlpatterns = [
     path('solutions/', views.solutions, name='solutions'),
     
     # Farmer URLs
+    path('farmer/products/', views.farmer_products, name='farmer_products'),
+    path('farmer/stock/', views.farmer_stock, name='farmer_stock'),
     path('add-vegetable/', views.add_vegetable, name='add_vegetable'),
+    path('edit-vegetable/<int:pk>/', views.edit_vegetable, name='edit_vegetable'),
+    path('view-vegetable/<int:pk>/', views.view_vegetable, name='view_vegetable'),
     path('delete-vegetable/<int:pk>/', views.delete_vegetable, name='delete_vegetable'),
     
     # Supplier URLs
+    path('marketplace/', views.public_marketplace, name='public_marketplace'),
+    path('marketplace/product/<int:pk>/', views.product_detail, name='product_detail'),
+    path('marketplace/order/<int:pk>/', views.place_order, name='place_order'),
+    path('cart/', views.cart_view, name='cart'),
+    path('cart/add/<int:pk>/', views.add_to_cart, name='add_to_cart'),
+    path('cart/remove/<int:pk>/', views.remove_from_cart, name='remove_from_cart'),
+    path('cart/checkout/', views.checkout_cart, name='checkout_cart'),
     path('supplier/marketplace/', views.supplier_marketplace, name='supplier_marketplace'),
     path('supplier/purchase/<int:pk>/', views.purchase_from_farmer, name='purchase_from_farmer'),
     

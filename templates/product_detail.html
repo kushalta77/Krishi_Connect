@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ vegetable.name }} | Krishi Connect{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-12 px-4">
+    <div class="max-w-4xl mx-auto">
+
+        <a href="{% url 'public_marketplace' %}" class="inline-flex items-center gap-2 text-gray-500 hover:text-green-600 text-sm font-medium mb-8 transition-colors">
+            <i class="fas fa-arrow-left"></i> Back to Marketplace
+        </a>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="md:flex">
+
+                <!-- Image -->
+                <div class="md:w-2/5 flex-shrink-0">
+                    {% if vegetable.image %}
+                    <img src="{{ vegetable.image.url }}" alt="{{ vegetable.name }}" class="w-full h-72 md:h-full object-cover">
+                    {% else %}
+                    <div class="w-full h-72 md:h-full bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center">
+                        <i class="fas fa-leaf text-green-400 text-8xl"></i>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Details -->
+                <div class="md:w-3/5 p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700 capitalize">{{ vegetable.category }}</span>
+                            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-50 text-emerald-600">In Stock</span>
+                        </div>
+                        <h1 class="text-3xl font-bold text-gray-800 mt-2">{{ vegetable.name }}</h1>
+                        <p class="text-gray-400 text-sm mt-1">By {{ vegetable.farmer.first_name }} {{ vegetable.farmer.last_name }}</p>
+
+                        <div class="mt-6 space-y-3">
+                            <div class="flex justify-between border-b border-gray-50 pb-3">
+                                <span class="text-gray-500">Price</span>
+                                <span class="font-bold text-green-600 text-xl">&#8377;{{ vegetable.price_per_unit }} / {{ vegetable.unit }}</span>
+                            </div>
+                            <div class="flex justify-between border-b border-gray-50 pb-3">
+                                <span class="text-gray-500">Available Stock</span>
+                                <span class="font-semibold text-gray-700">{{ vegetable.quantity }} {{ vegetable.unit }}</span>
+                            </div>
+                            {% if vegetable.description %}
+                            <div class="pt-1">
+                                <p class="text-gray-500 text-sm leading-relaxed">{{ vegetable.description }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="mt-8">
+                        {% for message in messages %}
+                        <div class="mb-4 p-3 rounded-xl text-sm {% if message.tags == 'success' %}bg-green-50 text-green-700{% else %}bg-red-50 text-red-700{% endif %}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+
+                        {% if user.is_authenticated and user.userprofile.role == 'customer' %}
+
+                        <!-- Shared quantity input -->
+                        <input type="number" id="shared-qty" min="0.1" max="{{ vegetable.quantity }}" step="0.1"
+                            placeholder="Enter quantity ({{ vegetable.unit }})"
+                            class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-400 mb-3">
+
+                        <div class="flex gap-3">
+                            <!-- Buy Now -->
+                            <form method="post" action="{% url 'place_order' vegetable.pk %}" class="flex-1" id="buy-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="quantity" id="buy-qty">
+                                <button type="submit" onclick="document.getElementById('buy-qty').value = document.getElementById('shared-qty').value"
+                                    class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition-colors">
+                                    <i class="fas fa-shopping-cart mr-2"></i>Buy Now
+                                </button>
+                            </form>
+
+                            <!-- Add to Cart -->
+                            <form method="post" action="{% url 'add_to_cart' vegetable.pk %}" class="flex-1">
+                                {% csrf_token %}
+                                <input type="hidden" name="quantity" id="cart-qty">
+                                <button type="submit" onclick="document.getElementById('cart-qty').value = document.getElementById('shared-qty').value"
+                                    class="w-full border-2 border-green-600 text-green-600 hover:bg-green-50 font-semibold py-3 rounded-xl transition-colors">
+                                    <i class="fas fa-cart-plus mr-2"></i>Add to Cart
+                                </button>
+                            </form>
+                        </div>
+
+                        <a href="{% url 'cart' %}" class="block text-center text-sm text-gray-400 hover:text-green-600 mt-3 transition-colors">
+                            <i class="fas fa-shopping-bag mr-1"></i>View Cart
+                        </a>
+
+                        {% elif not user.is_authenticated %}
+                        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center">
+                            <p class="text-amber-700 text-sm font-medium mb-3">You must be logged in as a customer to buy</p>
+                            <a href="{% url 'login' %}?next={{ request.path }}" class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors text-sm">
+                                <i class="fas fa-sign-in-alt"></i> Login to Buy
+                            </a>
+                        </div>
+                        {% else %}
+                        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-center">
+                            <p class="text-gray-500 text-sm">Only customers can purchase products</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

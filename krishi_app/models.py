@@ -11,8 +11,16 @@ class UserProfile(models.Model):
         return f"{self.user.username} - {self.role}"
 
 class Vegetable(models.Model):
+    CATEGORY_CHOICES = [
+        ('vegetable', 'Vegetable'),
+        ('fruit', 'Fruit'),
+        ('grain', 'Grain'),
+        ('spice', 'Spice'),
+        ('other', 'Other'),
+    ]
     farmer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='vegetables')
     name = models.CharField(max_length=100)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='vegetable')
     quantity = models.DecimalField(max_digits=10, decimal_places=2)
     unit = models.CharField(max_length=20, choices=[('kg', 'Kilogram'), ('ton', 'Ton'), ('quintal', 'Quintal')])
     price_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
@@ -46,6 +54,21 @@ class SupplierInventory(models.Model):
     
     def __str__(self):
         return f"{self.vegetable_name} - {self.supplier.username}"
+
+class Cart(models.Model):
+    customer = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cart')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def total(self):
+        return sum(item.subtotal() for item in self.items.all())
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
+    vegetable = models.ForeignKey(Vegetable, on_delete=models.CASCADE)
+    quantity = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def subtotal(self):
+        return self.quantity * self.vegetable.price_per_unit
 
 class CustomerOrder(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')

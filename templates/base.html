@@ -9,7 +9,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-50 min-h-screen">
+    {% block header %}
     {% include 'components/header.html' %}
+    {% endblock %}
     
     <main class="flex-1">
         {% block content %}

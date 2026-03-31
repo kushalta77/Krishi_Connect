@@ -8,8 +8,9 @@ from django.core.exceptions import ValidationError
 import re
 import requests
 from django.conf import settings
-from .models import UserProfile, Vegetable, SupplierPurchase, SupplierInventory, CustomerOrder
-from django.db.models import Sum
+from .models import UserProfile, Vegetable, SupplierPurchase, SupplierInventory, CustomerOrder, Cart, CartItem
+from django.db.models import Sum, Avg
+from django.db import models
 
 def home(request):
     return render(request, 'home.html')
@@ -193,7 +194,11 @@ def dashboard(request):
         return render(request, 'dashboard/supplier_dashboard.html', context)
     elif user_profile.role == 'customer':
         orders = CustomerOrder.objects.filter(customer=request.user)
+        total_spent = orders.aggregate(total=Sum('total_price'))['total'] or 0
+        recommended = Vegetable.objects.filter(available=True).order_by('-created_at')[:3]
         context['orders'] = orders
+        context['total_spent'] = total_spent
+        context['recommended'] = recommended
         return render(request, 'dashboard/customer_dashboard.html', context)
     else:
         return render(request, 'dashboard.html', context)
@@ -210,6 +215,26 @@ def solutions(request):
 
 # Farmer Views
 @login_required
+def farmer_stock(request):
+    if request.user.userprofile.role != 'farmer':
+        return redirect('dashboard')
+    vegetables = Vegetable.objects.filter(farmer=request.user, available=True).order_by('-created_at')
+    total_quantity = vegetables.aggregate(total=Sum('quantity'))['total'] or 0
+    avg_price = vegetables.aggregate(avg=models.Avg('price_per_unit'))['avg'] or 0
+    return render(request, 'dashboard/farmer_stock.html', {
+        'vegetables': vegetables,
+        'total_quantity': total_quantity,
+        'avg_price': avg_price,
+    })
+
+@login_required
+def farmer_products(request):
+    if request.user.userprofile.role != 'farmer':
+        return redirect('dashboard')
+    vegetables = Vegetable.objects.filter(farmer=request.user).order_by('-created_at')
+    return render(request, 'dashboard/farmer_products.html', {'vegetables': vegetables})
+
+@login_required
 def add_vegetable(request):
     if request.user.userprofile.role != 'farmer':
         messages.error(request, 'Only farmers can add vegetables')
@@ -219,6 +244,7 @@ def add_vegetable(request):
         Vegetable.objects.create(
             farmer=request.user,
             name=request.POST['name'],
+            category=request.POST.get('category', 'vegetable'),
             quantity=request.POST['quantity'],
             unit=request.POST['unit'],
             price_per_unit=request.POST['price_per_unit'],
@@ -230,10 +256,170 @@ def add_vegetable(request):
     return render(request, 'dashboard/add_vegetable.html')
 
 @login_required
+def edit_vegetable(request, pk):
+    vegetable = get_object_or_404(Vegetable, pk=pk, farmer=request.user)
+    if request.method == 'POST':
+        vegetable.name = request.POST['name']
+        vegetable.category = request.POST.get('category', vegetable.category)
+        vegetable.quantity = request.POST['quantity']
+        vegetable.unit = request.POST['unit']
+        vegetable.price_per_unit = request.POST['price_per_unit']
+        vegetable.description = request.POST.get('description', '')
+        if request.FILES.get('image'):
+            vegetable.image = request.FILES['image']
+        vegetable.available = request.POST.get('available') == 'on'
+        vegetable.save()
+        messages.success(request, 'Product updated successfully')
+        return redirect('dashboard')
+    return render(request, 'dashboard/edit_vegetable.html', {'vegetable': vegetable})
+
+@login_required
+def view_vegetable(request, pk):
+    vegetable = get_object_or_404(Vegetable, pk=pk, farmer=request.user)
+    return render(request, 'dashboard/view_vegetable.html', {'vegetable': vegetable})
+
+@login_required
 def delete_vegetable(request, pk):
     vegetable = get_object_or_404(Vegetable, pk=pk, farmer=request.user)
     vegetable.delete()
     messages.success(request, 'Vegetable deleted successfully')
+    return redirect('dashboard')
+
+def public_marketplace(request):
+    vegetables = Vegetable.objects.filter(available=True)
+    return render(request, 'marketplace.html', {'vegetables': vegetables})
+
+def product_detail(request, pk):
+    vegetable = get_object_or_404(Vegetable, pk=pk, available=True)
+    return render(request, 'product_detail.html', {'vegetable': vegetable})
+
+@login_required
+def place_order(request, pk):
+    if request.user.userprofile.role != 'customer':
+        messages.error(request, 'Only customers can place orders')
+        return redirect('login')
+
+    vegetable = get_object_or_404(Vegetable, pk=pk, available=True)
+
+    if request.method == 'POST':
+        quantity = float(request.POST.get('quantity', 0))
+
+        if quantity <= 0:
+            messages.error(request, 'Enter a valid quantity')
+            return redirect('product_detail', pk=pk)
+
+        if quantity > float(vegetable.quantity):
+            messages.error(request, f'Only {vegetable.quantity} {vegetable.unit} available')
+            return redirect('product_detail', pk=pk)
+
+        # Create a temporary SupplierInventory entry to reuse CustomerOrder model
+        inv, _ = SupplierInventory.objects.get_or_create(
+            supplier=vegetable.farmer,
+            vegetable_name=vegetable.name,
+            defaults={
+                'quantity': vegetable.quantity,
+                'unit': vegetable.unit,
+                'price_per_unit': vegetable.price_per_unit,
+                'image': vegetable.image,
+            }
+        )
+
+        total_price = quantity * float(vegetable.price_per_unit)
+        CustomerOrder.objects.create(
+            customer=request.user,
+            supplier_inventory=inv,
+            quantity=quantity,
+            total_price=total_price
+        )
+
+        vegetable.quantity -= quantity
+        if vegetable.quantity <= 0:
+            vegetable.available = False
+        vegetable.save()
+
+        messages.success(request, f'Order placed for {quantity} {vegetable.unit} of {vegetable.name}!')
+        return redirect('dashboard')
+
+    return redirect('product_detail', pk=pk)
+
+@login_required
+def add_to_cart(request, pk):
+    if request.user.userprofile.role != 'customer':
+        messages.error(request, 'Only customers can add to cart')
+        return redirect('login')
+
+    vegetable = get_object_or_404(Vegetable, pk=pk, available=True)
+
+    if request.method == 'POST':
+        quantity = float(request.POST.get('quantity', 0))
+        if quantity <= 0:
+            messages.error(request, 'Enter a valid quantity')
+            return redirect('product_detail', pk=pk)
+        if quantity > float(vegetable.quantity):
+            messages.error(request, f'Only {vegetable.quantity} {vegetable.unit} available')
+            return redirect('product_detail', pk=pk)
+
+        cart, _ = Cart.objects.get_or_create(customer=request.user)
+        item, created = CartItem.objects.get_or_create(cart=cart, vegetable=vegetable)
+        if not created:
+            item.quantity += quantity
+        else:
+            item.quantity = quantity
+        item.save()
+        messages.success(request, f'{vegetable.name} added to cart!')
+
+    return redirect('product_detail', pk=pk)
+
+@login_required
+def cart_view(request):
+    if request.user.userprofile.role != 'customer':
+        return redirect('dashboard')
+    cart, _ = Cart.objects.get_or_create(customer=request.user)
+    return render(request, 'cart.html', {'cart': cart})
+
+@login_required
+def remove_from_cart(request, pk):
+    item = get_object_or_404(CartItem, pk=pk, cart__customer=request.user)
+    item.delete()
+    messages.success(request, 'Item removed from cart')
+    return redirect('cart')
+
+@login_required
+def checkout_cart(request):
+    if request.user.userprofile.role != 'customer':
+        return redirect('dashboard')
+    cart, _ = Cart.objects.get_or_create(customer=request.user)
+    items = cart.items.select_related('vegetable').all()
+    if not items:
+        messages.error(request, 'Your cart is empty')
+        return redirect('cart')
+    for item in items:
+        if item.quantity > item.vegetable.quantity:
+            messages.error(request, f'Only {item.vegetable.quantity} {item.vegetable.unit} of {item.vegetable.name} available')
+            return redirect('cart')
+    for item in items:
+        inv, _ = SupplierInventory.objects.get_or_create(
+            supplier=item.vegetable.farmer,
+            vegetable_name=item.vegetable.name,
+            defaults={
+                'quantity': item.vegetable.quantity,
+                'unit': item.vegetable.unit,
+                'price_per_unit': item.vegetable.price_per_unit,
+                'image': item.vegetable.image,
+            }
+        )
+        CustomerOrder.objects.create(
+            customer=request.user,
+            supplier_inventory=inv,
+            quantity=item.quantity,
+            total_price=item.quantity * item.vegetable.price_per_unit
+        )
+        item.vegetable.quantity -= item.quantity
+        if item.vegetable.quantity <= 0:
+            item.vegetable.available = False
+        item.vegetable.save()
+    cart.items.all().delete()
+    messages.success(request, 'All orders placed successfully!')
     return redirect('dashboard')
 
 # Supplier Views

@@ -1,143 +1,299 @@
-{% extends 'base.html' %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard | Krishi Connect</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-100" style="font-size:20px">
+<style>
+* { font-size: inherit !important; }
+body { font-size: 20px !important; }
+.text-xs { font-size: 16px !important; }
+.text-sm { font-size: 18px !important; }
+.text-base { font-size: 20px !important; }
+.text-xl { font-size: 22px !important; }
+.text-2xl { font-size: 26px !important; }
+.text-3xl { font-size: 30px !important; }
+</style>
 
-{% block title %}Customer Dashboard | Organic Krishi{% endblock %}
+<!-- Mobile overlay -->
+<div id="overlay" onclick="closeSidebar()" class="hidden fixed inset-0 bg-black/40 z-40 md:hidden"></div>
 
-{% block content %}
-<div class="flex h-screen bg-gray-100">
+<div class="flex h-screen overflow-hidden">
+
     <!-- Sidebar -->
-    <div class="w-64 bg-purple-600 text-white flex flex-col">
-        <div class="p-6">
-            <div class="flex items-center space-x-3">
-                <i class="fas fa-shopping-bag text-2xl"></i>
+    <aside id="sidebar" class="fixed md:static z-50 w-72 h-full bg-gradient-to-b from-indigo-950 via-purple-900 to-violet-800 text-white flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0 transition-transform duration-300">
+
+        <!-- Brand -->
+        <div class="px-6 py-6 border-b border-white/10">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-white/15 rounded-2xl flex items-center justify-center">
+                    <i class="fas fa-leaf text-xl text-violet-200"></i>
+                </div>
                 <div>
-                    <h2 class="text-xl font-bold">Customer Portal</h2>
-                    <p class="text-purple-200 text-sm">{{ user.username }}</p>
+                    <p class="font-bold text-lg leading-tight">Krishi Connect</p>
+                    <p class="text-violet-300 text-xs mt-0.5">Customer Portal</p>
                 </div>
             </div>
         </div>
-        
-        <nav class="flex-1 px-4 pb-4">
-            <ul class="space-y-2">
-                <li>
-                    <a href="#" class="flex items-center space-x-3 px-4 py-3 bg-purple-700 rounded-lg">
-                        <i class="fas fa-chart-pie"></i>
-                        <span>Overview</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'customer_marketplace' %}" class="flex items-center space-x-3 px-4 py-3 hover:bg-purple-700 rounded-lg transition-colors">
-                        <i class="fas fa-store"></i>
-                        <span>Marketplace</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center space-x-3 px-4 py-3 hover:bg-purple-700 rounded-lg transition-colors">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span>My Orders</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
 
-    <!-- Main Content -->
+        <!-- Profile -->
+        <div class="mx-4 my-4 bg-white/10 rounded-2xl p-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-gradient-to-br from-pink-400 to-rose-500 rounded-2xl flex items-center justify-center text-xl font-bold shadow-lg flex-shrink-0">
+                    {{ user.first_name|first|upper }}
+                </div>
+                <div class="min-w-0">
+                    <p class="font-semibold text-sm truncate">{{ user.first_name }} {{ user.last_name }}</p>
+                    <p class="text-violet-300 text-xs truncate">{{ user.email }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nav -->
+        <nav class="flex-1 px-3 space-y-0.5 overflow-y-auto pb-4">
+            <p class="text-violet-400 text-xs font-bold uppercase tracking-widest px-3 py-3">Menu</p>
+
+            <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-4 py-3 bg-white/20 rounded-xl text-white font-semibold text-sm">
+                <i class="fas fa-grid-2 w-5 text-center"></i> Dashboard
+            </a>
+            <a href="{% url 'public_marketplace' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-violet-200 hover:text-white transition-all text-sm">
+                <i class="fas fa-store w-5 text-center"></i> Browse Shop
+            </a>
+            <a href="#orders" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-violet-200 hover:text-white transition-all text-sm">
+                <i class="fas fa-box w-5 text-center"></i> My Orders
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-violet-200 hover:text-white transition-all text-sm">
+                <i class="fas fa-truck w-5 text-center"></i> Track Delivery
+            </a>
+
+            <p class="text-violet-400 text-xs font-bold uppercase tracking-widest px-3 py-3 mt-2">Other</p>
+            <a href="{% url 'weather' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-violet-200 hover:text-white transition-all text-sm">
+                <i class="fas fa-cloud-sun w-5 text-center"></i> Weather
+            </a>
+            <a href="{% url 'home' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-violet-200 hover:text-white transition-all text-sm">
+                <i class="fas fa-home w-5 text-center"></i> Home
+            </a>
+        </nav>
+
+        <!-- Logout -->
+        <div class="p-4 border-t border-white/10">
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 bg-red-500/20 hover:bg-red-500/40 rounded-xl text-red-300 hover:text-white transition-all text-sm font-medium">
+                    <i class="fas fa-sign-out-alt w-5 text-center"></i> Logout
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- Main -->
     <div class="flex-1 flex flex-col overflow-hidden">
-        <header class="bg-white shadow-sm border-b px-6 py-4">
-            <div class="flex items-center justify-between">
+
+        <!-- Topbar -->
+        <header class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shadow-sm flex-shrink-0">
+            <div class="flex items-center gap-4">
+                <button onclick="openSidebar()" class="md:hidden text-slate-500 hover:text-slate-700">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-800">Customer Dashboard 🛒</h1>
-                    <p class="text-gray-600">Welcome back, {{ user.first_name }}!</p>
+                    <h1 class="text-xl font-bold text-slate-800">Hey, <span class="text-violet-600">{{ user.first_name }}</span> 👋</h1>
+                    <p class="text-slate-400 text-sm">Here's what's happening with your orders</p>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <span class="text-gray-600">{{ user.first_name }} {{ user.last_name }}</span>
-                    <form method="post" action="{% url 'logout' %}" class="inline">
-                        {% csrf_token %}
-                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </button>
-                    </form>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="relative hidden md:block">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input type="text" placeholder="Search products..." class="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-violet-400 w-56">
                 </div>
+                <a href="{% url 'public_marketplace' %}" class="flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all">
+                    <i class="fas fa-store"></i> Shop Now
+                </a>
             </div>
         </header>
 
-        <main class="flex-1 overflow-y-auto p-6">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white rounded-lg p-6 shadow-sm border">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-600 text-sm">Total Orders</p>
-                            <p class="text-2xl font-bold text-gray-800">34</p>
-                        </div>
-                        <div class="bg-purple-100 p-3 rounded-full">
-                            <i class="fas fa-shopping-cart text-purple-600"></i>
-                        </div>
+        <!-- Body -->
+        <main class="flex-1 overflow-y-auto p-6 space-y-6">
+
+            {% for message in messages %}
+            <div class="flex items-center gap-3 p-4 rounded-xl border text-sm {% if message.tags == 'success' %}bg-green-50 border-green-200 text-green-700{% else %}bg-red-50 border-red-200 text-red-700{% endif %}">
+                <i class="fas {% if message.tags == 'success' %}fa-check-circle text-green-500{% else %}fa-exclamation-circle text-red-500{% endif %}"></i>
+                {{ message }}
+            </div>
+            {% endfor %}
+
+            <!-- Stat Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center gap-5">
+                    <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-box text-blue-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-slate-800">{{ orders|length }}</p>
+                        <p class="text-slate-500 text-sm">Total Orders</p>
                     </div>
                 </div>
-                
-                <div class="bg-white rounded-lg p-6 shadow-sm border">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-600 text-sm">Active Orders</p>
-                            <p class="text-2xl font-bold text-gray-800">5</p>
-                        </div>
-                        <div class="bg-blue-100 p-3 rounded-full">
-                            <i class="fas fa-truck text-blue-600"></i>
-                        </div>
+
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center gap-5">
+                    <div class="w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-truck text-amber-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-slate-800">{{ orders|length }}</p>
+                        <p class="text-slate-500 text-sm">In Transit</p>
                     </div>
                 </div>
-                
-                <div class="bg-white rounded-lg p-6 shadow-sm border">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-600 text-sm">Total Spent</p>
-                            <p class="text-2xl font-bold text-gray-800">₹ 12,450</p>
-                        </div>
-                        <div class="bg-green-100 p-3 rounded-full">
-                            <i class="fas fa-rupee-sign text-green-600"></i>
-                        </div>
+
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center gap-5">
+                    <div class="w-14 h-14 bg-violet-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-rupee-sign text-violet-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-slate-800">₹{{ total_spent|floatformat:0 }}</p>
+                        <p class="text-slate-500 text-sm">Total Spent</p>
                     </div>
                 </div>
-                
-                <div class="bg-white rounded-lg p-6 shadow-sm border">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-600 text-sm">Wishlist Items</p>
-                            <p class="text-2xl font-bold text-gray-800">12</p>
-                        </div>
-                        <div class="bg-pink-100 p-3 rounded-full">
-                            <i class="fas fa-heart text-pink-600"></i>
-                        </div>
+
+            </div>
+
+            <!-- Orders Table -->
+            <div id="orders" class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-base">Recent Orders</h3>
+                        <p class="text-slate-400 text-sm mt-0.5">Your purchase history</p>
                     </div>
+                    <a href="{% url 'public_marketplace' %}" class="flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all">
+                        <i class="fas fa-plus"></i> New Order
+                    </a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-400 text-xs uppercase tracking-wider">
+                                <th class="px-6 py-4 text-left font-semibold">Order ID</th>
+                                <th class="px-6 py-4 text-left font-semibold">Product</th>
+                                <th class="px-6 py-4 text-left font-semibold">Date</th>
+                                <th class="px-6 py-4 text-left font-semibold">Price</th>
+                                <th class="px-6 py-4 text-left font-semibold">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            {% for order in orders %}
+                            <tr class="hover:bg-slate-50/70 transition-colors">
+                                <td class="px-6 py-4 text-slate-400 text-sm font-mono">#{{ order.id }}</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 bg-violet-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                            <i class="fas fa-leaf text-violet-500 text-sm"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold text-slate-800 text-sm">{{ order.supplier_inventory.vegetable_name }}</p>
+                                            <p class="text-slate-400 text-xs">{{ order.quantity }} {{ order.supplier_inventory.unit }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-slate-500 text-sm">{{ order.ordered_at|date:"d M Y" }}</td>
+                                <td class="px-6 py-4 font-bold text-slate-800 text-sm">₹{{ order.total_price }}</td>
+                                <td class="px-6 py-4">
+                                    {% if order.status == 'delivered' %}
+                                    <span class="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold bg-emerald-100 text-emerald-700 rounded-full">
+                                        <i class="fas fa-check-circle"></i> Delivered
+                                    </span>
+                                    {% elif order.status == 'confirmed' %}
+                                    <span class="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded-full">
+                                        <i class="fas fa-shipping-fast"></i> Shipped
+                                    </span>
+                                    {% else %}
+                                    <span class="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold bg-amber-100 text-amber-700 rounded-full">
+                                        <i class="fas fa-clock"></i> Processing
+                                    </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="px-6 py-16 text-center">
+                                    <div class="flex flex-col items-center gap-3">
+                                        <div class="w-16 h-16 bg-violet-50 rounded-2xl flex items-center justify-center">
+                                            <i class="fas fa-shopping-bag text-violet-300 text-3xl"></i>
+                                        </div>
+                                        <p class="text-slate-500 font-semibold">No orders yet</p>
+                                        <a href="{% url 'public_marketplace' %}" class="text-violet-600 hover:underline text-sm font-semibold">Start shopping →</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow-sm border">
-                <div class="p-6 border-b">
-                    <h3 class="text-lg font-semibold text-gray-800">My Orders</h3>
-                </div>
-                <div class="p-6">
-                    {% if orders %}
-                    <div class="space-y-4">
-                        {% for order in orders %}
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                            <div>
-                                <p class="font-medium text-gray-800">{{ order.supplier_inventory.vegetable_name }}</p>
-                                <p class="text-sm text-gray-600">{{ order.quantity }} {{ order.supplier_inventory.unit }} - ₹{{ order.total_price }}</p>
-                                <p class="text-xs text-gray-500">{{ order.ordered_at|date:"M d, Y" }}</p>
-                            </div>
-                            <span class="{% if order.status == 'delivered' %}bg-green-100 text-green-800{% elif order.status == 'confirmed' %}bg-blue-100 text-blue-800{% else %}bg-yellow-100 text-yellow-800{% endif %} px-3 py-1 rounded-full text-xs font-medium">
-                                {{ order.get_status_display }}
-                            </span>
-                        </div>
-                        {% endfor %}
+            <!-- Recommended -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                <div class="flex items-center justify-between mb-5">
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-base">Recommended for You</h3>
+                        <p class="text-slate-400 text-sm mt-0.5">Fresh picks from our farmers</p>
                     </div>
-                    {% else %}
-                    <p class="text-gray-600 text-center py-8">No orders yet. <a href="{% url 'customer_marketplace' %}" class="text-purple-600 hover:underline">Start shopping</a></p>
-                    {% endif %}
+                    <a href="{% url 'public_marketplace' %}" class="text-violet-600 hover:text-violet-800 text-sm font-semibold hover:underline">View All →</a>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {% for veg in recommended %}
+                    <div class="border border-slate-100 rounded-2xl overflow-hidden hover:shadow-md transition-shadow">
+                        {% if veg.image %}
+                        <img src="{{ veg.image.url }}" alt="{{ veg.name }}" class="w-full h-36 object-cover">
+                        {% else %}
+                        <div class="w-full h-36 bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center">
+                            <i class="fas fa-leaf text-violet-400 text-4xl"></i>
+                        </div>
+                        {% endif %}
+                        <div class="p-4">
+                            <p class="font-semibold text-slate-800 text-sm">{{ veg.name }}</p>
+                            <p class="text-violet-600 font-bold text-sm mt-1">₹{{ veg.price_per_unit }}/{{ veg.unit }}</p>
+                            <a href="{% url 'public_marketplace' %}" class="mt-3 block w-full text-center bg-violet-50 hover:bg-violet-100 text-violet-700 font-semibold text-sm py-2 rounded-xl transition-all">
+                                Buy Now
+                            </a>
+                        </div>
+                    </div>
+                    {% empty %}
+                    {% for i in "123" %}
+                    <div class="border border-slate-100 rounded-2xl overflow-hidden">
+                        <div class="w-full h-36 bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center">
+                            <i class="fas fa-leaf text-violet-400 text-4xl"></i>
+                        </div>
+                        <div class="p-4">
+                            <p class="font-semibold text-slate-400 text-sm">Fresh Product</p>
+                            <p class="text-violet-600 font-bold text-sm mt-1">Available in shop</p>
+                            <a href="{% url 'public_marketplace' %}" class="mt-3 block w-full text-center bg-violet-50 hover:bg-violet-100 text-violet-700 font-semibold text-sm py-2 rounded-xl transition-all">
+                                Browse Shop
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% endfor %}
                 </div>
             </div>
+
         </main>
     </div>
 </div>
-{% endblock %}
+
+<script>
+function openSidebar() {
+    document.getElementById('sidebar').classList.remove('-translate-x-full');
+    document.getElementById('overlay').classList.remove('hidden');
+}
+function closeSidebar() {
+    document.getElementById('sidebar').classList.add('-translate-x-full');
+    document.getElementById('overlay').classList.add('hidden');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ vegetable.name }} | Krishi Connect{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 py-12 px-4">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+
+            {% if vegetable.image %}
+            <img src="{{ vegetable.image.url }}" alt="{{ vegetable.name }}" class="w-full h-56 object-cover">
+            {% else %}
+            <div class="w-full h-56 bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center">
+                <i class="fas fa-leaf text-green-400 text-6xl"></i>
+            </div>
+            {% endif %}
+
+            <div class="p-8 space-y-5">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-2xl font-bold text-gray-800">{{ vegetable.name }}</h2>
+                    <span class="px-3 py-1 text-sm font-semibold rounded-full {% if vegetable.available %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-600{% endif %}">
+                        {% if vegetable.available %}Available{% else %}Sold Out{% endif %}
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div class="bg-gray-50 rounded-xl p-4">
+                        <p class="text-gray-400 mb-1">Category</p>
+                        <p class="font-semibold text-gray-700 capitalize">{{ vegetable.category }}</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-xl p-4">
+                        <p class="text-gray-400 mb-1">Price</p>
+                        <p class="font-semibold text-gray-700">₹{{ vegetable.price_per_unit }} / {{ vegetable.unit }}</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-xl p-4">
+                        <p class="text-gray-400 mb-1">Quantity</p>
+                        <p class="font-semibold text-gray-700">{{ vegetable.quantity }} {{ vegetable.unit }}</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-xl p-4">
+                        <p class="text-gray-400 mb-1">Listed On</p>
+                        <p class="font-semibold text-gray-700">{{ vegetable.created_at|date:"d M Y" }}</p>
+                    </div>
+                </div>
+
+                {% if vegetable.description %}
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <p class="text-gray-400 text-sm mb-1">Description</p>
+                    <p class="text-gray-700 text-sm leading-relaxed">{{ vegetable.description }}</p>
+                </div>
+                {% endif %}
+
+                <div class="flex gap-3 pt-2">
+                    <a href="{% url 'edit_vegetable' vegetable.pk %}" class="flex-1 flex items-center justify-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-3 rounded-lg transition-colors">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a href="{% url 'dashboard' %}" class="flex-1 flex items-center justify-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-3 rounded-lg transition-colors">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

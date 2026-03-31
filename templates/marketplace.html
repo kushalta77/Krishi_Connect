@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Marketplace | Krishi Connect{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-12 px-4">
+    <div class="max-w-7xl mx-auto">
+
+        <div class="mb-10 text-center">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">🌿 Marketplace</h1>
+            <p class="text-gray-500 text-lg">Fresh products listed directly by farmers</p>
+        </div>
+
+        <div class="flex gap-8">
+
+            <!-- Sidebar Filter -->
+            <aside class="w-52 flex-shrink-0">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sticky top-6">
+                    <h3 class="font-bold text-gray-700 text-base mb-4">Categories</h3>
+                    <ul class="space-y-1">
+                        <li>
+                            <button onclick="filterCat('all')" id="btn-all"
+                                class="cat-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold bg-green-600 text-white transition-all">
+                                🌾 All
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="filterCat('vegetable')" id="btn-vegetable"
+                                class="cat-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 transition-all">
+                                🥦 Vegetables
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="filterCat('fruit')" id="btn-fruit"
+                                class="cat-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 transition-all">
+                                🍎 Fruits
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="filterCat('grain')" id="btn-grain"
+                                class="cat-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 transition-all">
+                                🌾 Grains
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="filterCat('spice')" id="btn-spice"
+                                class="cat-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 transition-all">
+                                🌶️ Spices
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="filterCat('other')" id="btn-other"
+                                class="cat-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 transition-all">
+                                📦 Other
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Products Grid -->
+            <div class="flex-1">
+                <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for veg in vegetables %}
+                    <div class="product-card bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow" data-category="{{ veg.category }}">
+                        {% if veg.image %}
+                        <img src="{{ veg.image.url }}" alt="{{ veg.name }}" class="w-full h-48 object-cover">
+                        {% else %}
+                        <div class="w-full h-48 bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center">
+                            <i class="fas fa-leaf text-6xl text-green-400"></i>
+                        </div>
+                        {% endif %}
+
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-1">
+                                <h3 class="text-xl font-bold text-gray-800">{{ veg.name }}</h3>
+                                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-100 text-green-700 capitalize">{{ veg.category }}</span>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-4">By {{ veg.farmer.first_name }} {{ veg.farmer.last_name }}</p>
+
+                            <div class="space-y-2 mb-4">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">Available</span>
+                                    <span class="font-semibold text-gray-700">{{ veg.quantity }} {{ veg.unit }}</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">Price</span>
+                                    <span class="font-bold text-green-600">₹{{ veg.price_per_unit }}/{{ veg.unit }}</span>
+                                </div>
+                            </div>
+
+                            {% if veg.description %}
+                            <p class="text-gray-400 text-sm mb-4">{{ veg.description|truncatewords:15 }}</p>
+                            {% endif %}
+
+                            {% if user.is_authenticated and user.userprofile.role == 'customer' %}
+                            <a href="{% url 'product_detail' veg.pk %}" class="block w-full bg-green-600 hover:bg-green-700 text-white text-center font-semibold py-2.5 rounded-xl transition-colors">
+                                <i class="fas fa-shopping-cart mr-2"></i>Buy Now
+                            </a>
+                            {% elif not user.is_authenticated %}
+                            <a href="{% url 'login' %}?next={% url 'product_detail' veg.pk %}" class="block w-full bg-gray-100 hover:bg-gray-200 text-gray-600 text-center font-semibold py-2.5 rounded-xl transition-colors">
+                                <i class="fas fa-lock mr-2"></i>Login to Buy
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-span-3 text-center py-20">
+                        <div class="w-24 h-24 bg-green-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-seedling text-green-300 text-5xl"></i>
+                        </div>
+                        <p class="text-gray-500 text-lg font-medium">No products listed yet</p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- No results message -->
+                <div id="no-results" class="hidden text-center py-20">
+                    <div class="w-24 h-24 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-search text-gray-300 text-5xl"></i>
+                    </div>
+                    <p class="text-gray-500 text-lg font-medium">No products in this category</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+function filterCat(cat) {
+    const cards = document.querySelectorAll('.product-card');
+    let visible = 0;
+    cards.forEach(card => {
+        const show = cat === 'all' || card.dataset.category === cat;
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+    });
+    document.getElementById('no-results').classList.toggle('hidden', visible > 0);
+
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.classList.remove('bg-green-600', 'text-white');
+        btn.classList.add('text-gray-600', 'hover:bg-green-50');
+    });
+    const active = document.getElementById('btn-' + cat);
+    active.classList.add('bg-green-600', 'text-white');
+    active.classList.remove('text-gray-600', 'hover:bg-green-50');
+}
+</script>
+{% endblock %}
