@@ -86,7 +86,7 @@
         <p class="text-lg md:text-xl mb-12 text-white/90 max-w-3xl mx-auto leading-relaxed" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.6);" data-en="Connecting traditional knowledge with modern technology for Nepal's agricultural revolution" data-ne="हाम्रो पुर्खाको परम्परागत जैविक कृषिलाई आधुनिक प्रविधिसँग जोडेर नेपालको कृषि क्रान्तिमा सहभागी बनौं">
             हाम्रो पुर्खाको परम्परागत जैविक कृषिलाई आधुनिक प्रविधिसँग जोडेर नेपालको कृषि क्रान्तिमा सहभागी बनौं
         </p>
-        <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+        <div class="flex flex-col sm:flex-row gap-6 justify-center items-center flex-wrap">
             <a href="{% url 'organic_crops' %}" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-10 py-4 rounded-full font-bold hover:from-green-600 hover:to-green-700 transition-all duration-300 shadow-2xl transform hover:scale-105 flex items-center gap-2" data-en="Explore Organic Crops" data-ne="जैविक बाली खोज्नुहोस्">
                 <i class="fas fa-seedling"></i>
                 <span>जैविक बाली खोज्नुहोस्</span>
@@ -95,6 +95,12 @@
                 <i class="fas fa-cloud-sun"></i>
                 <span>मौसम जाँच गर्नुहोस्</span>
             </a>
+            {% if user.is_authenticated and user.role == 'farmer' %}
+            <a href="{% url 'add_vegetable' %}" class="border-2 border-white/60 text-white px-10 py-4 rounded-full font-bold hover:bg-white/15 backdrop-blur-sm transition-all duration-300 shadow-xl hover:scale-105 flex items-center gap-2" data-en="List New Product" data-ne="नयाँ उत्पादन सूचीबद्ध गर्नुहोस्">
+                <i class="fas fa-plus-circle"></i>
+                <span>नयाँ उत्पादन सूचीबद्ध गर्नुहोस्</span>
+            </a>
+            {% endif %}
         </div>
     </div>
 </section>
@@ -219,9 +225,7 @@
                                     </div>
                                     {% endif %}
                                 </div>
-                                <div class="bg-green-50 w-10 h-10 rounded-xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-colors cursor-pointer shadow-sm">
-                                    <i class="fas fa-cart-shopping"></i>
-                                </div>
+                                <button class="bg-green-600 text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-green-700 transition-colors shadow-sm whitespace-nowrap">View</button>
                             </div>
                         </div>
                         
@@ -308,6 +312,23 @@
                     <span>छलफलमा सहभागी</span> <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>
+            
+            <div class="group bg-white/80 backdrop-blur-sm p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 text-center border border-red-100 hover:border-red-300 hover:-translate-y-2">
+                <div class="bg-gradient-to-br from-red-400 to-red-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-plus-circle text-white text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-3 text-red-800" data-en="List Your Products" data-ne="आफ्नो उत्पादन सूचीबद्ध गर्नुहोस्">आफ्नो उत्पादन सूचीबद्ध गर्नुहोस्</h3>
+                <p class="text-red-600 mb-4" data-en="Sell your organic produce directly to buyers" data-ne="आफ्नो जैविक उत्पादन सीधा खरीदकर्तालाई बेच्नुहोस्">आफ्नो जैविक उत्पादन सीधा खरीदकर्तालाई बेच्नुहोस्</p>
+                {% if user.is_authenticated and user.role == 'farmer' %}
+                <a href="{% url 'add_vegetable' %}" class="inline-flex items-center text-red-700 hover:text-red-900 font-semibold group-hover:translate-x-1 transition-all" data-en="Start Listing" data-ne="सूचीबद्ध गर्न थाल्नुहोस्">
+                    <span>सूचीबद्ध गर्न थाल्नुहोस्</span> <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+                {% else %}
+                <a href="{% url 'register' %}" class="inline-flex items-center text-red-700 hover:text-red-900 font-semibold group-hover:translate-x-1 transition-all" data-en="Learn More" data-ne="थप जान्नुहोस्">
+                    <span>थप जान्नुहोस्</span> <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+                {% endif %}
+            </div>
         </div>
     </div>
 </section>
@@ -335,10 +356,9 @@
         <p class="text-xl text-emerald-50 mb-10 max-w-2xl mx-auto leading-relaxed font-medium" data-en="Step into the future. Get powerful tools, predictive analytics, and join a massive marketplace today." data-ne="भविष्यमा प्रवेश गर्नुहोस्। शक्तिशाली उपकरणहरू, भविष्यवाणी गर्ने एनालिटिक्स प्राप्त गर्नुहोस्, र आजै विशाल बजारमा सामेल हुनुहोस्।">Step into the future. Get powerful tools, predictive analytics, and join a massive marketplace today.</p>
         
         {% if not user.is_authenticated %}
-        <a href="/users/register/" class="inline-flex bg-emerald-500 hover:bg-emerald-400 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:-translate-y-1 transition-all shadow-[0_10px_35px_-10px_rgba(16,185,129,0.5)]" data-en="Create Free Account" data-ne="नि:शुल्क खाता बनाउनुहोस्">
+        <a href="{% url 'register' %}" class="inline-flex bg-emerald-500 hover:bg-emerald-400 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:-translate-y-1 transition-all shadow-[0_10px_35px_-10px_rgba(16,185,129,0.5)]" data-en="Create Free Account" data-ne="नि:शुल्क खाता बनाउनुहोस्">
             Create Free Account
         </a>
-        <p class="mt-4 text-slate-400 text-sm font-medium" data-en="No credit card required. Free for all farmers." data-ne="कुनै क्रेडिट कार्ड आवश्यक छैन। सबै किसानहरूको लागि नि: शुल्क।">No credit card required. Free for all farmers.</p>
         {% else %}
         <a href="{% url 'dashboard' %}" class="inline-flex bg-emerald-500 hover:bg-emerald-400 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:-translate-y-1 transition-all shadow-[0_10px_35px_-10px_rgba(16,185,129,0.5)]" data-en="Go to Dashboard" data-ne="ड्यासबोर्डमा जानुहोस्">
             Go to Dashboard
@@ -564,49 +584,61 @@
     </div>
 </section>
 
-<!-- Reports Section -->
+<!-- Feedback Section -->
 <section class="py-16 bg-gradient-to-b from-green-50 to-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-4xl font-bold text-green-800 mb-4 handwriting" data-en="Featured Reports" data-ne="मुख्य प्रतिवेदन">मुख्य प्रतिवेदन</h2>
+            <h2 class="text-4xl font-bold text-green-800 mb-4" data-en="Featured Feedback" data-ne="मुख्य प्रतिक्रिया">Featured Feedback</h2>
         </div>
-        {% if featured_reports %}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {% for report in featured_reports %}
-            <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
-                {% if report.cover_image and report.cover_image.url %}
-                <div class="overflow-hidden rounded-lg mb-4">
-                    <img src="{{ report.cover_image.url }}" alt="{{ report.title_en }}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group border-l-4 border-green-500">
+                <div class="text-5xl text-green-300 mb-4">✦</div>
+                <h3 class="text-lg font-semibold mb-2 text-green-800" data-en="Successful Harvest" data-ne="सफल फसल">Successful Harvest</h3>
+                <p class="text-gray-700 mb-4 text-sm" data-en="AgroConnect helped me increase my organic crop yield by 40%. The market insights are invaluable!" data-ne="AgroConnect ले मेरो जैविक बाली उत्पादन 40% बढाउन मद्दत गरे। बजार जानकारी अमूल्य छ!">AgroConnect helped me increase my organic crop yield by 40%. The market insights are invaluable!</p>
+                <div class="flex items-center text-yellow-400 text-sm mb-2">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
                 </div>
-                {% endif %}
-                <h3 class="text-lg font-semibold mb-2 text-green-800" data-en="{{ report.title_en }}" data-ne="{{ report.title_ne }}">{{ report.title_ne }}</h3>
-                <p class="text-gray-600 mb-4 text-sm" data-en="{{ report.description_en|truncatewords:15 }}" data-ne="{{ report.description_ne|truncatewords:15 }}">{{ report.description_ne|truncatewords:15 }}</p>
-                <div class="flex items-center justify-between text-xs text-gray-500 mb-4 border-b border-gray-100 pb-4">
-                    <span><i class="fas fa-download mr-1 text-green-500"></i>{{ report.download_count }} downloads</span>
-                    <span><i class="fas fa-eye mr-1 text-blue-500"></i>{{ report.view_count }} views</span>
-                </div>
-                {% if report.file %}
-                <a href="{{ report.file.url }}" target="_blank" class="inline-flex items-center text-green-600 hover:text-green-800 font-medium bg-green-50 px-4 py-2 rounded-lg hover:bg-green-100 transition-colors w-full justify-center">
-                    <i class="fas fa-file-pdf mr-2"></i>
-                    <span data-en="Download Report" data-ne="प्रतिवेदन डाउनलोड">प्रतिवेदन डाउनलोड</span>
-                </a>
-                {% else %}
-                <span class="text-gray-400 text-sm block w-full text-center bg-gray-50 px-4 py-2 rounded-lg" data-en="File not available" data-ne="फाइल उपलब्ध छैन">फाइल उपलब्ध छैन</span>
-                {% endif %}
+                <p class="text-gray-600 text-xs" data-en="Ramesh Kumar, Kathmandu" data-ne="रमेश कुमार, काठमाडौं">Ramesh Kumar, Kathmandu</p>
             </div>
-            {% endfor %}
+            
+            <div class="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group border-l-4 border-green-500">
+                <div class="text-5xl text-green-300 mb-4">✦</div>
+                <h3 class="text-lg font-semibold mb-2 text-green-800" data-en="Better Prices" data-ne="राम्रो मूल्य">Better Prices</h3>
+                <p class="text-gray-700 mb-4 text-sm" data-en="Direct marketplace access eliminated middlemen. I now get fair prices for my organic vegetables!" data-ne="प्रत्यक्ष बजार पहुँचले बिचौलिया हटायो। अब मुलाई मेरो जैविक सब्जीको न्यायोचित मूल्य मिलेको छ!">Direct marketplace access eliminated middlemen. I now get fair prices for my organic vegetables!</p>
+                <div class="flex items-center text-yellow-400 text-sm mb-2">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="text-gray-600 text-xs" data-en="Priya Sharma, Pokhara" data-ne="प्रिया शर्मा, पोखरा">Priya Sharma, Pokhara</p>
+            </div>
+            
+            <div class="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group border-l-4 border-green-500">
+                <div class="text-5xl text-green-300 mb-4">✦</div>
+                <h3 class="text-lg font-semibold mb-2 text-green-800" data-en="Community Support" data-ne="समुदाय समर्थन">Community Support</h3>
+                <p class="text-gray-700 mb-4 text-sm" data-en="The farmer community on AgroConnect is amazing. I learned so much from experienced professionals!" data-ne="AgroConnect मा किसान समुदाय अद्भुत छ। मैले अनुभवी पेशेवरहरूबाट धेरै सिकें!">The farmer community on AgroConnect is amazing. I learned so much from experienced professionals!</p>
+                <div class="flex items-center text-yellow-400 text-sm mb-2">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="text-gray-600 text-xs" data-en="Amit Poudel, Kathmandu Valley" data-ne="अमित पौडेल, काठमाडौं उपत्यका">Amit Poudel, Kathmandu Valley</p>
+            </div>
         </div>
         <div class="text-center mt-8">
-            <a href="{% url 'core:reports_list' %}" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors hover:shadow-lg hover:-translate-y-1 inline-block">
-                <span data-en="View More" data-ne="थप हेर्नुहोस्">View More</span>
+            <a href="{% url 'feedback' %}" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors hover:shadow-lg hover:-translate-y-1 inline-block">
+                <span data-en="View More Feedback" data-ne="थप प्रतिक्रिया हेर्नुहोस्">View More Feedback</span>
                 <i class="fas fa-arrow-right ml-2"></i>
             </a>
         </div>
-        {% else %}
-        <div class="text-center py-12">
-            <p class="text-gray-500" data-en="No reports available" data-ne="कुनै प्रतिवेदन उपलब्ध छैन">कुनै प्रतिवेदन उपलब्ध छैन</p>
-        </div>
-        {% endif %}
     </div>
 </section>
 

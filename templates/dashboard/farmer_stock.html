@@ -68,6 +68,9 @@
                     <span class="inline-flex items-center gap-1.5 text-[10px] bg-brand-400/20 text-brand-200 px-2 py-0.5 rounded-full mt-1 font-bold uppercase tracking-wider">
                         <i class="fas fa-circle text-brand-400" style="font-size:6px"></i> Active Farmer
                     </span>
+                    <a href="{% url 'farmer_profile' %}" class="mt-2 flex items-center gap-1 text-[10px] text-brand-300 hover:text-white transition-colors">
+                        <i class="fas fa-user-cog" style="font-size:9px"></i> View Profile
+                    </a>
                 </div>
             </div>
         </div>
@@ -83,7 +86,7 @@
             <a href="{% url 'farmer_products' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
                 <i class="fas fa-boxes w-5 text-center text-lg"></i><span>My Products</span>
             </a>
-            <a href="{% url 'my_orders' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+            <a href="{% url 'farmer_orders' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
                 <i class="fas fa-shopping-cart w-5 text-center text-lg"></i><span>Orders</span>
             </a>
             <a href="{% url 'farmer_stock' %}" class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl text-white font-medium shadow-[0_0_20px_rgba(74,222,128,0.1)]">

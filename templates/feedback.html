@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Feedback & Reviews - AgroConnect{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-b from-green-50 to-white">
+    <!-- Page Header -->
+    <section class="bg-gradient-to-r from-green-600 to-green-800 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Public Feedback & Reviews</h1>
+            <p class="text-xl text-green-100">Share your experience with AgroConnect</p>
+        </div>
+    </section>
+
+
+    <!-- Main Content -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Feedback Form -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-lg shadow-lg p-8 sticky top-20">
+                        <h2 class="text-2xl font-bold text-green-800 mb-6">Leave Your Feedback</h2>
+                        
+                        <form method="POST" class="space-y-4">
+                            {% csrf_token %}
+                            
+                            <!-- Name Field -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                                <input type="text" name="full_name" placeholder="Your name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500" required>
+                            </div>
+
+                            <!-- Email Field -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                                <input type="email" name="email" placeholder="your.email@example.com" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500" required>
+                            </div>
+
+                            <!-- Rating Field -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Rating</label>
+                                <select name="rating" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500" required>
+                                    <option value="">Select a rating</option>
+                                    <option value="1">⭐ 1 Star - Poor</option>
+                                    <option value="2">⭐⭐ 2 Stars - Fair</option>
+                                    <option value="3">⭐⭐⭐ 3 Stars - Good</option>
+                                    <option value="4">⭐⭐⭐⭐ 4 Stars - Very Good</option>
+                                    <option value="5" selected>⭐⭐⭐⭐⭐ 5 Stars - Excellent</option>
+                                </select>
+                            </div>
+
+                            <!-- Message Field -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Your Feedback</label>
+                                <textarea name="message" rows="5" placeholder="Share your experience and feedback..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500 resize-none" required></textarea>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                                Submit Feedback
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Feedback List -->
+                <div class="lg:col-span-2">
+                    <h2 class="text-2xl font-bold text-green-800 mb-6">Recent Reviews</h2>
+                    
+                    <div class="space-y-6">
+                        <!-- Sample Feedback 1 -->
+                        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-800">Raj Kumar</h3>
+                                <div class="text-yellow-400">⭐⭐⭐⭐⭐</div>
+                            </div>
+                            <p class="text-sm text-gray-500 mb-3">3 days ago</p>
+                            <p class="text-gray-700">AgroConnect is an excellent platform. My agricultural business is always improving here. The service and support team is always ready to help.</p>
+                        </div>
+
+                        <!-- Sample Feedback 2 -->
+                        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-800">Priya Sharma</h3>
+                                <div class="text-yellow-400">⭐⭐⭐⭐</div>
+                            </div>
+                            <p class="text-sm text-gray-500 mb-3">1 सप्ताह अघि</p>
+                            <p class="text-gray-700">Great platform with excellent features. The market analysis tools have really helped improve my business decisions. Highly recommended!</p>
+                        </div>
+
+                        <!-- Sample Feedback 3 -->
+                        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-800">Vikas Pathak</h3>
+                                <div class="text-yellow-400">⭐⭐⭐⭐⭐</div>
+                            </div>
+                            <p class="text-sm text-gray-500 mb-3">2 weeks ago</p>
+                            <p class="text-gray-700">This platform has changed my life. Market access and direct buyer connections are excellent. I use it all the time.</p>
+                        </div>
+
+                        <!-- Sample Feedback 4 -->
+                        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-800">Sunita Thapa</h3>
+                                <div class="text-yellow-400">⭐⭐⭐⭐⭐</div>
+                            </div>
+                            <p class="text-sm text-gray-500 mb-3">3 weeks ago</p>
+                            <p class="text-gray-700">Excellent service! The team is very responsive and helpful. I've been able to expand my business significantly using this platform.</p>
+                        </div>
+
+                        <!-- Sample Feedback 5 -->
+                        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-800">Amit Singh</h3>
+                                <div class="text-yellow-400">⭐⭐⭐⭐</div>
+                            </div>
+                            <p class="text-sm text-gray-500 mb-3">1 month ago</p>
+                            <p class="text-gray-700">Good platform. My farmer friends are also connected here. We can all work together.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% endblock %}

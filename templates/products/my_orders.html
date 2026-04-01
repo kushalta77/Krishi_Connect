@@ -5,6 +5,26 @@
 <div class="max-w-4xl mx-auto px-4 py-8">
     <h1 class="text-2xl font-bold text-green-800 mb-6">📦 My Orders</h1>
 
+    <!-- Status Filter -->
+    <div class="mb-6 flex gap-2 flex-wrap">
+        <a href="{% url 'my_orders' %}" class="px-4 py-2 rounded-lg font-medium transition
+            {% if not status_filter %}bg-green-600 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
+            All Orders
+        </a>
+        <a href="?status=active" class="px-4 py-2 rounded-lg font-medium transition
+            {% if status_filter == 'active' %}bg-blue-600 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
+            Active Orders
+        </a>
+        <a href="?status=completed" class="px-4 py-2 rounded-lg font-medium transition
+            {% if status_filter == 'completed' %}bg-green-600 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
+            Completed Orders
+        </a>
+        <a href="?status=cancelled" class="px-4 py-2 rounded-lg font-medium transition
+            {% if status_filter == 'cancelled' %}bg-red-600 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
+            Cancelled Orders
+        </a>
+    </div>
+
     {% if orders %}
     <div class="space-y-4">
         {% for order in orders %}
@@ -22,9 +42,9 @@
             <div class="text-right">
                 <p class="font-bold text-green-700">₹{{ order.total_price }}</p>
                 <span class="text-xs px-2 py-1 rounded-full
-                    {% if order.status == 'delivered' %}bg-green-100 text-green-700
-                    {% elif order.status == 'shipped' %}bg-blue-100 text-blue-700
-                    {% else %}bg-yellow-100 text-yellow-700{% endif %}">
+                    {% if order.status == 'completed' %}bg-green-100 text-green-700
+                    {% elif order.status == 'active' %}bg-blue-100 text-blue-700
+                    {% elif order.status == 'cancelled' %}bg-red-100 text-red-700{% endif %}">
                     {{ order.get_status_display }}
                 </span>
             </div>

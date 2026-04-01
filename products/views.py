@@ -116,4 +116,12 @@ def my_orders(request):
         return redirect('dashboard')
 
     orders = Order.objects.filter(customer=request.user).select_related('product').order_by('-ordered_at')
-    return render(request, 'products/my_orders.html', {'orders': orders})
+    status_filter = request.GET.get('status', '')
+    
+    if status_filter:
+        orders = orders.filter(status=status_filter)
+    
+    return render(request, 'products/my_orders.html', {
+        'orders': orders,
+        'status_filter': status_filter
+    })

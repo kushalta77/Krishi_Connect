@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import UserProfile, Vegetable, SupplierPurchase, SupplierInventory, CustomerOrder
+from .models import UserProfile, Vegetable, SupplierPurchase, SupplierInventory, CustomerOrder, Feedback
 
 # Inline for UserProfile in User admin
 class UserProfileInline(admin.StackedInline):
@@ -62,6 +62,13 @@ class CustomerOrderAdmin(admin.ModelAdmin):
     list_display = ['customer', 'supplier_inventory', 'quantity', 'total_price', 'status', 'ordered_at']
     list_filter = ['status', 'ordered_at']
     search_fields = ['customer__username', 'supplier_inventory__vegetable_name']
+
+@admin.register(Feedback)
+class FeedbackAdmin(admin.ModelAdmin):
+    list_display = ['full_name', 'email', 'rating', 'created_at']
+    list_filter = ['rating', 'created_at']
+    search_fields = ['full_name', 'email', 'message']
+    readonly_fields = ['created_at']
 
 # Customize admin site
 admin.site.site_header = 'Krishi Admin Panel'

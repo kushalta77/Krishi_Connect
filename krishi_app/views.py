@@ -5,10 +5,11 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from django.core.paginator import Paginator
 import re
 import requests
 from django.conf import settings
-from .models import UserProfile, Vegetable, SupplierPurchase, SupplierInventory, CustomerOrder, Cart, CartItem
+from .models import UserProfile, Vegetable, SupplierPurchase, SupplierInventory, CustomerOrder, Cart, CartItem, Feedback
 from django.db.models import Sum, Avg
 from django.db import models
 
@@ -27,7 +28,18 @@ def login_view(request):
             if user:
                 login(request, user)
                 messages.success(request, 'Login successful!')
-                return redirect('dashboard')
+                # Redirect based on user role
+                user_profile = user.userprofile
+                if user_profile.role == 'farmer':
+                    return redirect('farmer_dashboard')
+                elif user_profile.role == 'customer':
+                    return redirect('customer_dashboard')
+                elif user_profile.role == 'supplier':
+                    return redirect('supplier_dashboard')
+                elif user_profile.role == 'expert':
+                    return redirect('expert_dashboard')
+                else:
+                    return redirect('dashboard')
             else:
                 messages.error(request, 'Invalid password')
         except User.DoesNotExist:
@@ -175,6 +187,7 @@ def dashboard(request):
         available_vegetables = vegetables.filter(available=True).count()
         sold_out = vegetables.filter(available=False).count()
         total_earnings = SupplierPurchase.objects.filter(vegetable__farmer=request.user).aggregate(total=Sum('total_price'))['total'] or 0
+        total_orders = SupplierPurchase.objects.filter(vegetable__farmer=request.user).count()
         recent_purchases = SupplierPurchase.objects.filter(vegetable__farmer=request.user).order_by('-purchased_at')[:5]
         context.update({
             'vegetables': vegetables,
@@ -182,6 +195,7 @@ def dashboard(request):
             'available_vegetables': available_vegetables,
             'sold_out': sold_out,
             'total_earnings': total_earnings,
+            'total_orders': total_orders,
             'recent_purchases': recent_purchases,
         })
         return render(request, 'dashboard/farmer_dashboard.html', context)
@@ -205,6 +219,75 @@ def dashboard(request):
         return render(request, 'dashboard/customer_dashboard.html', context)
     else:
         return render(request, 'dashboard.html', context)
+
+@login_required
+def farmer_dashboard(request):
+    if request.user.userprofile.role != 'farmer':
+        return redirect('dashboard')
+    
+    vegetables = Vegetable.objects.filter(farmer=request.user)
+    total_vegetables = vegetables.count()
+    available_vegetables = vegetables.filter(available=True).count()
+    sold_out = vegetables.filter(available=False).count()
+    total_earnings = SupplierPurchase.objects.filter(vegetable__farmer=request.user).aggregate(total=Sum('total_price'))['total'] or 0
+    total_orders = SupplierPurchase.objects.filter(vegetable__farmer=request.user).count()
+    recent_purchases = SupplierPurchase.objects.filter(vegetable__farmer=request.user).order_by('-purchased_at')[:5]
+    
+    context = {
+        'user_role': 'farmer',
+        'vegetables': vegetables,
+        'total_vegetables': total_vegetables,
+        'available_vegetables': available_vegetables,
+        'sold_out': sold_out,
+        'total_earnings': total_earnings,
+        'total_orders': total_orders,
+        'recent_purchases': recent_purchases,
+    }
+    return render(request, 'dashboard/farmer_dashboard.html', context)
+
+@login_required
+def customer_dashboard(request):
+    if request.user.userprofile.role != 'customer':
+        return redirect('dashboard')
+    
+    orders = CustomerOrder.objects.filter(customer=request.user)
+    total_spent = orders.aggregate(total=Sum('total_price'))['total'] or 0
+    recommended = Vegetable.objects.filter(available=True).order_by('-created_at')[:3]
+    cart, _ = Cart.objects.get_or_create(customer=request.user)
+    
+    context = {
+        'user_role': 'customer',
+        'orders': orders,
+        'total_spent': total_spent,
+        'recommended': recommended,
+        'cart': cart,
+    }
+    return render(request, 'dashboard/customer_dashboard.html', context)
+
+@login_required
+def supplier_dashboard(request):
+    if request.user.userprofile.role != 'supplier':
+        return redirect('dashboard')
+    
+    purchases = SupplierPurchase.objects.filter(supplier=request.user)
+    inventory = SupplierInventory.objects.filter(supplier=request.user)
+    
+    context = {
+        'user_role': 'supplier',
+        'purchases': purchases,
+        'inventory': inventory,
+    }
+    return render(request, 'dashboard/supplier_dashboard.html', context)
+
+@login_required
+def expert_dashboard(request):
+    if request.user.userprofile.role != 'expert':
+        return redirect('dashboard')
+    
+    context = {
+        'user_role': 'expert',
+    }
+    return render(request, 'dashboard/expert_dashboard.html', context)
 
 def about(request):
     return render(request, 'about.html')
@@ -343,7 +426,10 @@ def farmer_products(request):
     if request.user.userprofile.role != 'farmer':
         return redirect('dashboard')
     vegetables = Vegetable.objects.filter(farmer=request.user).order_by('-created_at')
-    return render(request, 'dashboard/farmer_products.html', {'vegetables': vegetables})
+    paginator = Paginator(vegetables, 30)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'dashboard/farmer_products.html', {'vegetables': page_obj, 'paginator': paginator})
 
 @login_required
 def add_vegetable(request):
@@ -356,7 +442,7 @@ def add_vegetable(request):
             farmer=request.user,
             name=request.POST['name'],
             category=request.POST.get('category', 'vegetable'),
-            quantity=request.POST['quantity'],
+            quantity=request.POST.get('stock') or request.POST.get('quantity'),
             unit=request.POST['unit'],
             base_price=request.POST.get('base_price') or request.POST['price_per_unit'],
             price_per_unit=request.POST['price_per_unit'],
@@ -368,7 +454,7 @@ def add_vegetable(request):
             image=request.FILES.get('image')
         )
         messages.success(request, 'Product added successfully')
-        return redirect('dashboard')
+        return redirect('farmer_products')
     return render(request, 'dashboard/add_vegetable.html')
 
 @login_required
@@ -391,7 +477,7 @@ def edit_vegetable(request, pk):
         vegetable.available = request.POST.get('available') == 'on'
         vegetable.save()
         messages.success(request, 'Product updated successfully')
-        return redirect('dashboard')
+        return redirect('farmer_products')
     return render(request, 'dashboard/edit_vegetable.html', {'vegetable': vegetable})
 
 @login_required
@@ -404,7 +490,7 @@ def delete_vegetable(request, pk):
     vegetable = get_object_or_404(Vegetable, pk=pk, farmer=request.user)
     vegetable.delete()
     messages.success(request, 'Vegetable deleted successfully')
-    return redirect('dashboard')
+    return redirect('farmer_products')
 
 def public_marketplace(request):
     q = request.GET.get('q', '')
@@ -718,3 +804,66 @@ def weather_view(request):
             error = 'Please enter a city name.'
     
     return render(request, 'weather.html', {'weather_data': weather_data, 'error': error})
+
+
+def feedback_view(request):
+    if request.method == 'POST':
+        full_name = request.POST.get('full_name')
+        email = request.POST.get('email')
+        rating = request.POST.get('rating')
+        message = request.POST.get('message')
+        
+        if full_name and email and rating and message:
+            Feedback.objects.create(
+                full_name=full_name,
+                email=email,
+                rating=int(rating),
+                message=message
+            )
+            messages.success(request, 'Thank you for your feedback!')
+            return redirect('feedback')
+        else:
+            messages.error(request, 'Please fill all fields')
+    
+    feedbacks = Feedback.objects.all()[:10]  # Get 10 most recent feedbacks
+    return render(request, 'feedback.html', {'feedbacks': feedbacks})
+
+
+@login_required
+def farmer_orders(request):
+    if request.user.userprofile.role != 'farmer':
+        return redirect('dashboard')
+    
+    # Get all orders (purchases) made by suppliers from this farmer's vegetables
+    orders = SupplierPurchase.objects.filter(vegetable__farmer=request.user).select_related('supplier', 'vegetable').order_by('-purchased_at')
+    
+    # Also get customer orders for this farmer's vegetables (through SupplierInventory)
+    from django.db.models import Q
+    customer_orders = CustomerOrder.objects.filter(
+        supplier_inventory__supplier=request.user
+    ).select_related('customer', 'supplier_inventory').order_by('-ordered_at')
+    
+    # Combine both types of orders
+    all_orders = list(orders) + list(customer_orders)
+    
+    # Get status filter from query params
+    status_filter = request.GET.get('status', '')
+    if status_filter:
+        all_orders = [o for o in all_orders if o.status == status_filter]
+    
+    # Calculate summary stats
+    total_orders = SupplierPurchase.objects.filter(vegetable__farmer=request.user).count()
+    total_revenue = SupplierPurchase.objects.filter(vegetable__farmer=request.user).aggregate(total=Sum('total_price'))['total'] or 0
+    pending_orders_count = SupplierPurchase.objects.filter(vegetable__farmer=request.user, status='pending').count()
+    confirmed_orders_count = SupplierPurchase.objects.filter(vegetable__farmer=request.user, status='confirmed').count()
+    
+    context = {
+        'orders': orders,
+        'total_orders': total_orders,
+        'total_revenue': total_revenue,
+        'pending_orders': pending_orders_count,
+        'confirmed_orders': confirmed_orders_count,
+        'status_filter': status_filter,
+    }
+    
+    return render(request, 'dashboard/farmer_orders.html', context)

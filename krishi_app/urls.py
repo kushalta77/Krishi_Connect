@@ -6,7 +6,16 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
     path('logout/', views.logout_view, name='logout'),
-    path('farmer/dashboard/', views.dashboard, name='dashboard'),
+    
+    # Main dashboard (generic - redirects based on role)
+    path('dashboard/', views.dashboard, name='dashboard'),
+    
+    # Role-specific dashboards with prefixes
+    path('farmer/dashboard/', views.farmer_dashboard, name='farmer_dashboard'),
+    path('customer/dashboard/', views.customer_dashboard, name='customer_dashboard'),
+    path('supplier/dashboard/', views.supplier_dashboard, name='supplier_dashboard'),
+    path('expert/dashboard/', views.expert_dashboard, name='expert_dashboard'),
+    
     path('about/', views.about, name='about'),
     path('blog/', views.blog, name='blog'),
     path('blog/organic-farming-future/', views.blog_organic_future, name='blog_organic_future'),
@@ -26,11 +35,12 @@ urlpatterns = [
     # Farmer URLs
     path('farmer/products/', views.farmer_products, name='farmer_products'),
     path('farmer/stock/', views.farmer_stock, name='farmer_stock'),
+    path('farmer/orders/', views.farmer_orders, name='farmer_orders'),
     path('farmer/profile/', views.farmer_profile, name='farmer_profile'),
-    path('add-vegetable/', views.add_vegetable, name='add_vegetable'),
-    path('edit-vegetable/<int:pk>/', views.edit_vegetable, name='edit_vegetable'),
-    path('view-vegetable/<int:pk>/', views.view_vegetable, name='view_vegetable'),
-    path('delete-vegetable/<int:pk>/', views.delete_vegetable, name='delete_vegetable'),
+    path('farmer/add-product/', views.add_vegetable, name='add_vegetable'),
+    path('farmer/edit-product/<int:pk>/', views.edit_vegetable, name='edit_vegetable'),
+    path('farmer/view-product/<int:pk>/', views.view_vegetable, name='view_vegetable'),
+    path('farmer/delete-product/<int:pk>/', views.delete_vegetable, name='delete_vegetable'),
     
     # Supplier URLs
     path('marketplace/', views.public_marketplace, name='public_marketplace'),
@@ -50,5 +60,6 @@ urlpatterns = [
     
     # Weather URL
     path('weather/', views.weather_view, name='weather'),
+    path('feedback/', views.feedback_view, name='feedback'),
     path('reports/', views.reports_view, name='reports'),
 ]

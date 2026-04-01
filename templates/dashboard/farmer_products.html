@@ -65,7 +65,7 @@
             <a href="{% url 'farmer_products' %}" class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-white">
                 <i class="fas fa-boxes w-5 text-center text-lg"></i><span>My Products</span>
             </a>
-            <a href="{% url 'my_orders' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+            <a href="{% url 'farmer_orders' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
                 <i class="fas fa-shopping-cart w-5 text-center text-lg"></i><span>Orders</span>
             </a>
             <a href="{% url 'farmer_stock' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
@@ -115,30 +115,34 @@
             {% endfor %}
 
             <!-- Filter Bar -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 px-6 py-4 mb-6 flex items-center gap-4">
-                <i class="fas fa-filter text-gray-400"></i>
-                <select id="categoryFilter" onchange="filterProducts()" class="text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-400">
-                    <option value="all">All Categories</option>
-                    <option value="vegetable">Vegetables</option>
-                    <option value="fruit">Fruits</option>
-                    <option value="grain">Grains</option>
-                    <option value="spice">Spices</option>
-                    <option value="other">Other</option>
-                </select>
-                <select id="statusFilter" onchange="filterProducts()" class="text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-400">
-                    <option value="all">All Status</option>
-                    <option value="available">Available</option>
-                    <option value="soldout">Sold Out</option>
-                </select>
-                <span class="ml-auto text-sm text-gray-400">{{ vegetables.count }} product{{ vegetables.count|pluralize }} listed</span>
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 px-6 py-4 mb-6">
+                <div class="flex items-center gap-4 flex-wrap">
+                    <i class="fas fa-filter text-gray-400"></i>
+                    <select id="categoryFilter" onchange="filterProducts()" class="text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-400">
+                        <option value="all">All Categories</option>
+                        <option value="vegetable">Vegetables</option>
+                        <option value="fruit">Fruits</option>
+                        <option value="grain">Grains</option>
+                        <option value="spice">Spices</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <span class="text-sm font-medium text-gray-600">Status:</span>
+                    <select id="statusFilter" onchange="filterProducts()" class="text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-400">
+                        <option value="all">All Status</option>
+                        <option value="active">Active Order</option>
+                        <option value="completed">Completed Order</option>
+                        <option value="cancelled">Cancelled Order</option>
+                    </select>
+                    <span class="ml-auto text-sm text-gray-400">{{ vegetables.count }} product{{ vegetables.count|pluralize }} listed</span>
+                </div>
             </div>
 
             {% if vegetables %}
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5" id="productsGrid">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4" id="productsGrid">
                 {% for veg in vegetables %}
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all product-card"
                      data-category="{{ veg.category }}"
-                     data-status="{% if veg.available %}available{% else %}soldout{% endif %}">
+                     data-status="{% if veg.available %}active{% else %}completed{% endif %}">
 
                     <!-- Image -->
                     {% if veg.image %}
@@ -160,12 +164,12 @@
                             {{ veg.category|capfirst }}
                         </span>
                         {% if veg.available %}
-                        <span class="inline-flex items-center gap-1 text-xs font-semibold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">
-                            <i class="fas fa-circle" style="font-size:6px"></i> Available
+                        <span class="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">
+                            <i class="fas fa-circle" style="font-size:6px"></i> Active Order
                         </span>
                         {% else %}
-                        <span class="inline-flex items-center gap-1 text-xs font-semibold text-red-500 bg-red-50 px-2.5 py-1 rounded-full">
-                            <i class="fas fa-circle" style="font-size:6px"></i> Sold Out
+                        <span class="inline-flex items-center gap-1 text-xs font-semibold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">
+                            <i class="fas fa-circle" style="font-size:6px"></i> Completed Order
                         </span>
                         {% endif %}
                     </div>
@@ -200,6 +204,42 @@
                 {% endfor %}
             </div>
 
+            <!-- Pagination -->
+            <div class="flex items-center justify-between mt-8">
+                <div class="text-sm text-gray-600">
+                    Showing page <span class="font-semibold">{{ vegetables.number }}</span> of <span class="font-semibold">{{ paginator.num_pages }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    {% if vegetables.has_previous %}
+                    <a href="?page=1" class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium text-sm transition-all">
+                        <i class="fas fa-step-backward"></i> First
+                    </a>
+                    <a href="?page={{ vegetables.previous_page_number }}" class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium text-sm transition-all">
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </a>
+                    {% endif %}
+                    
+                    <div class="flex items-center gap-1">
+                        {% for num in paginator.page_range %}
+                            {% if vegetables.number == num %}
+                            <span class="px-3 py-2 bg-green-600 text-white rounded-lg font-semibold text-sm">{{ num }}</span>
+                            {% elif num > vegetables.number|add:'-3' and num < vegetables.number|add:'3' %}
+                            <a href="?page={{ num }}" class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium text-sm transition-all">{{ num }}</a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    
+                    {% if vegetables.has_next %}
+                    <a href="?page={{ vegetables.next_page_number }}" class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium text-sm transition-all">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </a>
+                    <a href="?page={{ paginator.num_pages }}" class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium text-sm transition-all">
+                        Last <i class="fas fa-step-forward"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
             <!-- No results after filter -->
             <div id="noResults" class="hidden text-center py-16">
                 <div class="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
@@ -229,11 +269,14 @@
 function filterProducts() {
     const cat = document.getElementById('categoryFilter').value;
     const status = document.getElementById('statusFilter').value;
+    
     const cards = document.querySelectorAll('.product-card');
     let visible = 0;
+    
     cards.forEach(card => {
         const catMatch = cat === 'all' || card.dataset.category === cat;
         const statusMatch = status === 'all' || card.dataset.status === status;
+        
         card.style.display = (catMatch && statusMatch) ? '' : 'none';
         if (catMatch && statusMatch) visible++;
     });

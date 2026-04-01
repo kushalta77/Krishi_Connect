@@ -102,3 +102,24 @@ class CustomerOrder(models.Model):
     
     def __str__(self):
         return f"{self.customer.username} - {self.supplier_inventory.vegetable_name}"
+
+class Feedback(models.Model):
+    RATING_CHOICES = [
+        (1, '1 Star - Poor'),
+        (2, '2 Stars - Fair'),
+        (3, '3 Stars - Good'),
+        (4, '4 Stars - Very Good'),
+        (5, '5 Stars - Excellent'),
+    ]
+    
+    full_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    rating = models.IntegerField(choices=RATING_CHOICES, default=5)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.full_name} - {self.rating} stars"
+    
+    class Meta:
+        ordering = ['-created_at']
