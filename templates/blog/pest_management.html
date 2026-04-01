@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Integrated Pest Management Strategies - Krishi Connect{% endblock %}
+{% block content %}
+
+<section class="relative py-20 bg-gradient-to-r from-green-600 to-green-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium mb-4 inline-block">Pest Control</span>
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Integrated Pest Management Strategies</h1>
+        <div class="flex items-center justify-center gap-4 text-green-100 text-sm">
+            <span>August 1, 2024</span><span>•</span><span>5 min read</span>
+        </div>
+    </div>
+</section>
+
+<section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <img src="{{ MEDIA_URL }}blog/organic_benefits.jpg" alt="Pest Management" class="w-full h-80 object-cover rounded-2xl mb-10 shadow-lg">
+
+        <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-6 mb-10">
+            <p class="text-gray-700 text-lg leading-relaxed">Sustainable pest control methods that protect crops while maintaining ecological balance and reducing chemical dependency.</p>
+        </div>
+
+        <div class="space-y-6 text-gray-600 leading-relaxed">
+            <p>Pesticide overuse is one of the most serious problems in Nepali agriculture. Farmers, understandably afraid of losing their crops, often apply chemicals at the first sign of any pest — and sometimes preventively, whether pests are present or not. This approach is expensive, harmful to health, and ultimately counterproductive as pests develop resistance.</p>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-red-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">What is Integrated Pest Management (IPM)?</h3>
+                <p class="mb-4">IPM is a science-based approach that uses multiple strategies to manage pests at economically acceptable levels while minimizing risks to human health and the environment.</p>
+                <ul class="space-y-2">
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Monitor pest populations regularly rather than spraying on a fixed schedule</span></li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Use biological controls — beneficial insects, birds, and microorganisms — as the first line of defense</span></li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Apply chemical pesticides only when pest populations exceed economic thresholds</span></li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Choose the least toxic, most targeted pesticide when chemical control is necessary</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-green-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Biological Control Methods</h3>
+                <p class="mb-3">Nature provides powerful pest control tools that most farmers overlook. Ladybugs, lacewings, and parasitic wasps are natural predators of aphids and caterpillars. Encouraging these beneficial insects by planting flowering border crops and avoiding broad-spectrum pesticides can dramatically reduce pest pressure without any chemical input.</p>
+                <p>Neem-based products, available locally in Nepal, provide effective control of many common pests while being safe for beneficial insects, humans, and the environment.</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-blue-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Early Detection is Everything</h3>
+                <p>The most cost-effective pest management happens before populations explode. Weekly field scouting allows you to intervene early when small, targeted actions are sufficient. Krishi Connect's photo diagnosis tool lets you upload images of suspicious plant symptoms and receive expert identification within hours.</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-green-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Building a Resilient Farm Ecosystem</h3>
+                <p>Diverse farms are more resilient to pest outbreaks than monocultures. Intercropping, companion planting, and maintaining hedgerows and field margins creates habitat for beneficial insects and disrupts the spread of crop-specific pests.</p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2 mt-10 pt-8 border-t border-gray-100">
+            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-xs font-medium">Pest Management</span>
+            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-xs font-medium">IPM</span>
+            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-xs font-medium">Organic</span>
+        </div>
+        <div class="mt-10">
+            <a href="{% url 'blog' %}" class="inline-flex items-center text-green-600 hover:text-green-800 font-medium">
+                <i class="fas fa-arrow-left mr-2"></i> Back to All Articles
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

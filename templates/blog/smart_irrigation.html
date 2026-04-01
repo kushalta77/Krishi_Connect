@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Smart Irrigation Systems for Small Farms - Krishi Connect{% endblock %}
+{% block content %}
+
+<section class="relative py-20 bg-gradient-to-r from-green-600 to-green-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium mb-4 inline-block">Technology</span>
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Smart Irrigation Systems for Small Farms</h1>
+        <div class="flex items-center justify-center gap-4 text-green-100 text-sm">
+            <span>August 10, 2024</span><span>•</span><span>4 min read</span>
+        </div>
+    </div>
+</section>
+
+<section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <img src="{{ MEDIA_URL }}blog/sustainable.jpg" alt="Smart Irrigation" class="w-full h-80 object-cover rounded-2xl mb-10 shadow-lg">
+
+        <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-6 mb-10">
+            <p class="text-gray-700 text-lg leading-relaxed">How modern irrigation technology helps small-scale farmers optimize water usage and increase crop yields while reducing costs.</p>
+        </div>
+
+        <div class="space-y-6 text-gray-600 leading-relaxed">
+            <p>Water is the most critical resource in farming, yet it is also the most wasted. Traditional flood irrigation methods used by most Nepali farmers deliver only 40–50% of water to plant roots — the rest evaporates or runs off. Smart irrigation systems change this equation dramatically.</p>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-blue-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">What is Smart Irrigation?</h3>
+                <p class="mb-4">Smart irrigation uses sensors, timers, and data to deliver exactly the right amount of water to crops at exactly the right time. Instead of flooding fields on a fixed schedule, smart systems monitor soil moisture in real-time and trigger irrigation only when plants actually need water.</p>
+                <ul class="space-y-2">
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Drip irrigation delivers water directly to root zones, reducing waste by up to 60%</span></li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Soil moisture sensors prevent both over-watering and under-watering</span></li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Weather-based controllers pause irrigation during rainfall automatically</span></li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Mobile apps allow farmers to control irrigation remotely from their phones</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-green-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Affordable Options for Small Farms</h3>
+                <p class="mb-3">The biggest misconception about smart irrigation is that it's expensive. In reality, basic drip irrigation systems for a 1-acre farm can be set up for under NPR 15,000 — and the water savings typically pay back the investment within a single growing season.</p>
+                <p>For farmers with smartphones, free apps integrated into Krishi Connect can provide irrigation scheduling recommendations based on local weather data and crop type — no hardware required to get started.</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-orange-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Results from Nepali Farmers</h3>
+                <p>Farmers in Chitwan who adopted drip irrigation through Krishi Connect's pilot program reported a 35% reduction in water usage and a 28% increase in vegetable yields in the first season. The combination of less water stress on plants and more consistent moisture levels directly improves crop quality and marketability.</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-green-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Getting Started</h3>
+                <p>The best way to start is small — install a basic drip system on your highest-value crop first, measure the results, and expand from there. Krishi Connect's expert network includes irrigation specialists who can provide free consultations on the best system for your specific farm layout and crop mix.</p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2 mt-10 pt-8 border-t border-gray-100">
+            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium">Irrigation</span>
+            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium">Technology</span>
+            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium">Water Management</span>
+        </div>
+        <div class="mt-10">
+            <a href="{% url 'blog' %}" class="inline-flex items-center text-green-600 hover:text-green-800 font-medium">
+                <i class="fas fa-arrow-left mr-2"></i> Back to All Articles
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

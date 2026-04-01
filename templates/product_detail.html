@@ -31,6 +31,14 @@
                         <div class="flex items-center gap-3 mb-2">
                             <span class="text-xs font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700 capitalize">{{ vegetable.category }}</span>
                             <span class="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-50 text-emerald-600">In Stock</span>
+                            {% if vegetable.is_farmers_special %}<span class="text-xs font-semibold px-3 py-1 rounded-full bg-yellow-100 text-yellow-700">⭐ Farmer's Special</span>{% endif %}
+                            {% with status=vegetable.freshness_status %}
+                            {% if status == 'fresh' %}<span class="text-xs font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700">🟢 Fresh</span>
+                            {% elif status == 'good' %}<span class="text-xs font-semibold px-3 py-1 rounded-full bg-lime-100 text-lime-700">🟡 Good</span>
+                            {% elif status == 'aging' %}<span class="text-xs font-semibold px-3 py-1 rounded-full bg-orange-100 text-orange-700">🟠 Aging</span>
+                            {% elif status == 'expired' %}<span class="text-xs font-semibold px-3 py-1 rounded-full bg-red-100 text-red-700">🔴 Old</span>
+                            {% endif %}
+                            {% endwith %}
                         </div>
                         <h1 class="text-3xl font-bold text-gray-800 mt-2">{{ vegetable.name }}</h1>
                         <p class="text-gray-400 text-sm mt-1">By {{ vegetable.farmer.first_name }} {{ vegetable.farmer.last_name }}</p>
@@ -38,7 +46,14 @@
                         <div class="mt-6 space-y-3">
                             <div class="flex justify-between border-b border-gray-50 pb-3">
                                 <span class="text-gray-500">Price</span>
-                                <span class="font-bold text-green-600 text-xl">&#8377;{{ vegetable.price_per_unit }} / {{ vegetable.unit }}</span>
+                                <div class="text-right">
+                                    {% if vegetable.discount_price %}
+                                    <span class="font-bold text-green-600 text-xl">&#8377;{{ vegetable.discount_price }} / {{ vegetable.unit }}</span>
+                                    <span class="text-gray-400 text-sm line-through ml-2">&#8377;{{ vegetable.price_per_unit }}</span>
+                                    {% else %}
+                                    <span class="font-bold text-green-600 text-xl">&#8377;{{ vegetable.price_per_unit }} / {{ vegetable.unit }}</span>
+                                    {% endif %}
+                                </div>
                             </div>
                             <div class="flex justify-between border-b border-gray-50 pb-3">
                                 <span class="text-gray-500">Available Stock</span>
@@ -69,20 +84,20 @@
 
                         <div class="flex gap-3">
                             <!-- Buy Now -->
-                            <form method="post" action="{% url 'place_order' vegetable.pk %}" class="flex-1" id="buy-form">
+                            <form method="post" action="{% url 'place_order' vegetable.pk %}" id="khalti-buy-now-form" class="flex-1">
                                 {% csrf_token %}
                                 <input type="hidden" name="quantity" id="buy-qty">
-                                <button type="submit" onclick="document.getElementById('buy-qty').value = document.getElementById('shared-qty').value"
-                                    class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition-colors">
-                                    <i class="fas fa-shopping-cart mr-2"></i>Buy Now
+                                <button type="button" onclick="initiateKhaltiPayment()"
+                                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2">
+                                    <i class="fas fa-bolt text-yellow-300"></i>Buy with Khalti
                                 </button>
                             </form>
 
                             <!-- Add to Cart -->
                             <form method="post" action="{% url 'add_to_cart' vegetable.pk %}" class="flex-1">
                                 {% csrf_token %}
-                                <input type="hidden" name="quantity" id="cart-qty">
-                                <button type="submit" onclick="document.getElementById('cart-qty').value = document.getElementById('shared-qty').value"
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit"
                                     class="w-full border-2 border-green-600 text-green-600 hover:bg-green-50 font-semibold py-3 rounded-xl transition-colors">
                                     <i class="fas fa-cart-plus mr-2"></i>Add to Cart
                                 </button>
@@ -112,4 +127,46 @@
 
     </div>
 </div>
+
+<script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
+<script>
+    function initiateKhaltiPayment() {
+        var qtyInput = document.getElementById('shared-qty').value;
+        if (!qtyInput || qtyInput <= 0) {
+            alert("Please enter a valid quantity.");
+            return;
+        }
+        
+        // Ensure the hidden input has the qty
+        document.getElementById('buy-qty').value = qtyInput;
+        
+        let pricePerUnit = parseFloat("{{ vegetable.discount_price|default:vegetable.price_per_unit }}");
+        let totalAmountRs = pricePerUnit * parseFloat(qtyInput);
+        let amountInPaisa = totalAmountRs * 100;
+        
+        var config = {
+            "publicKey": "test_public_key_dc74e0fd57cb46cd93832aee0a390234",
+            "productIdentity": "PROD_" + "{{ vegetable.pk }}",
+            "productName": "{{ vegetable.name }}",
+            "productUrl": window.location.href,
+            "paymentPreference": ["KHALTI", "EBANKING", "MOBILE_BANKING", "CONNECT_IPS", "SCT"],
+            "eventHandler": {
+                onSuccess(payload) {
+                    console.log("Khalti Success Payload:", payload);
+                    document.getElementById('khalti-buy-now-form').submit();
+                },
+                onError(error) {
+                    console.log("Khalti Error:", error);
+                    alert("Payment failed or cancelled!");
+                },
+                onClose() {
+                    console.log("Khalti widget closed");
+                }
+            }
+        };
+
+        var checkout = new KhaltiCheckout(config);
+        checkout.show({amount: amountInPaisa});
+    }
+</script>
 {% endblock %}

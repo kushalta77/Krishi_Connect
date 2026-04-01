@@ -6,439 +6,497 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Farmer Dashboard | Krishi Connect</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>">
+    
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons & Swiper CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', '"Plus Jakarta Sans"', 'sans-serif'],
+                        heading: ['Poppins', '"Outfit"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
     <style>
-        body { font-size: 16px; }
+        body {
+            background-color: #f8fafc;
+            background-image: radial-gradient(#22c55e15 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02);
+        }
+        .sidebar {
+            background: linear-gradient(160deg, #14532d 0%, #166534 100%);
+        }
+        .hover-scale {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .hover-scale:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px -10px rgba(34, 197, 94, 0.2);
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .nav-item {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background-color: #4ade80;
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+            transform-origin: left;
+        }
+        .nav-item:hover::before, .nav-item.active::before { transform: scaleY(1); }
+        .nav-item:hover, .nav-item.active { background: rgba(255, 255, 255, 0.1); color: #fff; }
+
+        /* Daraz-like Swiper Card styling */
+        .product-carousel-card {
+            background: #fff;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #f1f5f9;
+        }
+        .product-carousel-card:hover {
+            box-shadow: 0 10px 25px rgba(34,197,94,0.15);
+            transform: translateY(-4px);
+            border-color: #86efac;
+        }
+        .swiper-button-next, .swiper-button-prev {
+            background-color: white;
+            color: #16a34a !important;
+            border-radius: 50%;
+            width: 40px !important;
+            height: 40px !important;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .swiper-button-next:after, .swiper-button-prev:after {
+            font-size: 16px !important;
+            font-weight: bold;
+        }
+        .swiper-pagination-bullet-active {
+            background: #16a34a !important;
+        }
     </style>
 </head>
-<body class="bg-gray-50">
-<div class="flex h-screen bg-gray-50 overflow-hidden">
+<body class="min-h-screen text-slate-800 font-sans selection:bg-brand-200">
 
-    <!-- ── Sidebar ──────────────────────────────────────────────────────── -->
-    <aside class="w-72 bg-gradient-to-b from-green-900 via-green-800 to-green-700 text-white flex flex-col shadow-2xl flex-shrink-0">
+<!-- Mobile Overlay -->
+<div id="overlay" onclick="closeSidebar()" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-all duration-300 opacity-0"></div>
 
-        <!-- Brand -->
-        <div class="px-6 py-6 border-b border-green-600/50">
+<div class="flex h-screen overflow-hidden">
+
+    <!-- Premium Sidebar (Similar to Customer Dashboard updates) -->
+    <aside id="sidebar" class="fixed md:static z-50 w-72 h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0 transition-transform duration-500 ease-out">
+        <div class="px-8 py-8 relative">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-white/15 rounded-xl flex items-center justify-center">
-                    <i class="fas fa-seedling text-2xl text-green-200"></i>
+                <div class="w-12 h-12 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center border border-white/20 shadow-lg">
+                    <i class="fas fa-seedling text-2xl text-brand-400"></i>
                 </div>
                 <div>
-                    <p class="font-bold text-xl leading-tight">Krishi Connect</p>
-                    <p class="text-green-300 text-sm mt-0.5">Farmer Portal</p>
+                    <h2 class="font-heading font-bold text-2xl text-white tracking-tight">Krishi<span class="text-brand-400">Connect</span></h2>
+                    <p class="text-brand-200/80 text-[10px] tracking-wider uppercase font-semibold mt-1">Farmer Portal</p>
                 </div>
             </div>
         </div>
 
-        <!-- Profile Card -->
-        <div class="mx-4 my-5 bg-white/10 rounded-2xl p-4 border border-white/10">
-            <div class="flex items-center gap-4">
-                <div class="w-14 h-14 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg flex-shrink-0">
+        <div class="mx-6 mb-8 mt-2 p-1 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 shadow-lg relative overflow-hidden group">
+            <div class="absolute inset-0 bg-brand-600/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+            <div class="relative p-4 flex items-center gap-4">
+                <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-xl font-bold text-brand-700 shadow-md">
                     {{ user.first_name|first|upper }}
                 </div>
-                <div class="flex-1 min-w-0">
-                    <p class="font-bold text-base truncate">{{ user.first_name }} {{ user.last_name }}</p>
-                    <span class="inline-flex items-center gap-1.5 text-sm bg-green-400/20 text-green-200 px-2.5 py-0.5 rounded-full mt-1">
-                        <i class="fas fa-circle text-green-400" style="font-size:7px"></i> Active Farmer
+                <div class="min-w-0 flex-1">
+                    <p class="font-semibold text-white text-md truncate">{{ user.first_name }} {{ user.last_name }}</p>
+                    <span class="inline-flex items-center gap-1.5 text-[10px] bg-brand-400/20 text-brand-200 px-2 py-0.5 rounded-full mt-1 font-bold uppercase tracking-wider">
+                        <i class="fas fa-circle text-brand-400" style="font-size:6px"></i> Active Farmer
                     </span>
+                    <a href="{% url 'farmer_profile' %}" class="mt-2 flex items-center gap-1 text-[10px] text-brand-300 hover:text-white transition-colors">
+                        <i class="fas fa-user-cog" style="font-size:9px"></i> View Profile
+                    </a>
                 </div>
             </div>
         </div>
 
-        <!-- Nav -->
-        <nav class="flex-1 px-4 space-y-1 overflow-y-auto pb-4">
-            <p class="text-green-400 text-xs font-bold uppercase tracking-widest px-3 py-2">Main Menu</p>
-
-            <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-4 py-3 bg-white/20 rounded-xl text-white font-semibold text-base">
-                <span class="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-th-large"></i></span>
-                Dashboard
+        <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto pb-6">
+            <p class="text-brand-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mb-2">Main Menu</p>
+            <a href="{% url 'dashboard' %}" class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-white">
+                <i class="fas fa-th-large w-5 text-center text-lg"></i><span>Dashboard</span>
             </a>
-            <a href="{% url 'add_vegetable' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-base group">
-                <span class="w-9 h-9 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-plus-circle"></i></span>
-                List New Product
+            <a href="{% url 'add_vegetable' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-plus-circle w-5 text-center text-lg"></i><span>List New Product</span>
             </a>
-            <a href="{% url 'farmer_products' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-base group">
-                <span class="w-9 h-9 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-boxes"></i></span>
-                My Products
+            <a href="{% url 'farmer_products' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-boxes w-5 text-center text-lg"></i><span>My Products</span>
             </a>
-            <a href="{% url 'my_orders' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-base group">
-                <span class="w-9 h-9 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-shopping-cart"></i></span>
-                Orders
+            <a href="{% url 'my_orders' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-shopping-cart w-5 text-center text-lg"></i><span>Orders</span>
             </a>
-            <a href="{% url 'farmer_stock' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-base group">
-                <span class="w-9 h-9 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-warehouse"></i></span>
-                Stock
+            <a href="{% url 'farmer_stock' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-warehouse w-5 text-center text-lg"></i><span>Stock Management</span>
             </a>
-
-            <p class="text-green-400 text-xs font-bold uppercase tracking-widest px-3 py-2 mt-4">Tools</p>
-
-            <a href="{% url 'weather' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-base group">
-                <span class="w-9 h-9 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-cloud-sun"></i></span>
-                Weather
+            <p class="text-brand-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Tools</p>
+            <a href="{% url 'weather' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-cloud-sun w-5 text-center text-lg"></i><span>Weather Updates</span>
             </a>
-            <a href="#chatbot" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-base group">
-                <span class="w-9 h-9 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-robot"></i></span>
-                Chatbot
-            </a>
-            <a href="{% url 'home' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-base group">
-                <span class="w-9 h-9 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-home"></i></span>
-                Home
+            <a href="#chatbot" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-robot w-5 text-center text-lg"></i><span>Chatbot</span>
             </a>
         </nav>
 
-        <!-- Logout -->
-        <div class="p-4 border-t border-green-600/50">
+        <div class="p-6 border-t border-white/10 mt-auto bg-black/10">
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
-                <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 bg-red-500/20 hover:bg-red-500/40 rounded-xl text-red-200 hover:text-white transition-all text-base font-medium">
-                    <span class="w-9 h-9 bg-red-500/20 rounded-lg flex items-center justify-center"><i class="fas fa-sign-out-alt"></i></span>
-                    Logout
+                <button type="submit" class="w-full flex items-center justify-center gap-3 py-3.5 bg-red-500/10 hover:bg-red-500 border border-red-500/20 hover:border-red-500 rounded-xl text-red-400 hover:text-white font-medium transition-all duration-300 shadow-lg">
+                    <i class="fas fa-power-off"></i> 
+                    <span>Logout </span>
                 </button>
             </form>
         </div>
     </aside>
 
-    <!-- ── Main Content ──────────────────────────────────────────────────── -->
-    <div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col overflow-hidden relative">
 
-        <!-- Top Bar -->
-        <header class="bg-white border-b border-gray-100 px-8 py-5 flex items-center justify-between shadow-sm flex-shrink-0">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-800">
-                    Good day, <span class="text-green-600">{{ user.first_name }}</span>! 🌾
-                </h1>
-                <p class="text-gray-400 text-base mt-0.5">Here's your farm overview for today</p>
+        <!-- Top Header -->
+        <header class="glass-panel z-30 px-6 py-4 flex items-center justify-between shadow-sm flex-shrink-0 sticky top-0 mx-4 mt-4 mb-2 rounded-2xl">
+            <div class="flex items-center gap-4">
+                <button onclick="openSidebar()" class="md:hidden w-10 h-10 flex items-center justify-center bg-brand-50 text-brand-600 rounded-xl hover:bg-brand-100 transition-colors">
+                    <i class="fas fa-bars text-lg"></i>
+                </button>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-heading font-bold text-slate-800 tracking-tight">
+                        Good day, <span class="bg-gradient-to-r from-brand-600 to-emerald-500 bg-clip-text text-transparent">{{ user.first_name }}</span>! 🌾
+                    </h1>
+                    <p class="text-slate-500 text-sm font-medium mt-0.5">Here is your farm overview for today.</p>
+                </div>
             </div>
             <div class="flex items-center gap-3">
-                <a href="{% url 'weather' %}" class="flex items-center gap-2 bg-sky-50 hover:bg-sky-100 text-sky-600 px-5 py-2.5 rounded-xl text-base font-medium transition-all border border-sky-100">
+                <a href="{% url 'weather' %}" class="hidden sm:flex items-center gap-2 bg-sky-50 hover:bg-sky-100 text-sky-600 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all border border-sky-100">
                     <i class="fas fa-cloud-sun"></i> Weather
                 </a>
-                <a href="{% url 'add_vegetable' %}" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-xl text-base font-semibold transition-all shadow-sm shadow-green-200">
-                    <i class="fas fa-plus"></i> List Product
+                <a href="{% url 'add_vegetable' %}" class="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg hover:-translate-y-0.5">
+                    <i class="fas fa-plus text-brand-400"></i> List Product
                 </a>
             </div>
         </header>
 
-        <!-- Scrollable Body -->
-        <main class="flex-1 overflow-y-auto p-6 space-y-6">
+        <main class="flex-1 overflow-y-auto px-4 pb-12 pt-4">
+            <div class="max-w-7xl mx-auto space-y-8">
 
-            <!-- Flash Messages -->
-            {% for message in messages %}
-            <div class="flex items-center gap-3 p-4 rounded-xl border text-base {% if message.tags == 'success' %}bg-green-50 border-green-200 text-green-700{% else %}bg-red-50 border-red-200 text-red-700{% endif %}">
-                <i class="fas {% if message.tags == 'success' %}fa-check-circle text-green-500{% else %}fa-exclamation-circle text-red-500{% endif %} text-lg"></i>
-                {{ message }}
-            </div>
-            {% endfor %}
-
-            <!-- ── Stats Row ────────────────────────────────────────────── -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
-
-                <div class="relative bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 text-white overflow-hidden shadow-lg shadow-green-200">
-                    <div class="absolute -right-4 -top-4 w-28 h-28 bg-white/10 rounded-full"></div>
-                    <div class="absolute -right-2 -bottom-6 w-20 h-20 bg-white/10 rounded-full"></div>
-                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
-                        <i class="fas fa-rupee-sign text-xl"></i>
+                <!-- Alert Messages -->
+                {% for message in messages %}
+                <div class="fade-in-up p-4 rounded-2xl glass-panel border shadow-sm {% if message.tags == 'success' %}border-brand-200 bg-brand-50/80 text-brand-800{% else %}border-red-200 bg-red-50/80 text-red-800{% endif %} flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 {% if message.tags == 'success' %}bg-brand-100 text-brand-600{% else %}bg-red-100 text-red-600{% endif %}">
+                        <i class="fas {% if message.tags == 'success' %}fa-check{% else %}fa-exclamation{% endif %}"></i>
                     </div>
-                    <p class="text-3xl font-bold">₹{{ total_earnings|floatformat:0 }}</p>
-                    <p class="text-green-100 text-base mt-1 font-medium">Total Earnings</p>
-                    <div class="mt-3 flex items-center gap-1.5 text-green-200 text-sm">
-                        <i class="fas fa-arrow-up"></i> From all sales
+                    <p class="font-medium text-sm">{{ message }}</p>
+                </div>
+                {% endfor %}
+
+                <!-- Statistics Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <div class="glass-panel p-6 rounded-3xl hover-scale fade-in-up" style="animation-delay: 0.1s;">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-xl shadow-sm border border-emerald-100">
+                                <i class="fas fa-rupee-sign"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-3xl font-heading font-bold text-slate-800">₹{{ total_earnings|floatformat:0 }}</h3>
+                        <p class="text-slate-500 text-sm font-medium mt-1">Total Earnings</p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-3xl hover-scale fade-in-up" style="animation-delay: 0.2s;">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl shadow-sm border border-blue-100">
+                                <i class="fas fa-boxes"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-3xl font-heading font-bold text-slate-800">{{ total_vegetables }}</h3>
+                        <p class="text-slate-500 text-sm font-medium mt-1">Total Listed</p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-3xl hover-scale fade-in-up" style="animation-delay: 0.3s;">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="w-12 h-12 bg-teal-50 text-teal-600 rounded-2xl flex items-center justify-center text-xl shadow-sm border border-teal-100">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-3xl font-heading font-bold text-slate-800">{{ available_vegetables }}</h3>
+                        <p class="text-slate-500 text-sm font-medium mt-1">In Stock</p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-3xl hover-scale fade-in-up" style="animation-delay: 0.4s;">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center text-xl shadow-sm border border-orange-100">
+                                <i class="fas fa-times-circle"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-3xl font-heading font-bold text-slate-800">{{ sold_out }}</h3>
+                        <p class="text-slate-500 text-sm font-medium mt-1">Sold Out Products</p>
                     </div>
                 </div>
 
-                <div class="relative bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-6 text-white overflow-hidden shadow-lg shadow-blue-200">
-                    <div class="absolute -right-4 -top-4 w-28 h-28 bg-white/10 rounded-full"></div>
-                    <div class="absolute -right-2 -bottom-6 w-20 h-20 bg-white/10 rounded-full"></div>
-                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
-                        <i class="fas fa-boxes text-xl"></i>
-                    </div>
-                    <p class="text-3xl font-bold">{{ total_vegetables }}</p>
-                    <p class="text-blue-100 text-base mt-1 font-medium">Total Listed</p>
-                    <div class="mt-3 flex items-center gap-1.5 text-blue-200 text-sm">
-                        <i class="fas fa-layer-group"></i> All products
-                    </div>
-                </div>
-
-                <div class="relative bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl p-6 text-white overflow-hidden shadow-lg shadow-teal-200">
-                    <div class="absolute -right-4 -top-4 w-28 h-28 bg-white/10 rounded-full"></div>
-                    <div class="absolute -right-2 -bottom-6 w-20 h-20 bg-white/10 rounded-full"></div>
-                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
-                        <i class="fas fa-check-circle text-xl"></i>
-                    </div>
-                    <p class="text-3xl font-bold">{{ available_vegetables }}</p>
-                    <p class="text-teal-100 text-base mt-1 font-medium">In Stock</p>
-                    <div class="mt-3 flex items-center gap-1.5 text-teal-200 text-sm">
-                        <i class="fas fa-circle text-teal-300" style="font-size:9px"></i> Active listings
-                    </div>
-                </div>
-
-                <div class="relative bg-gradient-to-br from-orange-500 to-rose-500 rounded-2xl p-6 text-white overflow-hidden shadow-lg shadow-orange-200">
-                    <div class="absolute -right-4 -top-4 w-28 h-28 bg-white/10 rounded-full"></div>
-                    <div class="absolute -right-2 -bottom-6 w-20 h-20 bg-white/10 rounded-full"></div>
-                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
-                        <i class="fas fa-times-circle text-xl"></i>
-                    </div>
-                    <p class="text-3xl font-bold">{{ sold_out }}</p>
-                    <p class="text-orange-100 text-base mt-1 font-medium">Sold Out</p>
-                    <div class="mt-3 flex items-center gap-1.5 text-orange-200 text-sm">
-                        <i class="fas fa-redo"></i> Needs restock
-                    </div>
-                </div>
-            </div>
-
-            <!-- ── Main Grid ────────────────────────────────────────────── -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-                <!-- Products Table -->
-                <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+                <!-- 🔥 Daraz Like Carousel for Listed Products 🔥 -->
+                <div class="glass-panel p-8 rounded-[2rem] fade-in-up" style="animation-delay: 0.5s;">
+                    <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h3 class="font-bold text-gray-800 text-lg">My Listed Products</h3>
-                            <p class="text-gray-400 text-sm mt-0.5">Manage your listings</p>
+                            <h2 class="font-heading font-bold text-2xl text-slate-800 flex items-center gap-2">
+                                <i class="fas fa-bullhorn text-brand-500"></i> My Live Products Showcase
+                            </h2>
+                            <p class="text-slate-500 text-sm mt-1">Preview how your listings look on the marketplace!</p>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <select id="categoryFilter" onchange="filterByCategory()" class="text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-400">
-                                <option value="all">All</option>
-                                <option value="vegetable">Vegetables</option>
-                                <option value="fruit">Fruits</option>
-                                <option value="grain">Grains</option>
-                                <option value="spice">Spices</option>
-                                <option value="other">Other</option>
-                            </select>
-                            <a href="{% url 'add_vegetable' %}" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all">
-                                <i class="fas fa-plus"></i> Add New
-                            </a>
-                        </div>
+                        <a href="{% url 'farmer_products' %}" class="bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold text-sm px-4 py-2 rounded-xl transition-all">
+                            View List
+                        </a>
                     </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr class="bg-gray-50 text-gray-500 text-sm uppercase tracking-wider">
-                                    <th class="px-6 py-4 text-left font-semibold">Product</th>
-                                    <th class="px-6 py-4 text-left font-semibold">Stock</th>
-                                    <th class="px-6 py-4 text-left font-semibold">Price</th>
-                                    <th class="px-6 py-4 text-left font-semibold">Status</th>
-                                    <th class="px-6 py-4 text-left font-semibold">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-100">
+                    
+                    {% if vegetables %}
+                    <div class="relative px-2">
+                        <!-- Swiper -->
+                        <div class="swiper productSwiper pb-12 pt-2">
+                            <div class="swiper-wrapper">
                                 {% for veg in vegetables %}
-                                <tr class="hover:bg-gray-50/70 transition-colors" data-category="{{ veg.category }}">
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-11 h-11 rounded-xl overflow-hidden flex-shrink-0 bg-gradient-to-br from-green-100 to-emerald-100">
-                                                {% if veg.image %}
-                                                <img src="{{ veg.image.url }}" alt="{{ veg.name }}" class="w-full h-full object-cover">
-                                                {% else %}
-                                                <div class="w-full h-full flex items-center justify-center">
-                                                    <i class="fas fa-leaf text-green-600 text-base"></i>
+                                <div class="swiper-slide h-auto">
+                                    <div class="product-carousel-card h-full flex flex-col group cursor-pointer" onclick="window.location='{% url 'view_vegetable' veg.pk %}'">
+                                        <div class="relative h-48 w-full overflow-hidden bg-slate-100">
+                                            {% if veg.image %}
+                                            <img src="{{ veg.image.url }}" alt="{{ veg.name }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                            {% else %}
+                                            <div class="w-full h-full flex items-center justify-center text-4xl text-brand-200">
+                                                <i class="fas fa-leaf"></i>
+                                            </div>
+                                            {% endif %}
+                                            
+                                            <!-- Discount/New Tag Badge -->
+                                            {% if veg.discount_price %}
+                                            <div class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md shadow-lg z-10">
+                                                Sale Offer
+                                            </div>
+                                            {% endif %}
+                                            {% if veg.available %}
+                                            <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-brand-700 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md shadow-sm z-10 hidden group-hover:block transition-all">
+                                                In Stock
+                                            </div>
+                                            {% else %}
+                                            <div class="absolute top-3 right-3 bg-red-50 text-red-600 border border-red-200 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md shadow-sm z-10">
+                                                Out of Stock
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="p-5 flex-1 flex flex-col">
+                                            <div class="mb-1 text-xs text-slate-400 font-bold uppercase tracking-wider">{{ veg.category }}</div>
+                                            <h3 class="font-heading font-bold text-lg text-slate-800 truncate mb-1" title="{{ veg.name }}">{{ veg.name }}</h3>
+                                            
+                                            <div class="flex items-center gap-1 mb-3">
+                                                <div class="flex text-yellow-400 text-[10px]">
+                                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
                                                 </div>
+                                                <span class="text-xs text-slate-400">(4.8)</span>
+                                            </div>
+
+                                            <div class="mt-auto">
+                                                {% if veg.discount_price %}
+                                                <p class="font-bold text-brand-600 text-2xl leading-none">₹{{ veg.discount_price }} <span class="text-xs text-slate-400 font-medium">/{{ veg.unit }}</span></p>
+                                                <p class="text-sm text-slate-400 line-through mt-0.5">₹{{ veg.price_per_unit }}</p>
+                                                {% else %}
+                                                <p class="font-bold text-brand-600 text-2xl leading-none">₹{{ veg.price_per_unit }} <span class="text-xs text-slate-400 font-medium">/{{ veg.unit }}</span></p>
                                                 {% endif %}
-                                            </div>
-                                            <div>
-                                                <p class="font-semibold text-gray-800 text-base">{{ veg.name }}</p>
-                                                <p class="text-gray-400 text-sm">{{ veg.created_at|date:"d M Y" }}</p>
+                                                
+                                                <div class="mt-4 flex items-center justify-between">
+                                                    <div class="text-[11px] font-semibold text-slate-500 border border-slate-200 px-2.5 py-1 rounded-md bg-slate-50">
+                                                        Qty: {{ veg.quantity }}
+                                                    </div>
+                                                    <a href="{% url 'edit_vegetable' veg.pk %}" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 hover:bg-brand-500 hover:text-white transition-colors text-slate-600 block z-20" onclick="event.stopPropagation()">
+                                                        <i class="fas fa-edit text-xs"></i>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
-                                    </td>
-                                    <td class="px-6 py-4 text-gray-600 text-base">{{ veg.quantity }} {{ veg.unit }}</td>
-                                    <td class="px-6 py-4 font-semibold text-gray-800 text-base">₹{{ veg.price_per_unit }}/{{ veg.unit }}</td>
-                                    <td class="px-6 py-4">
-                                        {% if veg.available %}
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold bg-green-100 text-green-700 rounded-full">
-                                            <i class="fas fa-circle" style="font-size:7px"></i> Available
-                                        </span>
-                                        {% else %}
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold bg-red-100 text-red-600 rounded-full">
-                                            <i class="fas fa-circle" style="font-size:7px"></i> Sold Out
-                                        </span>
-                                        {% endif %}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center gap-2">
-                                            <a href="{% url 'view_vegetable' veg.pk %}"
-                                               class="w-9 h-9 bg-blue-50 hover:bg-blue-100 text-blue-400 hover:text-blue-600 rounded-lg flex items-center justify-center transition-all" title="View">
-                                                <i class="fas fa-eye text-sm"></i>
-                                            </a>
-                                            <a href="{% url 'edit_vegetable' veg.pk %}"
-                                               class="w-9 h-9 bg-yellow-50 hover:bg-yellow-100 text-yellow-500 hover:text-yellow-700 rounded-lg flex items-center justify-center transition-all" title="Edit">
-                                                <i class="fas fa-edit text-sm"></i>
-                                            </a>
-                                            <a href="{% url 'delete_vegetable' veg.pk %}"
-                                               onclick="return confirm('Delete {{ veg.name }}?')"
-                                               class="w-9 h-9 bg-red-50 hover:bg-red-100 text-red-400 hover:text-red-600 rounded-lg flex items-center justify-center transition-all" title="Delete">
-                                                <i class="fas fa-trash-alt text-sm"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="5" class="px-6 py-16 text-center">
-                                        <div class="flex flex-col items-center gap-3">
-                                            <div class="w-20 h-20 bg-green-50 rounded-2xl flex items-center justify-center">
-                                                <i class="fas fa-seedling text-green-300 text-4xl"></i>
-                                            </div>
-                                            <p class="text-gray-500 font-semibold text-lg">No products listed yet</p>
-                                            <a href="{% url 'add_vegetable' %}" class="text-green-600 hover:text-green-800 text-base font-semibold hover:underline">
-                                                + List your first product
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
+                                    </div>
+                                </div>
                                 {% endfor %}
-                            </tbody>
-                        </table>
+                            </div>
+                            <!-- Add Pagination & Nav -->
+                            <div class="swiper-pagination"></div>
+                            <div class="swiper-button-next !hidden sm:!flex"></div>
+                            <div class="swiper-button-prev !hidden sm:!flex"></div>
+                        </div>
                     </div>
+                    {% else %}
+                    <div class="text-center py-16 bg-white rounded-xl border border-dashed border-slate-300">
+                        <div class="w-20 h-20 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-camera text-3xl text-brand-300"></i>
+                        </div>
+                        <h4 class="font-heading font-bold text-lg text-slate-700 mb-2">No Products to Display</h4>
+                        <p class="text-slate-500 text-sm mb-6 max-w-sm mx-auto">Your carousel is empty. List your first product to see it showcased here beautifully!</p>
+                        <a href="{% url 'add_vegetable' %}" class="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-xl font-semibold shadow-md transition-all">
+                            Add First Product
+                        </a>
+                    </div>
+                    {% endif %}
                 </div>
 
-                <!-- Right Column -->
-                <div class="space-y-5">
-
-                    <!-- Quick Actions -->
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-                        <h3 class="font-bold text-gray-800 text-lg mb-4 flex items-center gap-2">
-                            <span class="w-7 h-7 bg-green-100 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-bolt text-green-600 text-sm"></i>
-                            </span>
-                            Quick Actions
-                        </h3>
-                        <div class="space-y-3">
-                            <a href="{% url 'add_vegetable' %}" class="flex items-center gap-3 p-3.5 bg-green-50 hover:bg-green-100 rounded-xl transition-all group">
-                                <div class="w-11 h-11 bg-green-500 group-hover:bg-green-600 rounded-xl flex items-center justify-center transition-all shadow-sm shadow-green-200 flex-shrink-0">
-                                    <i class="fas fa-plus text-white text-base"></i>
-                                </div>
-                                <div>
-                                    <p class="font-semibold text-gray-800 text-base">List New Product</p>
-                                    <p class="text-gray-400 text-sm">Add to marketplace</p>
-                                </div>
-                                <i class="fas fa-chevron-right text-gray-300 ml-auto"></i>
-                            </a>
-
-
-
-                            <a href="{% url 'weather' %}" class="flex items-center gap-3 p-3.5 bg-sky-50 hover:bg-sky-100 rounded-xl transition-all group">
-                                <div class="w-11 h-11 bg-sky-500 group-hover:bg-sky-600 rounded-xl flex items-center justify-center transition-all shadow-sm shadow-sky-200 flex-shrink-0">
-                                    <i class="fas fa-cloud-sun text-white text-base"></i>
-                                </div>
-                                <div>
-                                    <p class="font-semibold text-gray-800 text-base">Check Weather</p>
-                                    <p class="text-gray-400 text-sm">Plan your farming</p>
-                                </div>
-                                <i class="fas fa-chevron-right text-gray-300 ml-auto"></i>
-                            </a>
-                        </div>
-                    </div>
-
+                <!-- Bottom Section: Transactions & Tips -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 fade-in-up" style="animation-delay: 0.6s;">
                     <!-- Recent Sales -->
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-                        <h3 class="font-bold text-gray-800 text-lg mb-4 flex items-center gap-2">
-                            <span class="w-7 h-7 bg-orange-100 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-receipt text-orange-500 text-sm"></i>
-                            </span>
-                            Recent Sales
-                        </h3>
-                        <div class="space-y-3">
+                    <div class="lg:col-span-2 glass-panel p-8 rounded-3xl">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="font-heading font-bold text-xl text-slate-800 flex items-center gap-2">
+                                <i class="fas fa-receipt text-orange-500"></i> Recent Sales
+                            </h3>
+                            <a href="#" class="text-xs font-bold text-brand-600 hover:underline">View All</a>
+                        </div>
+                        <div class="space-y-4">
                             {% for purchase in recent_purchases %}
-                            <div class="flex items-center gap-3 p-3.5 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all">
-                                <div class="w-11 h-11 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                    <i class="fas fa-leaf text-green-600 text-base"></i>
+                            <div class="flex items-center gap-4 p-4 bg-white/50 border border-slate-100 hover:bg-white rounded-2xl transition-all shadow-sm">
+                                <div class="w-12 h-12 bg-gradient-to-br from-brand-100 to-emerald-100 rounded-xl flex items-center justify-center text-brand-600 text-lg">
+                                    <i class="fas fa-sack-dollar"></i>
                                 </div>
                                 <div class="flex-1 min-w-0">
-                                    <p class="text-base font-semibold text-gray-800 truncate">{{ purchase.vegetable.name }}</p>
-                                    <p class="text-sm text-gray-400">{{ purchase.purchased_at|date:"d M, H:i" }}</p>
+                                    <p class="font-bold text-slate-800 text-base truncate">{{ purchase.vegetable.name }}</p>
+                                    <p class="text-xs text-slate-400 font-medium">Purchased on {{ purchase.purchased_at|date:"M d, Y - h:i A" }}</p>
                                 </div>
-                                <span class="text-green-600 font-bold text-base flex-shrink-0">₹{{ purchase.total_price }}</span>
+                                <span class="font-heading font-black text-brand-600 text-lg">₹{{ purchase.total_price }}</span>
                             </div>
                             {% empty %}
-                            <div class="text-center py-8">
-                                <div class="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                                    <i class="fas fa-shopping-bag text-gray-300 text-2xl"></i>
-                                </div>
-                                <p class="text-gray-400 text-base font-medium">No sales yet</p>
-                                <p class="text-gray-300 text-sm mt-1">List products to start selling</p>
+                            <div class="text-center py-6 px-4 bg-white rounded-2xl border border-dashed border-slate-200">
+                                <i class="fas fa-box-open text-slate-300 text-3xl mb-3"></i>
+                                <p class="text-slate-500 font-medium text-sm">No recent sales yet.</p>
                             </div>
                             {% endfor %}
                         </div>
                     </div>
 
-                    <!-- Farming Tip -->
-                    <div class="relative bg-gradient-to-br from-green-700 to-teal-700 rounded-2xl p-5 text-white overflow-hidden">
-                        <div class="absolute -right-6 -top-6 w-28 h-28 bg-white/10 rounded-full"></div>
-                        <div class="absolute -right-2 -bottom-8 w-20 h-20 bg-white/10 rounded-full"></div>
-                        <div class="relative">
-                            <div class="flex items-center gap-2 mb-3">
-                                <i class="fas fa-lightbulb text-yellow-300 text-xl"></i>
-                                <span class="font-bold text-base">Today's Tip</span>
+                    <!-- Farming Tip & Quick Links -->
+                    <div class="space-y-6">
+                        <div class="relative bg-slate-900 rounded-3xl p-6 text-white overflow-hidden shadow-xl">
+                            <div class="absolute -right-6 -top-6 w-32 h-32 bg-brand-500/20 rounded-full blur-2xl"></div>
+                            <div class="absolute -left-6 -bottom-6 w-32 h-32 bg-sky-500/20 rounded-full blur-2xl"></div>
+                            <div class="relative z-10">
+                                <div class="flex items-center gap-2 mb-4 text-brand-400">
+                                    <i class="fas fa-lightbulb text-xl"></i>
+                                    <span class="font-heading font-bold text-lg">Smart Farming Tip</span>
+                                </div>
+                                <p class="text-slate-300 text-sm leading-relaxed mb-6 font-medium">
+                                    Water crops early morning to reduce evaporation. Always check our advanced weather forecast before irrigating to optimize water usage.
+                                </p>
+                                <a href="{% url 'weather' %}" class="inline-flex w-full items-center justify-center gap-2 bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 rounded-xl transition-all shadow border border-brand-400/50">
+                                    Check Weather Predictor
+                                </a>
                             </div>
-                            <p class="text-green-100 text-sm leading-relaxed">
-                                💧 Water crops early morning to reduce evaporation. Check the weather forecast before irrigating to save water.
-                            </p>
-                            <a href="{% url 'weather' %}" class="mt-4 inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white text-sm px-4 py-2 rounded-lg transition-all font-medium">
-                                Check Weather <i class="fas fa-arrow-right"></i>
+                        </div>
+
+                        <!-- Quick Inventory summary -->
+                        <div class="glass-panel p-6 rounded-3xl text-center">
+                            <h4 class="font-heading font-bold text-slate-700 mb-2">Inventory Action</h4>
+                            <p class="text-xs text-slate-500 mb-4 px-2">Keep your stock updated to ensure buyers can always place orders instantly.</p>
+                            <a href="{% url 'farmer_stock' %}" class="inline-block px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-bold transition-all w-full border border-slate-200">
+                                Manage Stock Levels
                             </a>
                         </div>
                     </div>
-
                 </div>
+
             </div>
-
-            <!-- ── Stock Overview ───────────────────────────────────────── -->
-            {% if vegetables %}
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                <div class="flex items-center justify-between mb-5">
-                    <div>
-                        <h3 class="font-bold text-gray-800 text-lg">Stock Overview</h3>
-                        <p class="text-gray-400 text-sm mt-0.5">Availability at a glance</p>
-                    </div>
-                    <a href="{% url 'dashboard' %}" class="text-green-600 hover:text-green-800 text-sm font-semibold hover:underline">View All →</a>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {% for veg in vegetables|slice:":6" %}
-                    <div class="p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="flex items-center gap-2">
-                                <div class="w-9 h-9 rounded-lg overflow-hidden flex-shrink-0 bg-green-100">
-                                    {% if veg.image %}
-                                    <img src="{{ veg.image.url }}" alt="{{ veg.name }}" class="w-full h-full object-cover">
-                                    {% else %}
-                                    <div class="w-full h-full flex items-center justify-center">
-                                        <i class="fas fa-leaf text-green-600 text-sm"></i>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                                <span class="text-base font-semibold text-gray-700 truncate max-w-[110px]">{{ veg.name }}</span>
-                            </div>
-                            <span class="text-sm font-bold {% if veg.available %}text-green-600{% else %}text-red-500{% endif %}">
-                                {% if veg.available %}In Stock{% else %}Out{% endif %}
-                            </span>
-                        </div>
-                        <div class="flex items-center justify-between text-sm text-gray-500 mt-2">
-                            <span>{{ veg.quantity }} {{ veg.unit }}</span>
-                            <span class="font-semibold text-gray-700">₹{{ veg.price_per_unit }}</span>
-                        </div>
-                        <div class="mt-2 h-2 bg-gray-200 rounded-full overflow-hidden">
-                            <div class="h-full rounded-full {% if veg.available %}bg-gradient-to-r from-green-400 to-emerald-500{% else %}bg-red-300{% endif %}"
-                                 style="width: {% if veg.available %}70%{% else %}5%{% endif %}"></div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
-
         </main>
     </div>
 </div>
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
 <script>
-function filterByCategory() {
-    const val = document.getElementById('categoryFilter').value;
-    document.querySelectorAll('tbody tr[data-category]').forEach(row => {
-        row.style.display = (val === 'all' || row.dataset.category === val) ? '' : 'none';
+    // Sidebar Mobile Toggle
+    function openSidebar() {
+        document.getElementById('sidebar').classList.remove('-translate-x-full');
+        document.getElementById('overlay').classList.remove('hidden', 'opacity-0');
+        document.getElementById('overlay').classList.add('opacity-100');
+    }
+    
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.add('-translate-x-full');
+        document.getElementById('overlay').classList.remove('opacity-100');
+        setTimeout(() => { document.getElementById('overlay').classList.add('hidden'); }, 300);
+    }
+
+    // Initialize Daraz Similar Swiper Carousel
+    var swiper = new Swiper(".productSwiper", {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+            dynamicBullets: true,
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+        breakpoints: {
+            640: { slidesPerView: 2, spaceBetween: 20 },
+            768: { slidesPerView: 2, spaceBetween: 20 },
+            1024: { slidesPerView: 3, spaceBetween: 24 },
+            1280: { slidesPerView: 4, spaceBetween: 24 },
+        },
     });
-}
 </script>
 </body>
 </html>

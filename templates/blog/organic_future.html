@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}The Future of Organic Farming in Nepal - Krishi Connect{% endblock %}
+{% block content %}
+
+<!-- Hero Section -->
+<section class="relative py-20 bg-gradient-to-r from-green-600 to-green-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium mb-4 inline-block">Featured Article</span>
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">The Future of Organic Farming in Nepal</h1>
+        <div class="flex items-center justify-center gap-4 text-green-100 text-sm">
+            <span>August 15, 2024</span>
+            <span>•</span>
+            <span>5 min read</span>
+        </div>
+    </div>
+</section>
+
+<!-- Article Content -->
+<section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <img src="{{ MEDIA_URL }}blog/organic_benefits.jpg" alt="Organic Farming Nepal" class="w-full h-80 object-cover rounded-2xl mb-10 shadow-lg">
+
+        <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-6 mb-10">
+            <p class="text-gray-700 text-lg leading-relaxed">How organic farming is transforming Nepal's agricultural landscape and creating sustainable livelihoods for thousands of farmers across the country.</p>
+        </div>
+
+        <div class="space-y-6 text-gray-600 leading-relaxed">
+            <p>Nepal's agricultural sector is undergoing a quiet revolution. Across the terraced hillsides of Dhading, the fertile plains of Chitwan, and the high-altitude farms of Mustang, farmers are turning away from chemical-intensive practices and embracing organic methods that their grandparents once used — but now powered by modern knowledge and digital tools.</p>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-green-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Why Organic Farming is Growing in Nepal</h3>
+                <p class="mb-4">The shift toward organic farming in Nepal is driven by three converging forces: rising consumer demand for chemical-free produce, increasing awareness of soil degradation caused by synthetic fertilizers, and the premium prices that certified organic products command in both domestic and export markets.</p>
+                <ul class="space-y-2">
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Organic produce commands 30–60% higher prices in Kathmandu's premium markets</span></li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Export demand from India, China, and Europe is growing at 15% annually</span></li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Soil health improvements reduce long-term input costs significantly</span></li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Government subsidies now support organic certification for small farmers</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-blue-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Technology Enabling the Transition</h3>
+                <p class="mb-3">Platforms like Krishi Connect are playing a critical role in this transition. By connecting organic farmers directly to verified buyers, providing real-time market price data, and offering access to agricultural experts, digital tools are removing the barriers that previously made organic farming economically risky.</p>
+                <p>Soil testing kits, mobile-based crop monitoring apps, and AI-powered pest identification tools are now accessible to farmers in remote districts — dramatically reducing the knowledge gap that once made organic farming difficult to scale.</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-orange-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Challenges That Remain</h3>
+                <p class="mb-3">Despite the progress, significant challenges remain. Organic certification processes are expensive and time-consuming for small farmers. Post-harvest losses remain high due to inadequate cold storage infrastructure. And market access outside major urban centers is still limited.</p>
+                <p>Krishi Connect is actively working to address these gaps — through group certification programs, logistics partnerships, and expanding our marketplace to reach buyers in secondary cities across Nepal.</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-green-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">The Road Ahead</h3>
+                <p>The future of organic farming in Nepal is bright. With the right combination of technology, market access, and policy support, Nepal has the potential to become a leading exporter of certified organic produce in South Asia within the next decade. The farmers who start this journey today are building the foundation for that future.</p>
+            </div>
+        </div>
+
+        <!-- Tags -->
+        <div class="flex flex-wrap gap-2 mt-10 pt-8 border-t border-gray-100">
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">Organic Farming</span>
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">Nepal Agriculture</span>
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">Sustainability</span>
+        </div>
+
+        <!-- Back -->
+        <div class="mt-10">
+            <a href="{% url 'blog' %}" class="inline-flex items-center text-green-600 hover:text-green-800 font-medium">
+                <i class="fas fa-arrow-left mr-2"></i> Back to All Articles
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

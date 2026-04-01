@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Direct Market Access for Farmers - Krishi Connect{% endblock %}
+{% block content %}
+
+<section class="relative py-20 bg-gradient-to-r from-green-600 to-green-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium mb-4 inline-block">Market</span>
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Direct Market Access for Farmers</h1>
+        <div class="flex items-center justify-center gap-4 text-green-100 text-sm">
+            <span>August 5, 2024</span><span>•</span><span>4 min read</span>
+        </div>
+    </div>
+</section>
+
+<section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <img src="{{ MEDIA_URL }}blog/irrigation_tech.jpg" alt="Direct Market Access" class="w-full h-80 object-cover rounded-2xl mb-10 shadow-lg">
+
+        <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-6 mb-10">
+            <p class="text-gray-700 text-lg leading-relaxed">How digital platforms are connecting farmers directly with consumers, eliminating middlemen and ensuring fair prices for agricultural products.</p>
+        </div>
+
+        <div class="space-y-6 text-gray-600 leading-relaxed">
+            <p>For decades, Nepali farmers have been at the mercy of a complex chain of middlemen — local traders, district wholesalers, and urban distributors — each taking a cut before produce reaches the consumer. A farmer who grows tomatoes worth NPR 100 at retail often receives only NPR 25–35. Digital platforms are changing this fundamentally.</p>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-orange-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">The Middleman Problem</h3>
+                <p class="mb-4">The traditional agricultural supply chain in Nepal involves 3–5 intermediaries between farm and consumer. Each layer adds cost, time, and risk of spoilage.</p>
+                <ul class="space-y-2">
+                    <li class="flex items-start gap-2"><i class="fas fa-times-circle text-red-500 mt-1 flex-shrink-0"></i><span>Farmers typically receive only 25–40% of the final consumer price</span></li>
+                    <li class="flex items-start gap-2"><i class="fas fa-times-circle text-red-500 mt-1 flex-shrink-0"></i><span>Each intermediary adds 15–25% markup to cover their costs and profit</span></li>
+                    <li class="flex items-start gap-2"><i class="fas fa-times-circle text-red-500 mt-1 flex-shrink-0"></i><span>Post-harvest losses increase with each additional handling step</span></li>
+                    <li class="flex items-start gap-2"><i class="fas fa-times-circle text-red-500 mt-1 flex-shrink-0"></i><span>Farmers have no visibility into what buyers are actually paying</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-green-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">How Direct Access Changes Everything</h3>
+                <p class="mb-3">When farmers list their produce directly on Krishi Connect, they set their own prices based on real market data. Verified buyers — restaurants, supermarkets, exporters, and individual consumers — can browse, compare, and purchase directly. The farmer receives payment digitally within 24 hours of delivery confirmation.</p>
+                <p>This direct connection doesn't just improve income — it also gives farmers valuable feedback about what buyers want, enabling them to make better decisions about what to grow next season.</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-blue-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Success Stories from the Platform</h3>
+                <p>Farmers in Dhading who joined Krishi Connect's direct marketplace in 2024 reported average income increases of 45–60% compared to selling through traditional channels. One vegetable farmer from Benighat increased his monthly income from NPR 18,000 to NPR 31,000 simply by selling directly to three restaurants in Kathmandu.</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-green-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">What You Need to Get Started</h3>
+                <p>Getting started on Krishi Connect's marketplace requires only a smartphone and a registered account. The platform handles payment processing, buyer verification, and dispute resolution. Logistics support is available for farmers who need help with delivery to urban buyers.</p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2 mt-10 pt-8 border-t border-gray-100">
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">Market Access</span>
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">Digital Commerce</span>
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">Fair Prices</span>
+        </div>
+        <div class="mt-10">
+            <a href="{% url 'blog' %}" class="inline-flex items-center text-green-600 hover:text-green-800 font-medium">
+                <i class="fas fa-arrow-left mr-2"></i> Back to All Articles
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

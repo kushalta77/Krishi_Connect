@@ -13,7 +13,8 @@ from django.db.models import Sum, Avg
 from django.db import models
 
 def home(request):
-    return render(request, 'home.html')
+    featured_products = Vegetable.objects.filter(available=True).order_by('-created_at')[:8]
+    return render(request, 'home.html', {'featured_products': featured_products})
 
 def login_view(request):
     if request.method == 'POST':
@@ -196,9 +197,11 @@ def dashboard(request):
         orders = CustomerOrder.objects.filter(customer=request.user)
         total_spent = orders.aggregate(total=Sum('total_price'))['total'] or 0
         recommended = Vegetable.objects.filter(available=True).order_by('-created_at')[:3]
+        cart, _ = Cart.objects.get_or_create(customer=request.user)
         context['orders'] = orders
         context['total_spent'] = total_spent
         context['recommended'] = recommended
+        context['cart'] = cart
         return render(request, 'dashboard/customer_dashboard.html', context)
     else:
         return render(request, 'dashboard.html', context)
@@ -209,8 +212,116 @@ def about(request):
 def blog(request):
     return render(request, 'blog.html')
 
+def blog_organic_future(request):
+    return render(request, 'blog/organic_future.html')
+
+def blog_smart_irrigation(request):
+    return render(request, 'blog/smart_irrigation.html')
+
+def blog_climate_change(request):
+    return render(request, 'blog/climate_change.html')
+
+def blog_direct_market(request):
+    return render(request, 'blog/direct_market.html')
+
+def blog_soil_testing(request):
+    return render(request, 'blog/soil_testing.html')
+
+def blog_pest_management(request):
+    return render(request, 'blog/pest_management.html')
+
+def blog_crop_rotation(request):
+    return render(request, 'blog/crop_rotation.html')
+
+def organic_crops(request):
+    return render(request, 'organic_crops.html')
+
 def solutions(request):
     return render(request, 'solutions.html')
+
+def smart_farming(request):
+    return render(request, 'solutions/smart_farming.html')
+
+def market_intelligence(request):
+    return render(request, 'solutions/market_intelligence.html')
+
+def supply_chain(request):
+    return render(request, 'solutions/supply_chain.html')
+
+def expert_advisory(request):
+    return render(request, 'solutions/expert_advisory.html')
+
+
+@login_required
+def customer_profile(request):
+    if request.user.userprofile.role != 'customer':
+        return redirect('dashboard')
+    profile = request.user.userprofile
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'update_info':
+            request.user.first_name = request.POST.get('first_name', '').strip()
+            request.user.last_name = request.POST.get('last_name', '').strip()
+            request.user.email = request.POST.get('email', '').strip()
+            profile.phone_number = request.POST.get('phone_number', '').strip()
+            profile.address = request.POST.get('address', '').strip()
+            request.user.save()
+            profile.save()
+            messages.success(request, 'Profile updated successfully.')
+        elif action == 'change_password':
+            current = request.POST.get('current_password')
+            new_pass = request.POST.get('new_password')
+            confirm = request.POST.get('confirm_password')
+            if not request.user.check_password(current):
+                messages.error(request, 'Current password is incorrect.')
+            elif len(new_pass) < 8:
+                messages.error(request, 'New password must be at least 8 characters.')
+            elif new_pass != confirm:
+                messages.error(request, 'New passwords do not match.')
+            else:
+                request.user.set_password(new_pass)
+                request.user.save()
+                from django.contrib.auth import update_session_auth_hash
+                update_session_auth_hash(request, request.user)
+                messages.success(request, 'Password changed successfully.')
+        return redirect('customer_profile')
+    return render(request, 'dashboard/customer_profile.html', {'profile': profile})
+
+
+@login_required
+def farmer_profile(request):
+    if request.user.userprofile.role != 'farmer':
+        return redirect('dashboard')
+    profile = request.user.userprofile
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'update_info':
+            request.user.first_name = request.POST.get('first_name', '').strip()
+            request.user.last_name = request.POST.get('last_name', '').strip()
+            request.user.email = request.POST.get('email', '').strip()
+            profile.phone_number = request.POST.get('phone_number', '').strip()
+            profile.address = request.POST.get('address', '').strip()
+            request.user.save()
+            profile.save()
+            messages.success(request, 'Profile updated successfully.')
+        elif action == 'change_password':
+            current = request.POST.get('current_password')
+            new_pass = request.POST.get('new_password')
+            confirm = request.POST.get('confirm_password')
+            if not request.user.check_password(current):
+                messages.error(request, 'Current password is incorrect.')
+            elif len(new_pass) < 8:
+                messages.error(request, 'New password must be at least 8 characters.')
+            elif new_pass != confirm:
+                messages.error(request, 'New passwords do not match.')
+            else:
+                request.user.set_password(new_pass)
+                request.user.save()
+                from django.contrib.auth import update_session_auth_hash
+                update_session_auth_hash(request, request.user)
+                messages.success(request, 'Password changed successfully.')
+        return redirect('farmer_profile')
+    return render(request, 'dashboard/farmer_profile.html', {'profile': profile})
 
 
 # Farmer Views
@@ -247,11 +358,16 @@ def add_vegetable(request):
             category=request.POST.get('category', 'vegetable'),
             quantity=request.POST['quantity'],
             unit=request.POST['unit'],
+            base_price=request.POST.get('base_price') or request.POST['price_per_unit'],
             price_per_unit=request.POST['price_per_unit'],
+            discount_price=request.POST.get('discount_price') or None,
+            harvest_date=request.POST.get('harvest_date') or None,
+            shelf_life_days=request.POST.get('shelf_life_days') or 7,
+            is_farmers_special=request.POST.get('is_farmers_special') == 'on',
             description=request.POST.get('description', ''),
             image=request.FILES.get('image')
         )
-        messages.success(request, 'Vegetable added successfully')
+        messages.success(request, 'Product added successfully')
         return redirect('dashboard')
     return render(request, 'dashboard/add_vegetable.html')
 
@@ -263,7 +379,12 @@ def edit_vegetable(request, pk):
         vegetable.category = request.POST.get('category', vegetable.category)
         vegetable.quantity = request.POST['quantity']
         vegetable.unit = request.POST['unit']
+        vegetable.base_price = request.POST.get('base_price') or vegetable.base_price
         vegetable.price_per_unit = request.POST['price_per_unit']
+        vegetable.discount_price = request.POST.get('discount_price') or None
+        vegetable.harvest_date = request.POST.get('harvest_date') or None
+        vegetable.shelf_life_days = request.POST.get('shelf_life_days') or 7
+        vegetable.is_farmers_special = request.POST.get('is_farmers_special') == 'on'
         vegetable.description = request.POST.get('description', '')
         if request.FILES.get('image'):
             vegetable.image = request.FILES['image']
@@ -286,8 +407,9 @@ def delete_vegetable(request, pk):
     return redirect('dashboard')
 
 def public_marketplace(request):
+    q = request.GET.get('q', '')
     vegetables = Vegetable.objects.filter(available=True)
-    return render(request, 'marketplace.html', {'vegetables': vegetables})
+    return render(request, 'marketplace.html', {'vegetables': vegetables, 'search_query': q})
 
 def product_detail(request, pk):
     vegetable = get_object_or_404(Vegetable, pk=pk, available=True)
@@ -351,7 +473,11 @@ def add_to_cart(request, pk):
     vegetable = get_object_or_404(Vegetable, pk=pk, available=True)
 
     if request.method == 'POST':
-        quantity = float(request.POST.get('quantity', 0))
+        try:
+            quantity = float(request.POST.get('quantity', '').strip())
+        except (ValueError, TypeError):
+            messages.error(request, 'Please enter a valid quantity')
+            return redirect('product_detail', pk=pk)
         if quantity <= 0:
             messages.error(request, 'Enter a valid quantity')
             return redirect('product_detail', pk=pk)
@@ -360,11 +486,11 @@ def add_to_cart(request, pk):
             return redirect('product_detail', pk=pk)
 
         cart, _ = Cart.objects.get_or_create(customer=request.user)
-        item, created = CartItem.objects.get_or_create(cart=cart, vegetable=vegetable)
-        if not created:
+        try:
+            item = CartItem.objects.get(cart=cart, vegetable=vegetable)
             item.quantity += quantity
-        else:
-            item.quantity = quantity
+        except CartItem.DoesNotExist:
+            item = CartItem(cart=cart, vegetable=vegetable, quantity=quantity)
         item.save()
         messages.success(request, f'{vegetable.name} added to cart!')
 
@@ -510,6 +636,43 @@ def order_from_supplier(request, pk):
     return render(request, 'dashboard/order_vegetable.html', {'inventory': inventory})
 
 # Weather View
+def reports_view(request):
+    from django.db.models import Sum, Count
+    total_farmers = UserProfile.objects.filter(role='farmer').count()
+    total_customers = UserProfile.objects.filter(role='customer').count()
+    total_products = Vegetable.objects.count()
+    available_products = Vegetable.objects.filter(available=True).count()
+    total_orders = CustomerOrder.objects.count()
+    total_revenue = CustomerOrder.objects.aggregate(total=Sum('total_price'))['total'] or 0
+    pending_orders = CustomerOrder.objects.filter(status='pending').count()
+    confirmed_orders = CustomerOrder.objects.filter(status='confirmed').count()
+    delivered_orders = CustomerOrder.objects.filter(status='delivered').count()
+    top_products = CustomerOrder.objects.values('supplier_inventory__vegetable_name').annotate(
+        vegetable_name=models.F('supplier_inventory__vegetable_name'),
+        total_qty=Sum('quantity')
+    ).order_by('-total_qty')[:6]
+    max_qty = max((p['total_qty'] for p in top_products), default=1)
+    category_stats = Vegetable.objects.values('category').annotate(count=Count('id')).order_by('-count')
+    top_farmers = Vegetable.objects.values('farmer__username').annotate(product_count=Count('id')).order_by('-product_count')[:5]
+    recent_orders = CustomerOrder.objects.select_related('customer', 'supplier_inventory').order_by('-ordered_at')[:8]
+    return render(request, 'reports.html', {
+        'total_farmers': total_farmers,
+        'total_customers': total_customers,
+        'total_products': total_products,
+        'available_products': available_products,
+        'total_orders': total_orders,
+        'total_revenue': total_revenue,
+        'pending_orders': pending_orders,
+        'confirmed_orders': confirmed_orders,
+        'delivered_orders': delivered_orders,
+        'top_products': top_products,
+        'max_qty': max_qty,
+        'category_stats': category_stats,
+        'top_farmers': top_farmers,
+        'recent_orders': recent_orders,
+    })
+
+
 def weather_view(request):
     weather_data = None
     error = None

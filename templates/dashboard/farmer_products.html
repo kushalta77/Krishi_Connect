@@ -6,87 +6,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Products | Krishi Connect</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; background-image: radial-gradient(#22c55e15 1px, transparent 1px); background-size: 32px 32px; }
+        .sidebar { background: linear-gradient(160deg, #14532d 0%, #166534 100%); }
+        .nav-item { position: relative; overflow: hidden; transition: all 0.3s ease; }
+        .nav-item::before { content: ''; position: absolute; left: 0; top: 0; width: 3px; height: 100%; background-color: #4ade80; transform: scaleY(0); transition: transform 0.3s ease; }
+        .nav-item:hover::before, .nav-item.active::before { transform: scaleY(1); }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: #fff; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
 </head>
-<body class="bg-gray-50">
-<div class="flex h-screen bg-gray-50 overflow-hidden">
+<body class="min-h-screen text-slate-800">
+
+<div class="flex h-screen overflow-hidden">
 
     <!-- Sidebar -->
-    <aside class="w-72 bg-gradient-to-b from-green-900 via-green-800 to-green-700 text-white flex flex-col shadow-2xl flex-shrink-0">
-
-        <div class="px-6 py-6 border-b border-green-600/50">
+    <aside class="w-72 h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0">
+        <div class="px-8 py-8">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-white/15 rounded-xl flex items-center justify-center">
-                    <i class="fas fa-seedling text-2xl text-green-200"></i>
+                <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20">
+                    <i class="fas fa-seedling text-2xl text-green-400"></i>
                 </div>
                 <div>
-                    <p class="font-bold text-xl leading-tight">Krishi Connect</p>
-                    <p class="text-green-300 text-sm mt-0.5">Farmer Portal</p>
+                    <h2 class="font-bold text-2xl text-white">Krishi<span class="text-green-400">Connect</span></h2>
+                    <p class="text-green-200/80 text-[10px] tracking-wider uppercase font-semibold mt-1">Farmer Portal</p>
                 </div>
             </div>
         </div>
 
-        <div class="mx-4 my-5 bg-white/10 rounded-2xl p-4 border border-white/10">
-            <div class="flex items-center gap-4">
-                <div class="w-14 h-14 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg flex-shrink-0">
+        <div class="mx-6 mb-8 mt-2 p-1 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10">
+            <div class="p-4 flex items-center gap-4">
+                <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-xl font-bold text-green-700">
                     {{ user.first_name|first|upper }}
                 </div>
-                <div class="flex-1 min-w-0">
-                    <p class="font-bold text-base truncate">{{ user.first_name }} {{ user.last_name }}</p>
-                    <span class="inline-flex items-center gap-1.5 text-sm bg-green-400/20 text-green-200 px-2.5 py-0.5 rounded-full mt-1">
-                        <i class="fas fa-circle text-green-400" style="font-size:7px"></i> Active Farmer
+                <div class="min-w-0 flex-1">
+                    <p class="font-semibold text-white truncate">{{ user.first_name }} {{ user.last_name }}</p>
+                    <span class="inline-flex items-center gap-1.5 text-[10px] bg-green-400/20 text-green-200 px-2 py-0.5 rounded-full mt-1 font-bold uppercase tracking-wider">
+                        <i class="fas fa-circle text-green-400" style="font-size:6px"></i> Active Farmer
                     </span>
+                    <a href="{% url 'farmer_profile' %}" class="mt-2 flex items-center gap-1 text-[10px] text-green-300 hover:text-white transition-colors">
+                        <i class="fas fa-user-cog" style="font-size:9px"></i> View Profile
+                    </a>
                 </div>
             </div>
         </div>
 
-        <nav class="flex-1 px-4 space-y-1 overflow-y-auto pb-4">
-            <p class="text-green-400 text-xs font-bold uppercase tracking-widest px-3 py-2">Main Menu</p>
-
-            <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-base group">
-                <span class="w-9 h-9 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-th-large"></i></span>
-                Dashboard
+        <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto pb-6">
+            <p class="text-green-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mb-2">Main Menu</p>
+            <a href="{% url 'dashboard' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-th-large w-5 text-center text-lg"></i><span>Dashboard</span>
             </a>
-            <a href="{% url 'add_vegetable' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-base group">
-                <span class="w-9 h-9 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-plus-circle"></i></span>
-                List New Product
+            <a href="{% url 'add_vegetable' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-plus-circle w-5 text-center text-lg"></i><span>List New Product</span>
             </a>
-            <a href="{% url 'farmer_products' %}" class="flex items-center gap-3 px-4 py-3 bg-white/20 rounded-xl text-white font-semibold text-base">
-                <span class="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-boxes"></i></span>
-                My Products
+            <a href="{% url 'farmer_products' %}" class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-white">
+                <i class="fas fa-boxes w-5 text-center text-lg"></i><span>My Products</span>
             </a>
-            <a href="{% url 'my_orders' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-base group">
-                <span class="w-9 h-9 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-shopping-cart"></i></span>
-                Orders
+            <a href="{% url 'my_orders' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-shopping-cart w-5 text-center text-lg"></i><span>Orders</span>
             </a>
-            <a href="{% url 'farmer_stock' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-base group">
-                <span class="w-9 h-9 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-warehouse"></i></span>
-                Stock
+            <a href="{% url 'farmer_stock' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-warehouse w-5 text-center text-lg"></i><span>Stock Management</span>
             </a>
-
-            <p class="text-green-400 text-xs font-bold uppercase tracking-widest px-3 py-2 mt-4">Tools</p>
-
-            <a href="{% url 'weather' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-base group">
-                <span class="w-9 h-9 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-cloud-sun"></i></span>
-                Weather
+            <p class="text-green-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Tools</p>
+            <a href="{% url 'weather' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-cloud-sun w-5 text-center text-lg"></i><span>Weather Updates</span>
             </a>
-            <a href="#chatbot" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-base group">
-                <span class="w-9 h-9 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-robot"></i></span>
-                Chatbot
-            </a>
-            <a href="{% url 'home' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-green-100 hover:text-white transition-all text-base group">
-                <span class="w-9 h-9 bg-white/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center"><i class="fas fa-home"></i></span>
-                Home
+            <a href="#chatbot" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-robot w-5 text-center text-lg"></i><span>Chatbot</span>
             </a>
         </nav>
 
-        <div class="p-4 border-t border-green-600/50">
+        <div class="p-6 border-t border-white/10 bg-black/10">
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
-                <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 bg-red-500/20 hover:bg-red-500/40 rounded-xl text-red-200 hover:text-white transition-all text-base font-medium">
-                    <span class="w-9 h-9 bg-red-500/20 rounded-lg flex items-center justify-center"><i class="fas fa-sign-out-alt"></i></span>
-                    Logout
+                <button type="submit" class="w-full flex items-center justify-center gap-3 py-3.5 bg-red-500/10 hover:bg-red-500 border border-red-500/20 hover:border-red-500 rounded-xl text-red-400 hover:text-white font-medium transition-all duration-300">
+                    <i class="fas fa-power-off"></i><span>Logout</span>
                 </button>
             </form>
         </div>

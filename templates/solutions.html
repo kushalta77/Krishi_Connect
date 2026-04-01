@@ -1,68 +1,275 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Our Solutions - Krishi Connect{% endblock %}
+{% block title %}Our Solutions - KrishiConnect{% endblock %}
 
 {% block content %}
-<!-- Solutions Header -->
-<section class="bg-gradient-to-r from-green-600 to-green-800 text-white py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4" data-en="Our Solutions" data-ne="हाम्रो समाधान">हाम्रो समाधान</h1>
-        <p class="text-xl text-green-100" data-en="Innovative agricultural solutions combining traditional knowledge with modern technology" data-ne="परम्परागत ज्ञान र आधुनिक प्रविधिको संयोजनमा नवाचार कृषि समाधान">परम्परागत ज्ञान र आधुनिक प्रविधिको संयोजनमा नवाचार कृषि समाधान</p>
-    </div>
-</section>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
-<!-- Solutions Grid -->
-<section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12">
-            <!-- Smart Farming Technology -->
-            <div class="bg-white rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-shadow">
-                <div class="bg-gradient-to-br from-green-400 to-green-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i class="fas fa-cog text-white text-3xl"></i>
-                </div>
-                <h3 class="text-2xl font-bold mb-4 text-green-800" data-en="Smart Farming Technology" data-ne="स्मार्ट बाली सिंगारिस">स्मार्ट बाली सिंगारिस</h3>
-                <p class="text-gray-600 mb-6" data-en="Modern sensors and automated irrigation systems for optimal crop management. Monitor soil moisture, temperature, and nutrient levels in real-time." data-ne="आधुनिक सेन्सर र स्वचालित सिंचाई प्रणाली उत्तम बाली व्यवस्थापनका लागि। माटोको नमी, तापक्रम र पोषक तत्वहरूको वास्तविक समयमा निगरानी गर्नुहोस्।">आधुनिक सेन्सर र स्वचालित सिंचाई प्रणाली उत्तम बाली व्यवस्थापनका लागि। माटोको नमी, तापक्रम र पोषक तत्वहरूको वास्तविक समयमा निगरानी गर्नुहोस्।</p>
-                <ul class="text-left text-gray-600 mb-6 space-y-2">
-                    <li class="flex items-center"><i class="fas fa-check text-green-600 mr-2"></i> <span data-en="Automated irrigation systems" data-ne="स्वचालित सिंचाई प्रणाली">स्वचालित सिंचाई प्रणाली</span></li>
-                    <li class="flex items-center"><i class="fas fa-check text-green-600 mr-2"></i> <span data-en="Soil monitoring sensors" data-ne="माटो निगरानी सेन्सर">माटो निगरानी सेन्सर</span></li>
-                    <li class="flex items-center"><i class="fas fa-check text-green-600 mr-2"></i> <span data-en="Real-time data analytics" data-ne="वास्तविक समय डाटा विश्लेषण">वास्तविक समय डाटा विश्लेषण</span></li>
-                </ul>
-                <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                    <span data-en="Learn More" data-ne="थप जान्नुहोस्">थप जान्नुहोस्</span>
-                </a>
+    .solutions-page {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .font-heading {
+        font-family: 'Outfit', sans-serif;
+    }
+
+    .glass-panel {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    
+    .glass-dark {
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .hover-lift {
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hover-lift:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.25);
+    }
+
+    .reveal-anim {
+        animation: fadeUp 0.8s ease-out forwards;
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    .delay-100 { animation-delay: 100ms; }
+    .delay-200 { animation-delay: 200ms; }
+    .delay-300 { animation-delay: 300ms; }
+
+    @keyframes fadeUp {
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .bg-blob {
+        position: absolute;
+        filter: blur(90px);
+        z-index: 0;
+        opacity: 0.5;
+        animation: float 12s infinite alternate ease-in-out;
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0) scale(1.0); }
+        100% { transform: translateY(-40px) scale(1.15); }
+    }
+</style>
+
+<div class="solutions-page">
+    <!-- Hero Section -->
+    <section class="relative min-h-[60vh] flex items-center justify-center overflow-hidden bg-slate-900">
+        <!-- Background Image with Overlay -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2532&q=80" 
+                 alt="Advanced Farming" 
+                 class="w-full h-full object-cover opacity-50 mix-blend-overlay">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-emerald-900/40 to-slate-900/80 pointer-events-none"></div>
+        </div>
+        
+        <!-- Hero Content -->
+        <div class="relative z-10 max-w-5xl mx-auto px-4 mt-20 text-center flex flex-col items-center">
+            <div class="glass-dark px-5 py-2 rounded-full inline-flex items-center gap-2 mb-6 reveal-anim border border-emerald-500/30">
+                <i class="fas fa-microchip text-emerald-400"></i>
+                <span class="text-emerald-50 text-xs font-bold uppercase tracking-widest" data-en="Next-Generation Tools" data-ne="अर्को पुस्ताका उपकरणहरू">Next-Generation Tools</span>
             </div>
 
-            <!-- Market Intelligence -->
-            <div class="bg-white rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-shadow">
-                <div class="bg-gradient-to-br from-green-400 to-green-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i class="fas fa-chart-bar text-white text-3xl"></i>
+            <h1 class="font-heading text-5xl md:text-7xl font-black text-white mb-6 leading-tight reveal-anim delay-100 tracking-tight" data-en="Our Solutions" data-ne="हाम्रो समाधान">
+                Our <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">Solutions</span>
+            </h1>
+            
+            <p class="text-xl md:text-2xl text-slate-300 max-w-3xl mb-8 font-medium reveal-anim delay-200 leading-relaxed text-center" data-en="Innovative agricultural solutions combining traditional knowledge with cutting-edge modern technology." data-ne="परम्परागत ज्ञान र आधुनिक प्रविधिको संयोजनमा नवाचार कृषि समाधान।">
+                Innovative agricultural solutions combining traditional knowledge with cutting-edge modern technology.
+            </p>
+        </div>
+    </section>
+
+    <!-- Solutions Grid -->
+    <section class="py-24 relative bg-slate-50 overflow-hidden">
+        <!-- Decorative blobs -->
+        <div class="bg-blob bg-emerald-200 w-[600px] h-[600px] rounded-full top-[-100px] left-[-200px]"></div>
+        <div class="bg-blob bg-teal-200 w-[500px] h-[500px] rounded-full bottom-[-100px] right-[-100px]" style="animation-delay: -5s;"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16 max-w-3xl mx-auto reveal-anim">
+                <h2 class="font-heading text-4xl md:text-5xl font-black text-slate-800 mb-6" data-en="Powerful Ecosystem" data-ne="शक्तिशाली इकोसिस्टम">Powerful Ecosystem</h2>
+                <p class="text-xl text-slate-500 font-medium" data-en="Discover the complete suite of tools designed to maximize your yield, streamline your workflow, and increase your profit." data-ne="तपाईंको उत्पादन अधिकतम गर्न, तपाईंको कार्यप्रवाहलाई सुव्यवस्थित गर्न र नाफा बढाउन डिजाइन गरिएका उपकरणहरू पत्ता लगाउनुहोस्।">Discover the complete suite of tools designed to maximize your yield, streamline your workflow, and increase your profit.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Smart Farming Technology -->
+                <div class="bg-white rounded-[2.5rem] p-10 shadow-sm hover-lift border border-slate-100 flex flex-col group relative overflow-hidden delay-100 reveal-anim">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-100 to-transparent opacity-50 rounded-bl-[100px] -z-10 group-hover:scale-110 transition-transform duration-500"></div>
+                    
+                    <div class="bg-emerald-50 w-20 h-20 rounded-2xl flex items-center justify-center mb-8 text-emerald-600 text-3xl group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300 shadow-sm">
+                        <i class="fas fa-satellite-dish"></i>
+                    </div>
+                    
+                    <h3 class="font-heading text-3xl font-extrabold mb-4 text-slate-800" data-en="Smart Farming Tech" data-ne="स्मार्ट बाली प्रविधि">Smart Farming Tech</h3>
+                    <p class="text-slate-500 mb-8 leading-relaxed font-medium" data-en="Modern sensors and automated irrigation systems for optimal crop management. Monitor soil moisture, temperature, and nutrient levels in real-time." data-ne="आधुनिक सेन्सर र स्वचालित सिंचाई प्रणाली उत्तम बाली व्यवस्थापनका लागि। माटोको नमी, तापक्रम र पोषक तत्वहरूको वास्तविक समयमा निगरानी गर्नुहोस्।">Modern sensors and automated irrigation systems for optimal crop management. Monitor soil moisture, temperature, and nutrient levels in real-time.</p>
+                    
+                    <div class="mt-auto">
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-center text-slate-700 font-semibold gap-3">
+                                <span class="bg-emerald-100 text-emerald-600 w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fas fa-check"></i></span>
+                                <span data-en="Automated irrigation scheduling" data-ne="स्वचालित सिंचाई समय तालिका">Automated irrigation scheduling</span>
+                            </li>
+                            <li class="flex items-center text-slate-700 font-semibold gap-3">
+                                <span class="bg-emerald-100 text-emerald-600 w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fas fa-check"></i></span>
+                                <span data-en="Soil health monitoring sensors" data-ne="माटो स्वास्थ्य निगरानी सेन्सरहरू">Soil health monitoring sensors</span>
+                            </li>
+                            <li class="flex items-center text-slate-700 font-semibold gap-3">
+                                <span class="bg-emerald-100 text-emerald-600 w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fas fa-check"></i></span>
+                                <span data-en="Drone-based crop analysis" data-ne="ड्रोनमा आधारित बाली विश्लेषण">Drone-based crop analysis</span>
+                            </li>
+                        </ul>
+                        <a href="{% url 'smart_farming' %}" class="inline-flex items-center gap-2 text-emerald-600 font-bold hover:text-emerald-700 group/link">
+                            <span data-en="Discover Tech" data-ne="प्रविधि पत्ता लगाउनुहोस्">Discover Tech</span>
+                            <i class="fas fa-arrow-right group-hover/link:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
                 </div>
-                <h3 class="text-2xl font-bold mb-4 text-green-800" data-en="Market Intelligence" data-ne="बजार बुद्धिमत्ता">बजार बुद्धिमत्ता</h3>
-                <p class="text-gray-600 mb-6" data-en="Real-time market prices and demand forecasting for better profits. Get insights into market trends and make informed selling decisions." data-ne="राम्रो नाफाका लागि वास्तविक समयमा बजार मूल्य र माग पूर्वानुमान। बजार प्रवृत्तिमा अन्तर्दृष्टि प्राप्त गर्नुहोस् र सूचित बिक्री निर्णयहरू गर्नुहोस्।">राम्रो नाफाका लागि वास्तविक समयमा बजार मूल्य र माग पूर्वानुमान। बजार प्रवृत्तिमा अन्तर्दृष्टि प्राप्त गर्नुहोस् र सूचित बिक्री निर्णयहरू गर्नुहोस्।</p>
-                <ul class="text-left text-gray-600 mb-6 space-y-2">
-                    <li class="flex items-center"><i class="fas fa-check text-green-600 mr-2"></i> <span data-en="Real-time price tracking" data-ne="वास्तविक समय मूल्य ट्र्याकिङ">वास्तविक समय मूल्य ट्र्याकिङ</span></li>
-                    <li class="flex items-center"><i class="fas fa-check text-green-600 mr-2"></i> <span data-en="Demand forecasting" data-ne="माग पूर्वानुमान">माग पूर्वानुमान</span></li>
-                    <li class="flex items-center"><i class="fas fa-check text-green-600 mr-2"></i> <span data-en="Market trend analysis" data-ne="बजार प्रवृत्ति विश्लेषण">बजार प्रवृत्ति विश्लेषण</span></li>
-                </ul>
-                <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                    <span data-en="Learn More" data-ne="थप जान्नुहोस्">थप जान्नुहोस्</span>
-                </a>
+
+                <!-- Market Intelligence -->
+                <div class="bg-white rounded-[2.5rem] p-10 shadow-sm hover-lift border border-slate-100 flex flex-col group relative overflow-hidden delay-200 reveal-anim">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-teal-100 to-transparent opacity-50 rounded-br-[100px] -z-10 group-hover:scale-110 transition-transform duration-500"></div>
+                    
+                    <div class="bg-teal-50 w-20 h-20 rounded-2xl flex items-center justify-center mb-8 text-teal-600 text-3xl group-hover:bg-teal-600 group-hover:text-white transition-colors duration-300 shadow-sm">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    
+                    <h3 class="font-heading text-3xl font-extrabold mb-4 text-slate-800" data-en="Market Intelligence" data-ne="बजार बुद्धिमत्ता">Market Intelligence</h3>
+                    <p class="text-slate-500 mb-8 leading-relaxed font-medium" data-en="Real-time market prices and demand forecasting for better profits. Get deep insights into market trends and make informed, data-driven selling decisions." data-ne="राम्रो नाफाका लागि वास्तविक समयमा बजार मूल्य र माग पूर्वानुमान। बजार प्रवृत्तिमा अन्तर्दृष्टि प्राप्त गर्नुहोस् र सूचित बिक्री निर्णयहरू गर्नुहोस्।">Real-time market prices and demand forecasting for better profits. Get deep insights into market trends and make informed, data-driven selling decisions.</p>
+                    
+                    <div class="mt-auto">
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-center text-slate-700 font-semibold gap-3">
+                                <span class="bg-teal-100 text-teal-600 w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fas fa-check"></i></span>
+                                <span data-en="Live national pricing feeds" data-ne="प्रत्यक्ष राष्ट्रिय मूल्य फिड">Live national pricing feeds</span>
+                            </li>
+                            <li class="flex items-center text-slate-700 font-semibold gap-3">
+                                <span class="bg-teal-100 text-teal-600 w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fas fa-check"></i></span>
+                                <span data-en="AI-powered demand forecasting" data-ne="AI-संचालित माग पूर्वानुमान">AI-powered demand forecasting</span>
+                            </li>
+                            <li class="flex items-center text-slate-700 font-semibold gap-3">
+                                <span class="bg-teal-100 text-teal-600 w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fas fa-check"></i></span>
+                                <span data-en="Historical trend analytics" data-ne="ऐतिहासिक प्रवृत्ति विश्लेषण">Historical trend analytics</span>
+                            </li>
+                        </ul>
+                        <a href="{% url 'market_intelligence' %}" class="inline-flex items-center gap-2 text-teal-600 font-bold hover:text-teal-700 group/link">
+                            <span data-en="View Analytics" data-ne="विश्लेषण हेर्नुहोस्">View Analytics</span>
+                            <i class="fas fa-arrow-right group-hover/link:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Digital Supply Chain -->
+                <div class="bg-white rounded-[2.5rem] p-10 shadow-sm hover-lift border border-slate-100 flex flex-col group relative overflow-hidden delay-100 reveal-anim">
+                    <div class="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-orange-100 to-transparent opacity-50 rounded-tr-[100px] -z-10 group-hover:scale-110 transition-transform duration-500"></div>
+                    
+                    <div class="bg-orange-50 w-20 h-20 rounded-2xl flex items-center justify-center mb-8 text-orange-600 text-3xl group-hover:bg-orange-600 group-hover:text-white transition-colors duration-300 shadow-sm">
+                        <i class="fas fa-truck-fast"></i>
+                    </div>
+                    
+                    <h3 class="font-heading text-3xl font-extrabold mb-4 text-slate-800" data-en="Digital Supply Chain" data-ne="डिजिटल आपूर्ति श्रृंखला">Digital Supply Chain</h3>
+                    <p class="text-slate-500 mb-8 leading-relaxed font-medium" data-en="Bypass traditional middlemen and connect directly to buyers and distributors. Track your shipments and verify authentic organic status seamlessly." data-ne="पारम्परिक बिचौलियाहरूलाई बाइपास गर्नुहोस् र सिधै खरीददारहरू र वितरकहरूसँग जडान गर्नुहोस्।">Bypass traditional middlemen and connect directly to buyers and distributors. Track your shipments and verify authentic organic status seamlessly.</p>
+                    
+                    <div class="mt-auto">
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-center text-slate-700 font-semibold gap-3">
+                                <span class="bg-orange-100 text-orange-600 w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fas fa-check"></i></span>
+                                <span data-en="Direct buyer matching" data-ne="प्रत्यक्ष खरीददार म्याचिंग">Direct buyer matching</span>
+                            </li>
+                            <li class="flex items-center text-slate-700 font-semibold gap-3">
+                                <span class="bg-orange-100 text-orange-600 w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fas fa-check"></i></span>
+                                <span data-en="Transparent transaction ledger" data-ne="पारदर्शी लेनदेन खाता">Transparent transaction ledger</span>
+                            </li>
+                            <li class="flex items-center text-slate-700 font-semibold gap-3">
+                                <span class="bg-orange-100 text-orange-600 w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fas fa-check"></i></span>
+                                <span data-en="Organic certification tracking" data-ne="जैविक प्रमाणीकरण ट्र्याकिङ">Organic certification tracking</span>
+                            </li>
+                        </ul>
+                        <a href="{% url 'supply_chain' %}" class="inline-flex items-center gap-2 text-orange-600 font-bold hover:text-orange-700 group/link">
+                            <span data-en="Explore Marketplace" data-ne="बजार अन्वेषण गर्नुहोस्">Explore Marketplace</span>
+                            <i class="fas fa-arrow-right group-hover/link:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Expert Advisory Network -->
+                <div class="bg-white rounded-[2.5rem] p-10 shadow-sm hover-lift border border-slate-100 flex flex-col group relative overflow-hidden delay-200 reveal-anim">
+                    <div class="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-purple-100 to-transparent opacity-50 rounded-tl-[100px] -z-10 group-hover:scale-110 transition-transform duration-500"></div>
+                    
+                    <div class="bg-purple-50 w-20 h-20 rounded-2xl flex items-center justify-center mb-8 text-purple-600 text-3xl group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300 shadow-sm">
+                        <i class="fas fa-user-doctor"></i>
+                    </div>
+                    
+                    <h3 class="font-heading text-3xl font-extrabold mb-4 text-slate-800" data-en="Expert Advisory" data-ne="विशेषज्ञ सल्लाहकार">Expert Advisory</h3>
+                    <p class="text-slate-500 mb-8 leading-relaxed font-medium" data-en="Get 24/7 access to agronomists, pest control experts, and soil scientists. Resolve crop diseases instantly with our photo diagnosis community." data-ne="कृषि वैज्ञानिकहरू, कीट नियन्त्रण विशेषज्ञहरू, र माटो वैज्ञानिकहरूलाई 24/7 पहुँच प्राप्त गर्नुहोस्।">Get 24/7 access to agronomists, pest control experts, and soil scientists. Resolve crop diseases instantly with our photo diagnosis community.</p>
+                    
+                    <div class="mt-auto">
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-center text-slate-700 font-semibold gap-3">
+                                <span class="bg-purple-100 text-purple-600 w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fas fa-check"></i></span>
+                                <span data-en="24/7 Community forum support" data-ne="24/7 समुदाय फोरम समर्थन">24/7 Community forum support</span>
+                            </li>
+                            <li class="flex items-center text-slate-700 font-semibold gap-3">
+                                <span class="bg-purple-100 text-purple-600 w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fas fa-check"></i></span>
+                                <span data-en="Visual pest & disease diagnosis" data-ne="दृश्य रोग निदान">Visual pest & disease diagnosis</span>
+                            </li>
+                            <li class="flex items-center text-slate-700 font-semibold gap-3">
+                                <span class="bg-purple-100 text-purple-600 w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fas fa-check"></i></span>
+                                <span data-en="Direct consultations" data-ne="प्रत्यक्ष परामर्श">Direct consultations</span>
+                            </li>
+                        </ul>
+                        <a href="{% url 'expert_advisory' %}" class="inline-flex items-center gap-2 text-purple-600 font-bold hover:text-purple-700 group/link">
+                            <span data-en="Join Community" data-ne="समुदायमा सामेल हुनुहोस्">Join Community</span>
+                            <i class="fas fa-arrow-right group-hover/link:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- Call to Action -->
-<section class="bg-green-600 text-white py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-3xl font-bold mb-4" data-en="Ready to Transform Your Farming?" data-ne="आफ्नो खेती रूपान्तरण गर्न तयार हुनुहुन्छ?">आफ्नो खेती रूपान्तरण गर्न तयार हुनुहुन्छ?</h2>
-        <p class="text-xl mb-8 text-green-100" data-en="Join thousands of farmers already using Krishi Connect" data-ne="पहिले नै Krishi Connect प्रयोग गरिरहेका हजारौं किसानहरूसँग सामेल हुनुहोस्">पहिले नै Krishi Connect प्रयोग गरिरहेका हजारौं किसानहरूसँग सामेल हुनुहोस्</p>
-        {% if not user.is_authenticated %}
-        <a href="{% url 'register' %}" class="bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-green-50 transition-colors">
-            <span data-en="Get Started Today" data-ne="आज नै सुरु गर्नुहोस्">आज नै सुरु गर्नुहोस्</span>
-        </a>
-        {% endif %}
-    </div>
-</section>
+    <!-- Modernized CTA Section (Like Home Page) -->
+    <section class="py-24 relative overflow-hidden font-sans delay-300 reveal-anim">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2532&q=80" 
+                 alt="Transform Farming" 
+                 class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-emerald-600/80 backdrop-blur-md"></div>
+        </div>
+        <div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 text-white border border-white/30 mb-8 font-bold text-sm tracking-widest uppercase shadow-sm">
+                <i class="fas fa-rocket"></i> <span data-en="Transform Operations" data-ne="सञ्चालन रूपान्तरण">Transform Operations</span>
+            </div>
+            <h2 class="text-5xl md:text-6xl font-black text-white mb-6 font-heading tracking-tight" data-en="Ready for Next-Gen Agriculture?" data-ne="अर्को पुस्ताको कृषिको लागि तयार हुनुहुन्छ?">Ready for Next-Gen Agriculture?</h2>
+            <p class="text-xl text-emerald-50 mb-10 max-w-2xl mx-auto leading-relaxed font-medium" data-en="Join thousands of farmers already using KrishiConnect to boost their yields, trace their products, and amplify their profits." data-ne="पहिले नै Krishi Connect प्रयोग गरिरहेका हजारौं किसानहरूसँग सामेल हुनुहोस्">Join thousands of farmers already using KrishiConnect to boost their yields, trace their products, and amplify their profits.</p>
+            
+            {% if not user.is_authenticated %}
+            <a href="{% url 'register' %}" class="inline-flex bg-white hover:bg-emerald-50 text-emerald-700 px-10 py-5 rounded-2xl font-bold text-lg hover:-translate-y-1 transition-all shadow-xl group">
+                <span data-en="Get Started Today" data-ne="आज नै सुरु गर्नुहोस्">Get Started Today</span>
+                <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform pt-1"></i>
+            </a>
+            <p class="mt-4 text-emerald-100 text-sm font-medium" data-en="Instantly available. Completely free for all farmers." data-ne="तत्काल उपलब्ध छ। सबै किसानहरूको लागि नि: शुल्क।">Instantly available. Completely free for all farmers.</p>
+            {% else %}
+            <a href="{% url 'dashboard' %}" class="inline-flex bg-white hover:bg-emerald-50 text-emerald-700 px-10 py-5 rounded-2xl font-bold text-lg hover:-translate-y-1 transition-all shadow-xl group">
+                <span data-en="Access Your Hub" data-ne="ड्यासबोर्डमा जानुहोस्">Access Your Hub</span>
+                <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform pt-1"></i>
+            </a>
+            {% endif %}
+        </div>
+    </section>
+</div>
 {% endblock %}

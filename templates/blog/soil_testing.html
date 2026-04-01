@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Soil Testing and Nutrient Management - Krishi Connect{% endblock %}
+{% block content %}
+
+<section class="relative py-20 bg-gradient-to-r from-green-600 to-green-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium mb-4 inline-block">Soil Health</span>
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Soil Testing and Nutrient Management</h1>
+        <div class="flex items-center justify-center gap-4 text-green-100 text-sm">
+            <span>August 3, 2024</span><span>•</span><span>4 min read</span>
+        </div>
+    </div>
+</section>
+
+<section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <img src="{{ MEDIA_URL }}blog/technology.jpg" alt="Soil Testing" class="w-full h-80 object-cover rounded-2xl mb-10 shadow-lg">
+
+        <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-6 mb-10">
+            <p class="text-gray-700 text-lg leading-relaxed">Understanding soil health is crucial for sustainable farming. Learn about soil testing methods and how to manage nutrients effectively.</p>
+        </div>
+
+        <div class="space-y-6 text-gray-600 leading-relaxed">
+            <p>Most Nepali farmers apply fertilizers based on habit or guesswork — the same amount their parents used, on the same schedule, regardless of what the soil actually needs. This approach wastes money, damages soil health over time, and often produces worse results than a science-based approach would.</p>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-purple-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Why Soil Testing Matters</h3>
+                <p class="mb-4">Soil is not just dirt — it is a complex living ecosystem with specific chemical, physical, and biological properties that determine how well crops grow. A soil test reveals the pH level, nutrient content, organic matter percentage, and micronutrient levels that are invisible to the naked eye but critical to plant health.</p>
+                <ul class="space-y-2">
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Over 60% of Nepal's agricultural soils are deficient in zinc and boron</span></li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Acidic soils (pH below 5.5) lock up nutrients even when fertilizers are applied</span></li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Excess nitrogen application causes groundwater contamination and crop lodging</span></li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Organic matter below 2% significantly reduces water retention capacity</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-green-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">How to Get Your Soil Tested</h3>
+                <p class="mb-3">Soil testing in Nepal is available through district agriculture offices, private laboratories in major cities, and increasingly through mobile testing kits that provide results within 30 minutes. The cost of a comprehensive soil test ranges from NPR 500–2,000.</p>
+                <p>Krishi Connect's expert network includes soil scientists who can interpret your test results and provide specific amendment recommendations tailored to your crops and budget.</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-blue-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Building Soil Health Organically</h3>
+                <p>The most cost-effective way to improve soil health is through organic matter additions — compost, vermicompost, green manures, and crop residue incorporation. These materials feed soil microorganisms that make nutrients available to plants, improve water retention, and build the long-term fertility that chemical fertilizers cannot provide.</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-green-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">A Practical Starting Point</h3>
+                <p>Start with a basic pH test — inexpensive kits are available at most agricultural supply stores. If your soil pH is below 6.0, lime application will unlock nutrients that are already present but unavailable to plants. This single intervention often produces dramatic yield improvements at very low cost.</p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2 mt-10 pt-8 border-t border-gray-100">
+            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-xs font-medium">Soil Health</span>
+            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-xs font-medium">Nutrients</span>
+            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-xs font-medium">Organic Farming</span>
+        </div>
+        <div class="mt-10">
+            <a href="{% url 'blog' %}" class="inline-flex items-center text-green-600 hover:text-green-800 font-medium">
+                <i class="fas fa-arrow-left mr-2"></i> Back to All Articles
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

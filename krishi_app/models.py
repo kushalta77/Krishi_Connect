@@ -5,6 +5,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=[('farmer', 'Farmer'), ('expert', 'Expert'), ('supplier', 'Supplier'), ('customer', 'Customer')])
     phone_number = models.CharField(max_length=15, blank=True, null=True)
+    address = models.TextField(max_length=255, blank=True, null=True)
     profile_image = models.ImageField(upload_to='profiles/', blank=True, null=True)
     
     def __str__(self):
@@ -23,12 +24,33 @@ class Vegetable(models.Model):
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='vegetable')
     quantity = models.DecimalField(max_digits=10, decimal_places=2)
     unit = models.CharField(max_length=20, choices=[('kg', 'Kilogram'), ('ton', 'Ton'), ('quintal', 'Quintal')])
+    base_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     price_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
+    discount_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    harvest_date = models.DateField(blank=True, null=True)
+    shelf_life_days = models.PositiveIntegerField(default=7)
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='vegetables/', blank=True, null=True)
     available = models.BooleanField(default=True)
+    is_farmers_special = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
+    def freshness_status(self):
+        if not self.harvest_date:
+            return 'unknown'
+        from datetime import date
+        days_old = (date.today() - self.harvest_date).days
+        if days_old <= self.shelf_life_days * 0.4:
+            return 'fresh'
+        elif days_old <= self.shelf_life_days * 0.75:
+            return 'good'
+        elif days_old <= self.shelf_life_days:
+            return 'aging'
+        return 'expired'
+
+    def effective_price(self):
+        return self.discount_price if self.discount_price else self.price_per_unit
+
     def __str__(self):
         return f"{self.name} by {self.farmer.username}"
 

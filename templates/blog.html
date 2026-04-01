@@ -5,8 +5,14 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="relative py-20 bg-gradient-to-r from-green-600 to-green-700">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+<section class="relative min-h-[40vh] flex items-center justify-center overflow-hidden bg-slate-900">
+    <div class="absolute inset-0 z-0">
+        <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=2532&q=80"
+             alt="Agriculture Blog"
+             class="w-full h-full object-cover opacity-90">
+        <div class="absolute inset-0 bg-black/40"></div>
+    </div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-20">
         <h1 class="text-5xl font-bold text-white mb-6" data-en="Agriculture Blog" data-ne="कृषि ब्लग">कृषि ब्लग</h1>
         <p class="text-xl text-green-100 max-w-3xl mx-auto" data-en="Latest insights, tips, and knowledge for modern farming" data-ne="आधुनिक खेतीका लागि नवीनतम अन्तर्दृष्टि, सुझाव र ज्ञान">आधुनिक खेतीका लागि नवीनतम अन्तर्दृष्टि, सुझाव र ज्ञान</p>
     </div>
@@ -26,7 +32,7 @@
                         <span class="mx-2">•</span>
                         <span data-en="5 min read" data-ne="५ मिनेट पढाइ">५ मिनेट पढाइ</span>
                     </div>
-                    <a href="#" class="inline-flex items-center bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
+                    <a href="{% url 'blog_organic_future' %}" class="inline-flex items-center bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
                         <span data-en="Read Full Article" data-ne="पूरा लेख पढ्नुहोस्">पूरा लेख पढ्नुहोस्</span>
                         <i class="fas fa-arrow-right ml-2"></i>
                     </a>
@@ -45,7 +51,7 @@
         <div class="text-center mb-12">
             <h2 class="text-4xl font-bold text-gray-900 mb-4" data-en="Latest Articles" data-ne="नवीनतम लेखहरू">नवीनतम लेखहरू</h2>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <!-- Article 1 -->
             <article class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
@@ -57,9 +63,9 @@
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-3" data-en="Smart Irrigation Systems for Small Farms" data-ne="साना खेतहरूका लागि स्मार्ट सिंचाई प्रणाली">साना खेतहरूका लागि स्मार्ट सिंचाई प्रणाली</h3>
                     <p class="text-gray-600 mb-4" data-en="Learn how modern irrigation technology can help small-scale farmers optimize water usage and increase crop yields while reducing costs." data-ne="आधुनिक सिंचाई प्रविधिले कसरी साना किसानहरूलाई पानीको प्रयोग अनुकूलन गर्न र लागत घटाउँदै बाली उत्पादन बढाउन मद्दत गर्न सक्छ भनेर जान्नुहोस्।">आधुनिक सिंचाई प्रविधिले कसरी साना किसानहरूलाई पानीको प्रयोग अनुकूलन गर्न र लागत घटाउँदै बाली उत्पादन बढाउन मद्दत गर्न सक्छ भनेर जान्नुहोस्।</p>
-                    <a href="#" class="text-green-600 hover:text-green-800 font-medium inline-flex items-center">
+                    <a href="{% url 'blog_smart_irrigation' %}" class="text-green-600 hover:text-green-800 font-medium inline-flex items-center">
                         <span data-en="Read More" data-ne="थप पढ्नुहोस्">थप पढ्नुहोस्</span>
-                        <i class="fas fa-arrow-right ml-1 text-sm"></i>
+                        <i class="fas fa-arrow-right ml-2"></i>
                     </a>
                 </div>
             </article>
@@ -74,9 +80,9 @@
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-3" data-en="Adapting to Climate Change in Agriculture" data-ne="कृषिमा जलवायु परिवर्तनसँग अनुकूलन">कृषिमा जलवायु परिवर्तनसँग अनुकूलन</h3>
                     <p class="text-gray-600 mb-4" data-en="Discover strategies and techniques that help farmers adapt to changing weather patterns and maintain productive farming operations." data-ne="परिवर्तनशील मौसमी ढाँचासँग अनुकूलन गर्न र उत्पादक कृषि सञ्चालन कायम राख्न किसानहरूलाई मद्दत गर्ने रणनीति र प्रविधिहरू पत्ता लगाउनुहोस्।">परिवर्तनशील मौसमी ढाँचासँग अनुकूलन गर्न र उत्पादक कृषि सञ्चालन कायम राख्न किसानहरूलाई मद्दत गर्ने रणनीति र प्रविधिहरू पत्ता लगाउनुहोस्।</p>
-                    <a href="#" class="text-green-600 hover:text-green-800 font-medium inline-flex items-center">
+                    <a href="{% url 'blog_climate_change' %}" class="text-green-600 hover:text-green-800 font-medium inline-flex items-center">
                         <span data-en="Read More" data-ne="थप पढ्नुहोस्">थप पढ्नुहोस्</span>
-                        <i class="fas fa-arrow-right ml-1 text-sm"></i>
+                        <i class="fas fa-arrow-right ml-2"></i>
                     </a>
                 </div>
             </article>
@@ -91,9 +97,9 @@
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-3" data-en="Direct Market Access for Farmers" data-ne="किसानहरूका लागि प्रत्यक्ष बजार पहुँच">किसानहरूका लागि प्रत्यक्ष बजार पहुँच</h3>
                     <p class="text-gray-600 mb-4" data-en="Explore how digital platforms are connecting farmers directly with consumers, eliminating middlemen and ensuring fair prices for agricultural products." data-ne="डिजिटल प्लेटफर्महरूले कसरी किसानहरूलाई उपभोक्ताहरूसँग प्रत्यक्ष जोडिरहेका छन्, बिचौलियाहरूलाई हटाउँदै र कृषि उत्पादनहरूको निष्पक्ष मूल्य सुनिश्चित गर्दै भन्ने कुरा अन्वेषण गर्नुहोस्।">डिजिटल प्लेटफर्महरूले कसरी किसानहरूलाई उपभोक्ताहरूसँग प्रत्यक्ष जोडिरहेका छन्, बिचौलियाहरूलाई हटाउँदै र कृषि उत्पादनहरूको निष्पक्ष मूल्य सुनिश्चित गर्दै भन्ने कुरा अन्वेषण गर्नुहोस्।</p>
-                    <a href="#" class="text-green-600 hover:text-green-800 font-medium inline-flex items-center">
+                    <a href="{% url 'blog_direct_market' %}" class="text-green-600 hover:text-green-800 font-medium inline-flex items-center">
                         <span data-en="Read More" data-ne="थप पढ्नुहोस्">थप पढ्नुहोस्</span>
-                        <i class="fas fa-arrow-right ml-1 text-sm"></i>
+                        <i class="fas fa-arrow-right ml-2"></i>
                     </a>
                 </div>
             </article>
@@ -108,9 +114,9 @@
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-3" data-en="Soil Testing and Nutrient Management" data-ne="माटो परीक्षण र पोषक तत्व व्यवस्थापन">माटो परीक्षण र पोषक तत्व व्यवस्थापन</h3>
                     <p class="text-gray-600 mb-4" data-en="Understanding soil health is crucial for sustainable farming. Learn about soil testing methods and how to manage nutrients effectively." data-ne="दिगो खेतीका लागि माटोको स्वास्थ्य बुझ्नु महत्वपूर्ण छ। माटो परीक्षण विधिहरू र पोषक तत्वहरूलाई प्रभावकारी रूपमा व्यवस्थापन गर्ने बारेमा जान्नुहोस्।">दिगो खेतीका लागि माटोको स्वास्थ्य बुझ्नु महत्वपूर्ण छ। माटो परीक्षण विधिहरू र पोषक तत्वहरूलाई प्रभावकारी रूपमा व्यवस्थापन गर्ने बारेमा जान्नुहोस्।</p>
-                    <a href="#" class="text-green-600 hover:text-green-800 font-medium inline-flex items-center">
+                    <a href="{% url 'blog_soil_testing' %}" class="text-green-600 hover:text-green-800 font-medium inline-flex items-center">
                         <span data-en="Read More" data-ne="थप पढ्नुहोस्">थप पढ्नुहोस्</span>
-                        <i class="fas fa-arrow-right ml-1 text-sm"></i>
+                        <i class="fas fa-arrow-right ml-2"></i>
                     </a>
                 </div>
             </article>
@@ -125,9 +131,9 @@
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-3" data-en="Integrated Pest Management Strategies" data-ne="एकीकृत कीट व्यवस्थापन रणनीतिहरू">एकीकृत कीट व्यवस्थापन रणनीतिहरू</h3>
                     <p class="text-gray-600 mb-4" data-en="Learn about sustainable pest control methods that protect crops while maintaining ecological balance and reducing chemical dependency." data-ne="पारिस्थितिक सन्तुलन कायम राख्दै र रासायनिक निर्भरता घटाउँदै बालीहरूको संरक्षण गर्ने दिगो कीट नियन्त्रण विधिहरूको बारेमा जान्नुहोस्।">पारिस्थितिक सन्तुलन कायम राख्दै र रासायनिक निर्भरता घटाउँदै बालीहरूको संरक्षण गर्ने दिगो कीट नियन्त्रण विधिहरूको बारेमा जान्नुहोस्।</p>
-                    <a href="#" class="text-green-600 hover:text-green-800 font-medium inline-flex items-center">
+                    <a href="{% url 'blog_pest_management' %}" class="text-green-600 hover:text-green-800 font-medium inline-flex items-center">
                         <span data-en="Read More" data-ne="थप पढ्नुहोस्">थप पढ्नुहोस्</span>
-                        <i class="fas fa-arrow-right ml-1 text-sm"></i>
+                        <i class="fas fa-arrow-right ml-2"></i>
                     </a>
                 </div>
             </article>
@@ -142,9 +148,9 @@
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-3" data-en="Crop Rotation for Better Yields" data-ne="राम्रो उत्पादनका लागि बाली चक्रीकरण">राम्रो उत्पादनका लागि बाली चक्रीकरण</h3>
                     <p class="text-gray-600 mb-4" data-en="Discover the benefits of crop rotation and how this traditional practice can improve soil fertility and increase overall farm productivity." data-ne="बाली चक्रीकरणका फाइदाहरू र यो परम्परागत अभ्यासले कसरी माटोको उर्वरता सुधार गर्न र समग्र खेतको उत्पादकत्व बढाउन सक्छ भनेर पत्ता लगाउनुहोस्।">बाली चक्रीकरणका फाइदाहरू र यो परम्परागत अभ्यासले कसरी माटोको उर्वरता सुधार गर्न र समग्र खेतको उत्पादकत्व बढाउन सक्छ भनेर पत्ता लगाउनुहोस्।</p>
-                    <a href="#" class="text-green-600 hover:text-green-800 font-medium inline-flex items-center">
+                    <a href="{% url 'blog_crop_rotation' %}" class="text-green-600 hover:text-green-800 font-medium inline-flex items-center">
                         <span data-en="Read More" data-ne="थप पढ्नुहोस्">थप पढ्नुहोस्</span>
-                        <i class="fas fa-arrow-right ml-1 text-sm"></i>
+                        <i class="fas fa-arrow-right ml-2"></i>
                     </a>
                 </div>
             </article>

@@ -1,88 +1,235 @@
-{% extends 'base.html' %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product | Krishi Connect</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; background-image: radial-gradient(#22c55e15 1px, transparent 1px); background-size: 32px 32px; }
+        .sidebar { background: linear-gradient(160deg, #14532d 0%, #166534 100%); }
+        .nav-item { position: relative; overflow: hidden; transition: all 0.3s ease; }
+        .nav-item::before { content: ''; position: absolute; left: 0; top: 0; width: 3px; height: 100%; background-color: #4ade80; transform: scaleY(0); transition: transform 0.3s ease; }
+        .nav-item:hover::before, .nav-item.active::before { transform: scaleY(1); }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: #fff; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800">
 
-{% block title %}Add Product | Krishi Connect{% endblock %}
+<div class="flex h-screen overflow-hidden">
 
-{% block content %}
-<div class="min-h-screen bg-gray-100 py-12 px-4">
-    <div class="max-w-2xl mx-auto">
-        <div class="bg-white rounded-lg shadow-md p-8">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Add New Product</h2>
+    <!-- Sidebar -->
+    <aside class="w-72 h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0">
+        <div class="px-8 py-8">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20">
+                    <i class="fas fa-seedling text-2xl text-green-400"></i>
+                </div>
+                <div>
+                    <h2 class="font-bold text-2xl text-white">Krishi<span class="text-green-400">Connect</span></h2>
+                    <p class="text-green-200/80 text-[10px] tracking-wider uppercase font-semibold mt-1">Farmer Portal</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mx-6 mb-8 mt-2 p-1 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10">
+            <div class="p-4 flex items-center gap-4">
+                <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-xl font-bold text-green-700">
+                    {{ user.first_name|first|upper }}
+                </div>
+                <div class="min-w-0 flex-1">
+                    <p class="font-semibold text-white truncate">{{ user.first_name }} {{ user.last_name }}</p>
+                    <span class="inline-flex items-center gap-1.5 text-[10px] bg-green-400/20 text-green-200 px-2 py-0.5 rounded-full mt-1 font-bold uppercase tracking-wider">
+                        <i class="fas fa-circle text-green-400" style="font-size:6px"></i> Active Farmer
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto pb-6">
+            <p class="text-green-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mb-2">Main Menu</p>
+            <a href="{% url 'dashboard' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-th-large w-5 text-center text-lg"></i><span>Dashboard</span>
+            </a>
+            <a href="{% url 'add_vegetable' %}" class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-white">
+                <i class="fas fa-plus-circle w-5 text-center text-lg"></i><span>List New Product</span>
+            </a>
+            <a href="{% url 'farmer_products' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-boxes w-5 text-center text-lg"></i><span>My Products</span>
+            </a>
+            <a href="{% url 'my_orders' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-shopping-cart w-5 text-center text-lg"></i><span>Orders</span>
+            </a>
+            <a href="{% url 'farmer_stock' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-warehouse w-5 text-center text-lg"></i><span>Stock Management</span>
+            </a>
+            <p class="text-green-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Tools</p>
+            <a href="{% url 'weather' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-cloud-sun w-5 text-center text-lg"></i><span>Weather Updates</span>
+            </a>
+            <a href="#chatbot" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-robot w-5 text-center text-lg"></i><span>Chatbot</span>
+            </a>
             
-            <form method="post" enctype="multipart/form-data" class="space-y-6">
-                {% csrf_token %}
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                    <select name="category" id="category" required onchange="updateNameLabel()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                        <option value="vegetable">Vegetable</option>
-                        <option value="fruit">Fruit</option>
-                        <option value="grain">Grain</option>
-                        <option value="spice">Spice</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
+        </nav>
 
-                <div>
-                    <label id="name-label" class="block text-sm font-medium text-gray-700 mb-2">Vegetable Name</label>
-                    <input type="text" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                </div>
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
-                        <input type="number" step="0.01" name="quantity" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Unit</label>
-                        <select name="unit" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                            <option value="kg">Kilogram (kg)</option>
-                            <option value="ton">Ton</option>
-                            <option value="quintal">Quintal</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Price per Unit (₹)</label>
-                    <input type="number" step="0.01" name="price_per_unit" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                    <textarea name="description" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"></textarea>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Image</label>
-                    <input type="file" name="image" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                </div>
-                
-                <div class="flex space-x-4">
-                    <button type="submit" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-lg transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Add Product
-                    </button>
-                    <a href="{% url 'dashboard' %}" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-3 rounded-lg text-center transition-colors">
-                        Cancel
-                    </a>
-                </div>
+        <div class="p-6 border-t border-white/10 bg-black/10">
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="w-full flex items-center justify-center gap-3 py-3.5 bg-red-500/10 hover:bg-red-500 border border-red-500/20 hover:border-red-500 rounded-xl text-red-400 hover:text-white font-medium transition-all duration-300">
+                    <i class="fas fa-power-off"></i><span>Logout</span>
+                </button>
             </form>
         </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+
+        <!-- Top Header -->
+        <header class="bg-white/80 backdrop-blur-md border-b border-gray-100 px-8 py-5 flex items-center justify-between shadow-sm flex-shrink-0">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800">🌱 List New Product</h1>
+                <p class="text-slate-400 text-sm mt-0.5">Add a new product to the marketplace</p>
+            </div>
+            <a href="{% url 'farmer_products' %}" class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all">
+                <i class="fas fa-arrow-left"></i> Back to Products
+            </a>
+        </header>
+
+        <!-- Body -->
+        <main class="flex-1 overflow-y-auto p-6">
+            <div class="max-w-2xl mx-auto">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+
+                    {% for message in messages %}
+                    <div class="flex items-center gap-3 p-4 rounded-xl border text-sm mb-6 {% if message.tags == 'success' %}bg-green-50 border-green-200 text-green-700{% else %}bg-red-50 border-red-200 text-red-700{% endif %}">
+                        <i class="fas {% if message.tags == 'success' %}fa-check-circle text-green-500{% else %}fa-exclamation-circle text-red-500{% endif %}"></i>
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+
+                    <form method="post" enctype="multipart/form-data" class="space-y-5">
+                        {% csrf_token %}
+
+                        <!-- Category -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                            <select name="category" id="category" required onchange="updateNameLabel()" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                <option value="vegetable">🥦 Vegetable</option>
+                                <option value="fruit">🍎 Fruit</option>
+                                <option value="grain">🌾 Grain</option>
+                                <option value="spice">🌶️ Spice</option>
+                                <option value="other">📦 Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Name -->
+                        <div>
+                            <label id="name-label" class="block text-sm font-medium text-gray-700 mb-2">Vegetable Name</label>
+                            <input type="text" name="name" required placeholder="e.g. Tomato, Mango, Rice..."
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+
+                        <!-- Quantity + Unit -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Stock</label>
+                                <input type="number" step="0.01" name="stock" required
+                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Unit</label>
+                                <select name="unit" required class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                    <option value="kg">Kilogram (kg)</option>
+                                    <option value="ton">Ton</option>
+                                    <option value="quintal">Quintal</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Base Price + Selling Price -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Base Price (₹)</label>
+                                <input type="number" step="0.01" name="base_price" placeholder="Your cost price"
+                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Selling Price (₹) *</label>
+                                <input type="number" step="0.01" name="price_per_unit" required placeholder="Price shown to customers"
+                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            </div>
+                        </div>
+
+                        <!-- Discount Price -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Discount Price (₹) <span class="text-gray-400 font-normal">— optional</span></label>
+                            <input type="number" step="0.01" name="discount_price" placeholder="Leave empty if no discount"
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+
+                        <!-- Harvest Date + Shelf Life -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Harvest Date</label>
+                                <input type="date" name="harvest_date"
+                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Shelf Life (days)</label>
+                                <input type="number" name="shelf_life_days" value="7" min="1"
+                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                            <textarea name="description" rows="3" placeholder="Describe your product..."
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent"></textarea>
+                        </div>
+
+                        <!-- Image -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
+                            <input type="file" name="image" accept="image/*"
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+
+                        <!-- Farmer's Special -->
+                        <div class="flex items-center gap-3 bg-yellow-50 border border-yellow-200 rounded-xl px-4 py-3">
+                            <input type="checkbox" name="is_farmers_special" id="is_farmers_special" class="w-5 h-5 accent-yellow-500">
+                            <label for="is_farmers_special" class="text-sm font-medium text-yellow-800 cursor-pointer">
+                                ⭐ Mark as Farmer's Special — highlights this product in the marketplace
+                            </label>
+                        </div>
+
+                        <div class="flex gap-4 pt-2">
+                            <button type="submit" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition-colors">
+                                <i class="fas fa-plus mr-2"></i>Add Product
+                            </button>
+                            <a href="{% url 'dashboard' %}" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 rounded-xl text-center transition-colors">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
     </div>
 </div>
 
 <script>
-const labels = {
-    vegetable: 'Vegetable Name',
-    fruit: 'Fruit Name',
-    grain: 'Grain Name',
-    spice: 'Spice Name',
-    other: 'Product Name',
-};
+const labels = { vegetable: 'Vegetable Name', fruit: 'Fruit Name', grain: 'Grain Name', spice: 'Spice Name', other: 'Product Name' };
 function updateNameLabel() {
-    const cat = document.getElementById('category').value;
-    document.getElementById('name-label').textContent = labels[cat] || 'Product Name';
+    document.getElementById('name-label').textContent = labels[document.getElementById('category').value] || 'Product Name';
 }
 </script>
-{% endblock %}
+</body>
+</html>

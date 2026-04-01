@@ -7,293 +7,653 @@
     <title>Customer Dashboard | Krishi Connect</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts for Premium Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Khalti Checkout JS -->
+    <script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        heading: ['"Outfit"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                        accent: {
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            background-image: radial-gradient(#22c55e15 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02);
+        }
+        .sidebar {
+            background: linear-gradient(160deg, #14532d 0%, #166534 100%);
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+        .hover-scale {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .hover-scale:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px -10px rgba(34, 197, 94, 0.2);
+        }
+        .nav-item {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background-color: #4ade80;
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+            transform-origin: left;
+        }
+        .nav-item:hover::before, .nav-item.active::before {
+            transform: scaleY(1);
+        }
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        .khalti-btn {
+            background: #5C2D91;
+            box-shadow: 0 8px 20px rgba(92, 45, 145, 0.25);
+            border: none;
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .khalti-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        .khalti-btn:hover::after {
+            left: 100%;
+        }
+        .khalti-btn:hover {
+            background: #4a2475;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(92, 45, 145, 0.35);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
-<body class="bg-slate-100" style="font-size:20px">
-<style>
-* { font-size: inherit !important; }
-body { font-size: 20px !important; }
-.text-xs { font-size: 16px !important; }
-.text-sm { font-size: 18px !important; }
-.text-base { font-size: 20px !important; }
-.text-xl { font-size: 22px !important; }
-.text-2xl { font-size: 26px !important; }
-.text-3xl { font-size: 30px !important; }
-</style>
+<body class="min-h-screen text-slate-800 font-sans selection:bg-brand-200">
 
-<!-- Mobile overlay -->
-<div id="overlay" onclick="closeSidebar()" class="hidden fixed inset-0 bg-black/40 z-40 md:hidden"></div>
+<!-- Mobile Overlay -->
+<div id="overlay" onclick="closeSidebar()" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-all duration-300 opacity-0"></div>
 
 <div class="flex h-screen overflow-hidden">
 
-    <!-- Sidebar -->
-    <aside id="sidebar" class="fixed md:static z-50 w-72 h-full bg-gradient-to-b from-indigo-950 via-purple-900 to-violet-800 text-white flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0 transition-transform duration-300">
-
-        <!-- Brand -->
-        <div class="px-6 py-6 border-b border-white/10">
-            <div class="flex items-center gap-3">
-                <div class="w-11 h-11 bg-white/15 rounded-2xl flex items-center justify-center">
-                    <i class="fas fa-leaf text-xl text-violet-200"></i>
+    <!-- Premium Sidebar -->
+    <aside id="sidebar" class="fixed md:static z-50 w-[280px] h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0 transition-transform duration-500 ease-out">
+        
+        <!-- Brand Logo -->
+        <div class="px-8 py-8 relative">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center border border-white/20 shadow-lg">
+                    <i class="fas fa-leaf text-2xl text-brand-400"></i>
                 </div>
                 <div>
-                    <p class="font-bold text-lg leading-tight">Krishi Connect</p>
-                    <p class="text-violet-300 text-xs mt-0.5">Customer Portal</p>
+                    <h2 class="font-heading font-bold text-2xl text-white tracking-tight">Krishi<span class="text-brand-400">Connect</span></h2>
+                    <p class="text-brand-200/80 text-xs tracking-wider uppercase font-semibold mt-1">Farm to Home</p>
                 </div>
             </div>
         </div>
 
-        <!-- Profile -->
-        <div class="mx-4 my-4 bg-white/10 rounded-2xl p-4">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-gradient-to-br from-pink-400 to-rose-500 rounded-2xl flex items-center justify-center text-xl font-bold shadow-lg flex-shrink-0">
+        <!-- User Profile Card -->
+        <div class="mx-6 mb-8 mt-2 p-1 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 shadow-lg relative overflow-hidden group">
+            <div class="absolute inset-0 bg-brand-600/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+            <div class="relative p-4 flex items-center gap-4">
+                <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-xl font-heading font-bold text-brand-700 shadow-md">
                     {{ user.first_name|first|upper }}
                 </div>
-                <div class="min-w-0">
-                    <p class="font-semibold text-sm truncate">{{ user.first_name }} {{ user.last_name }}</p>
-                    <p class="text-violet-300 text-xs truncate">{{ user.email }}</p>
+                <div class="min-w-0 flex-1">
+                    <p class="font-heading font-semibold text-white text-md truncate">{{ user.first_name }} {{ user.last_name }}</p>
+                    <span class="inline-flex items-center gap-1.5 text-[10px] bg-brand-400/20 text-brand-200 px-2 py-0.5 rounded-full mt-1 font-bold uppercase tracking-wider">
+                        <i class="fas fa-circle text-brand-400" style="font-size:6px"></i> Active Customer
+                    </span>
+                    <a href="{% url 'customer_profile' %}" class="mt-2 flex items-center gap-1 text-[10px] text-brand-300 hover:text-white transition-colors">
+                        <i class="fas fa-user-cog" style="font-size:9px"></i> View Profile
+                    </a>
                 </div>
             </div>
         </div>
 
-        <!-- Nav -->
-        <nav class="flex-1 px-3 space-y-0.5 overflow-y-auto pb-4">
-            <p class="text-violet-400 text-xs font-bold uppercase tracking-widest px-3 py-3">Menu</p>
+        <!-- Navigation Links -->
+        <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto pb-6">
+            <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mb-2">Menu</p>
 
-            <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-4 py-3 bg-white/20 rounded-xl text-white font-semibold text-sm">
-                <i class="fas fa-grid-2 w-5 text-center"></i> Dashboard
+            <a href="{% url 'dashboard' %}" class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-white shadow-[0_0_20px_rgba(74,222,128,0.1)]">
+                <i class="fas fa-grid-2 w-5 text-center text-lg"></i> 
+                <span>Dashboard</span>
             </a>
-            <a href="{% url 'public_marketplace' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-violet-200 hover:text-white transition-all text-sm">
-                <i class="fas fa-store w-5 text-center"></i> Browse Shop
+            <a href="{% url 'public_marketplace' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-store w-5 text-center text-lg"></i> 
+                <span>Marketplace</span>
             </a>
-            <a href="#orders" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-violet-200 hover:text-white transition-all text-sm">
-                <i class="fas fa-box w-5 text-center"></i> My Orders
+            <a href="#orders" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-box-open w-5 text-center text-lg"></i> 
+                <span>My Orders</span>
             </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-violet-200 hover:text-white transition-all text-sm">
-                <i class="fas fa-truck w-5 text-center"></i> Track Delivery
+            <a href="#cart" class="nav-item flex items-center justify-between px-4 py-3.5 rounded-xl text-slate-300 font-medium group">
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-shopping-basket w-5 text-center text-lg group-hover:text-brand-400 transition-colors"></i> 
+                    <span>Shopping Cart</span>
+                </div>
+                {% if cart.items.all %}
+                <span class="bg-brand-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">{{ cart.items.count }}</span>
+                {% endif %}
             </a>
 
-            <p class="text-violet-400 text-xs font-bold uppercase tracking-widest px-3 py-3 mt-2">Other</p>
-            <a href="{% url 'weather' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-violet-200 hover:text-white transition-all text-sm">
-                <i class="fas fa-cloud-sun w-5 text-center"></i> Weather
-            </a>
-            <a href="{% url 'home' %}" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl text-violet-200 hover:text-white transition-all text-sm">
-                <i class="fas fa-home w-5 text-center"></i> Home
-            </a>
+            <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Others</p>
+            <a href="{% url 'weather' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-cloud-sun w-5 text-center text-lg"></i> 
+                <span>Weather Updates</span>
+            
         </nav>
 
-        <!-- Logout -->
-        <div class="p-4 border-t border-white/10">
+        <!-- Logout Area -->
+        <div class="p-6 border-t border-white/10 mt-auto bg-black/10">
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
-                <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 bg-red-500/20 hover:bg-red-500/40 rounded-xl text-red-300 hover:text-white transition-all text-sm font-medium">
-                    <i class="fas fa-sign-out-alt w-5 text-center"></i> Logout
+                <button type="submit" class="w-full flex items-center justify-center gap-3 py-3.5 bg-red-500/10 hover:bg-red-500 border border-red-500/20 hover:border-red-500 rounded-xl text-red-400 hover:text-white font-medium transition-all duration-300 shadow-lg">
+                    <i class="fas fa-power-off"></i> 
+                    <span>Logout </span>
                 </button>
             </form>
         </div>
     </aside>
 
-    <!-- Main -->
-    <div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col overflow-hidden relative">
 
-        <!-- Topbar -->
-        <header class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shadow-sm flex-shrink-0">
+        <!-- Top Header -->
+        <header class="glass-panel z-30 px-6 py-4 flex items-center justify-between shadow-sm flex-shrink-0 sticky top-0 mx-4 mt-4 mb-2 rounded-2xl">
             <div class="flex items-center gap-4">
-                <button onclick="openSidebar()" class="md:hidden text-slate-500 hover:text-slate-700">
-                    <i class="fas fa-bars text-xl"></i>
+                <button onclick="openSidebar()" class="md:hidden w-10 h-10 flex items-center justify-center bg-brand-50 text-brand-600 rounded-xl hover:bg-brand-100 transition-colors">
+                    <i class="fas fa-bars text-lg"></i>
                 </button>
                 <div>
-                    <h1 class="text-xl font-bold text-slate-800">Hey, <span class="text-violet-600">{{ user.first_name }}</span> 👋</h1>
-                    <p class="text-slate-400 text-sm">Here's what's happening with your orders</p>
+                    <h1 class="text-xl md:text-2xl font-heading font-bold text-slate-800 tracking-tight">
+                        Welcome back, <span class="bg-gradient-to-r from-brand-600 to-emerald-500 bg-clip-text text-transparent">{{ user.first_name }}</span>! 👋
+                    </h1>
+                    <p class="text-slate-500 text-sm font-medium mt-0.5">Let's find some fresh products today.</p>
                 </div>
             </div>
             <div class="flex items-center gap-3">
-                <div class="relative hidden md:block">
-                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                    <input type="text" placeholder="Search products..." class="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-violet-400 w-56">
+                <div class="relative hidden lg:block group">
+                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-500 transition-colors"></i>
+                    <form action="{% url 'public_marketplace' %}" method="get">
+                        <input type="text" name="q" placeholder="Search vegetables..." class="pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 hover:border-brand-300 focus:border-brand-500 rounded-xl text-sm text-slate-700 outline-none w-64 focus:ring-4 focus:ring-brand-500/10 transition-all shadow-inner">
+                    </form>
                 </div>
-                <a href="{% url 'public_marketplace' %}" class="flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all">
-                    <i class="fas fa-store"></i> Shop Now
+                <a href="{% url 'public_marketplace' %}" class="hidden sm:flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                    <i class="fas fa-store text-brand-400"></i> Explore Shop
                 </a>
             </div>
         </header>
 
-        <!-- Body -->
-        <main class="flex-1 overflow-y-auto p-6 space-y-6">
+        <!-- Scrollable Content -->
+        <main class="flex-1 overflow-y-auto px-4 pb-12 pt-4">
+            <div class="max-w-7xl mx-auto space-y-8">
 
-            {% for message in messages %}
-            <div class="flex items-center gap-3 p-4 rounded-xl border text-sm {% if message.tags == 'success' %}bg-green-50 border-green-200 text-green-700{% else %}bg-red-50 border-red-200 text-red-700{% endif %}">
-                <i class="fas {% if message.tags == 'success' %}fa-check-circle text-green-500{% else %}fa-exclamation-circle text-red-500{% endif %}"></i>
-                {{ message }}
-            </div>
-            {% endfor %}
-
-            <!-- Stat Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center gap-5">
-                    <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-box text-blue-600 text-xl"></i>
+                <!-- Alert Messages -->
+                {% for message in messages %}
+                <div class="fade-in-up p-4 rounded-2xl glass-panel border shadow-sm {% if message.tags == 'success' %}border-brand-200 bg-brand-50/80 text-brand-800{% else %}border-red-200 bg-red-50/80 text-red-800{% endif %} flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 {% if message.tags == 'success' %}bg-brand-100 text-brand-600{% else %}bg-red-100 text-red-600{% endif %}">
+                        <i class="fas {% if message.tags == 'success' %}fa-check{% else %}fa-exclamation{% endif %}"></i>
                     </div>
-                    <div>
-                        <p class="text-2xl font-bold text-slate-800">{{ orders|length }}</p>
-                        <p class="text-slate-500 text-sm">Total Orders</p>
-                    </div>
+                    <p class="font-medium text-sm">{{ message }}</p>
                 </div>
+                {% endfor %}
 
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center gap-5">
-                    <div class="w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-truck text-amber-500 text-xl"></i>
+                <!-- Statistics Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <!-- Stat Card 1 -->
+                    <div class="glass-panel p-6 rounded-3xl hover-scale fade-in-up" style="animation-delay: 0.1s;">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl shadow-sm border border-blue-100">
+                                <i class="fas fa-box-open"></i>
+                            </div>
+                            <span class="bg-blue-50 text-blue-600 text-xs font-bold px-2 py-1 rounded-lg">All Time</span>
+                        </div>
+                        <h3 class="text-3xl font-heading font-bold text-slate-800">{{ orders|length }}</h3>
+                        <p class="text-slate-500 text-sm font-medium mt-1">Total Purchases</p>
                     </div>
-                    <div>
-                        <p class="text-2xl font-bold text-slate-800">{{ orders|length }}</p>
-                        <p class="text-slate-500 text-sm">In Transit</p>
-                    </div>
-                </div>
 
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center gap-5">
-                    <div class="w-14 h-14 bg-violet-100 rounded-2xl flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-rupee-sign text-violet-600 text-xl"></i>
+                    <!-- Stat Card 2 -->
+                    <div class="glass-panel p-6 rounded-3xl hover-scale fade-in-up" style="animation-delay: 0.2s;">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-xl shadow-sm border border-amber-100">
+                                <i class="fas fa-truck-fast"></i>
+                            </div>
+                            <span class="bg-amber-50 text-amber-600 text-xs font-bold px-2 py-1 rounded-lg">Active</span>
+                        </div>
+                        <h3 class="text-3xl font-heading font-bold text-slate-800">{{ in_transit|default:orders|length }}</h3>
+                        <p class="text-slate-500 text-sm font-medium mt-1">Orders in Transit</p>
                     </div>
-                    <div>
-                        <p class="text-2xl font-bold text-slate-800">₹{{ total_spent|floatformat:0 }}</p>
-                        <p class="text-slate-500 text-sm">Total Spent</p>
-                    </div>
-                </div>
 
-            </div>
-
-            <!-- Orders Table -->
-            <div id="orders" class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
-                    <div>
-                        <h3 class="font-bold text-slate-800 text-base">Recent Orders</h3>
-                        <p class="text-slate-400 text-sm mt-0.5">Your purchase history</p>
+                    <!-- Stat Card 3 -->
+                    <div class="glass-panel p-6 rounded-3xl hover-scale fade-in-up" style="animation-delay: 0.3s;">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-xl shadow-sm border border-emerald-100">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <span class="bg-emerald-50 text-emerald-600 text-xs font-bold px-2 py-1 rounded-lg">Invested</span>
+                        </div>
+                        <h3 class="text-3xl font-heading font-bold text-slate-800">₹{{ total_spent|floatformat:0 }}</h3>
+                        <p class="text-slate-500 text-sm font-medium mt-1">Total Amount Spent</p>
                     </div>
-                    <a href="{% url 'public_marketplace' %}" class="flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all">
-                        <i class="fas fa-plus"></i> New Order
+
+                    <!-- Stat Card 4 -->
+                    <a href="#cart" class="glass-panel p-6 rounded-3xl hover-scale fade-in-up block group" style="animation-delay: 0.4s;">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center text-xl shadow-sm border border-purple-100 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <span class="bg-purple-50 text-purple-600 text-xs font-bold px-2 py-1 rounded-lg border border-purple-100">Pending</span>
+                        </div>
+                        <h3 class="text-3xl font-heading font-bold text-slate-800">{{ cart.items.count }}</h3>
+                        <p class="text-slate-500 text-sm font-medium mt-1">Items in Cart</p>
+                        <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-brand-600 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                            View Cart <i class="fas fa-arrow-right"></i>
+                        </div>
                     </a>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead>
-                            <tr class="bg-slate-50 text-slate-400 text-xs uppercase tracking-wider">
-                                <th class="px-6 py-4 text-left font-semibold">Order ID</th>
-                                <th class="px-6 py-4 text-left font-semibold">Product</th>
-                                <th class="px-6 py-4 text-left font-semibold">Date</th>
-                                <th class="px-6 py-4 text-left font-semibold">Price</th>
-                                <th class="px-6 py-4 text-left font-semibold">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100">
-                            {% for order in orders %}
-                            <tr class="hover:bg-slate-50/70 transition-colors">
-                                <td class="px-6 py-4 text-slate-400 text-sm font-mono">#{{ order.id }}</td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 bg-violet-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                            <i class="fas fa-leaf text-violet-500 text-sm"></i>
-                                        </div>
-                                        <div>
-                                            <p class="font-semibold text-slate-800 text-sm">{{ order.supplier_inventory.vegetable_name }}</p>
-                                            <p class="text-slate-400 text-xs">{{ order.quantity }} {{ order.supplier_inventory.unit }}</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 text-slate-500 text-sm">{{ order.ordered_at|date:"d M Y" }}</td>
-                                <td class="px-6 py-4 font-bold text-slate-800 text-sm">₹{{ order.total_price }}</td>
-                                <td class="px-6 py-4">
-                                    {% if order.status == 'delivered' %}
-                                    <span class="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold bg-emerald-100 text-emerald-700 rounded-full">
-                                        <i class="fas fa-check-circle"></i> Delivered
-                                    </span>
-                                    {% elif order.status == 'confirmed' %}
-                                    <span class="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded-full">
-                                        <i class="fas fa-shipping-fast"></i> Shipped
-                                    </span>
-                                    {% else %}
-                                    <span class="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold bg-amber-100 text-amber-700 rounded-full">
-                                        <i class="fas fa-clock"></i> Processing
-                                    </span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="5" class="px-6 py-16 text-center">
-                                    <div class="flex flex-col items-center gap-3">
-                                        <div class="w-16 h-16 bg-violet-50 rounded-2xl flex items-center justify-center">
-                                            <i class="fas fa-shopping-bag text-violet-300 text-3xl"></i>
-                                        </div>
-                                        <p class="text-slate-500 font-semibold">No orders yet</p>
-                                        <a href="{% url 'public_marketplace' %}" class="text-violet-600 hover:underline text-sm font-semibold">Start shopping →</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
 
-            <!-- Recommended -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-                <div class="flex items-center justify-between mb-5">
-                    <div>
-                        <h3 class="font-bold text-slate-800 text-base">Recommended for You</h3>
-                        <p class="text-slate-400 text-sm mt-0.5">Fresh picks from our farmers</p>
-                    </div>
-                    <a href="{% url 'public_marketplace' %}" class="text-violet-600 hover:text-violet-800 text-sm font-semibold hover:underline">View All →</a>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {% for veg in recommended %}
-                    <div class="border border-slate-100 rounded-2xl overflow-hidden hover:shadow-md transition-shadow">
-                        {% if veg.image %}
-                        <img src="{{ veg.image.url }}" alt="{{ veg.name }}" class="w-full h-36 object-cover">
+                <!-- Shopping Cart Summary -->
+                <div id="cart" class="glass-panel rounded-3xl overflow-hidden fade-in-up" style="animation-delay: 0.5s;">
+                    <div class="px-8 py-6 border-b border-slate-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white/50">
+                        <div>
+                            <h3 class="font-heading font-bold text-xl text-slate-800 flex items-center gap-2">
+                                <i class="fas fa-shopping-cart text-brand-500"></i> My Smart Cart
+                            </h3>
+                            <p class="text-slate-500 text-sm mt-1">Review your items before checkout.</p>
+                        </div>
+                        
+                        {% if cart.items.all %}
+                        <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+                            <div class="text-right flex-1 sm:flex-initial hidden sm:block">
+                                <p class="text-xs text-slate-500 font-medium">Total Amount</p>
+                                <p class="text-xl font-heading font-bold text-slate-800">₹{{ cart.total|floatformat:0 }}</p>
+                            </div>
+                            
+                            <!-- Khalti Payment Form -->
+                            <form id="khalti-checkout-form" method="post" action="{% url 'checkout_cart' %}" class="w-full sm:w-auto">
+                                {% csrf_token %}
+                                <button type="button" onclick="checkoutKhaltiCart('{{ cart.total|floatformat:0 }}')" class="khalti-btn w-full sm:w-auto px-6 py-3.5 rounded-xl font-bold flex items-center justify-center gap-3 text-sm">
+                                    <img src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-logo.svg" alt="Khalti" class="h-4 brightness-0 invert">
+                                    Buy Now with Khalti
+                                </button>
+                            </form>
+                        </div>
                         {% else %}
-                        <div class="w-full h-36 bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center">
-                            <i class="fas fa-leaf text-violet-400 text-4xl"></i>
-                        </div>
+                        <a href="{% url 'public_marketplace' %}" class="bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-brand-500/30 text-sm flex items-center gap-2">
+                            <i class="fas fa-plus"></i> Add Items
+                        </a>
                         {% endif %}
-                        <div class="p-4">
-                            <p class="font-semibold text-slate-800 text-sm">{{ veg.name }}</p>
-                            <p class="text-violet-600 font-bold text-sm mt-1">₹{{ veg.price_per_unit }}/{{ veg.unit }}</p>
-                            <a href="{% url 'public_marketplace' %}" class="mt-3 block w-full text-center bg-violet-50 hover:bg-violet-100 text-violet-700 font-semibold text-sm py-2 rounded-xl transition-all">
-                                Buy Now
-                            </a>
-                        </div>
                     </div>
-                    {% empty %}
-                    {% for i in "123" %}
-                    <div class="border border-slate-100 rounded-2xl overflow-hidden">
-                        <div class="w-full h-36 bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center">
-                            <i class="fas fa-leaf text-violet-400 text-4xl"></i>
-                        </div>
-                        <div class="p-4">
-                            <p class="font-semibold text-slate-400 text-sm">Fresh Product</p>
-                            <p class="text-violet-600 font-bold text-sm mt-1">Available in shop</p>
-                            <a href="{% url 'public_marketplace' %}" class="mt-3 block w-full text-center bg-violet-50 hover:bg-violet-100 text-violet-700 font-semibold text-sm py-2 rounded-xl transition-all">
-                                Browse Shop
-                            </a>
-                        </div>
-                    </div>
-                    {% endfor %}
-                    {% endfor %}
-                </div>
-            </div>
 
+                    <div class="overflow-x-auto">
+                        <table class="w-full min-w-max">
+                            <thead>
+                                <tr class="bg-slate-50/50 text-slate-500 text-xs uppercase tracking-widest font-bold">
+                                    <th class="px-8 py-5 text-left">Product Detail</th>
+                                    <th class="px-6 py-5 text-left">Price</th>
+                                    <th class="px-6 py-5 text-left">Quality/Qty</th>
+                                    <th class="px-6 py-5 text-left">Subtotal</th>
+                                    <th class="px-6 py-5 text-right bg-slate-50/50 backdrop-blur-sm sticky justify-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                {% for item in cart.items.all %}
+                                <tr class="hover:bg-slate-50/50 transition-colors group">
+                                    <td class="px-8 py-5">
+                                        <div class="flex items-center gap-4">
+                                            {% if item.vegetable.image %}
+                                            <div class="w-14 h-14 rounded-2xl overflow-hidden shadow-sm border border-slate-100">
+                                                <img src="{{ item.vegetable.image.url }}" alt="{{ item.vegetable.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                            </div>
+                                            {% else %}
+                                            <div class="w-14 h-14 bg-gradient-to-br from-brand-100 to-emerald-100 rounded-2xl flex items-center justify-center border border-brand-200 text-brand-500 shadow-inner">
+                                                <i class="fas fa-carrot text-xl"></i>
+                                            </div>
+                                            {% endif %}
+                                            <div>
+                                                <p class="font-heading font-bold text-slate-800 text-base">{{ item.vegetable.name }}</p>
+                                                <span class="inline-block px-2 py-0.5 mt-1 bg-slate-100 text-slate-600 text-[10px] font-bold uppercase rounded-md tracking-wider">{{ item.vegetable.category }}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <p class="font-semibold text-slate-700">₹{{ item.vegetable.price_per_unit }}</p>
+                                        <p class="text-xs text-slate-400">per {{ item.vegetable.unit }}</p>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div class="inline-flex items-center justify-center bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
+                                            <span class="font-bold text-slate-700 text-sm">{{ item.quantity }}</span>
+                                            <span class="ml-1 text-xs text-slate-500">{{ item.vegetable.unit }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <p class="font-heading font-bold text-brand-600 text-lg">₹{{ item.subtotal|floatformat:0 }}</p>
+                                    </td>
+                                    <td class="px-6 py-5 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <a href="{% url 'product_detail' item.vegetable.pk %}" class="w-9 h-9 flex items-center justify-center rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-colors" title="View details">
+                                                <i class="fas fa-eye text-sm"></i>
+                                            </a>
+                                            <form method="post" action="{% url 'remove_from_cart' item.pk %}" class="inline">
+                                                {% csrf_token %}
+                                                <button type="submit" class="w-9 h-9 flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-colors" title="Remove">
+                                                    <i class="fas fa-trash-alt text-sm"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="py-16">
+                                        <div class="max-w-sm mx-auto text-center">
+                                            <div class="w-24 h-24 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                                <i class="fas fa-shopping-basket text-4xl text-brand-300"></i>
+                                            </div>
+                                            <h4 class="text-xl font-heading font-bold text-slate-800 mb-2">Your cart is empty</h4>
+                                            <p class="text-slate-500 text-sm mb-6">Looks like you haven't added any fresh farm products yet.</p>
+                                            <a href="{% url 'public_marketplace' %}" class="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-md">
+                                                Discover Fresh Produce
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Recommended Deals - Quick Khalti Buy -->
+                <div class="glass-panel p-8 rounded-3xl fade-in-up" style="animation-delay: 0.6s;">
+                    <div class="flex items-center justify-between mb-8">
+                        <div>
+                            <h3 class="font-heading font-bold text-2xl text-slate-800 flex items-center gap-2">
+                                <i class="fas fa-fire text-orange-500"></i> Hot Deals for You
+                            </h3>
+                            <p class="text-slate-500 text-sm mt-1">Directly from our trusted farmers to your kitchen.</p>
+                        </div>
+                        <a href="{% url 'public_marketplace' %}" class="text-brand-600 hover:text-brand-700 font-bold text-sm bg-brand-50 hover:bg-brand-100 px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                            View all <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        {% for veg in recommended %}
+                        <div class="bg-white rounded-2xl p-3 border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                            <div class="relative h-48 rounded-xl overflow-hidden cursor-pointer" onclick="window.location='{% url 'product_detail' veg.pk %}'">
+                                {% if veg.image %}
+                                <img src="{{ veg.image.url }}" alt="{{ veg.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                {% else %}
+                                <div class="w-full h-full bg-slate-100 flex items-center justify-center">
+                                    <i class="fas fa-leaf text-slate-300 text-5xl"></i>
+                                </div>
+                                {% endif %}
+                                <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-md text-[10px] font-bold text-brand-700 tracking-wider shadow-sm uppercase">
+                                    {{ veg.category }}
+                                </div>
+                            </div>
+                            
+                            <div class="p-3 pt-4">
+                                <h4 class="font-heading font-bold text-lg text-slate-800 truncate" title="{{ veg.name }}">{{ veg.name }}</h4>
+                                <div class="flex items-end justify-between mt-1 mb-4">
+                                    <div>
+                                        <p class="text-xs text-slate-500">Price</p>
+                                        <p class="font-bold text-brand-600 text-lg leading-tight">₹{{ veg.price_per_unit }}<span class="text-xs text-slate-400 font-medium">/{{ veg.unit }}</span></p>
+                                    </div>
+                                    <span class="text-xs font-semibold px-2 py-1 bg-amber-50 text-amber-600 rounded-md border border-amber-100">
+                                        <i class="fas fa-star text-[10px]"></i> 4.8
+                                    </span>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <!-- Buy Now with Khalti Directly -->
+                                    <form method="post" action="{% url 'place_order' veg.pk %}" id="khalti-form-{{ veg.pk }}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="quantity" value="1">
+                                        <button type="button" onclick="checkoutKhaltiSingle('{{ veg.price_per_unit }}', '{{ veg.pk }}')" class="khalti-btn w-full py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 text-sm">
+                                            <i class="fas fa-bolt"></i> Buy Now
+                                        </button>
+                                    </form>
+                                    
+                                    <!-- Add to Cart Alternative -->
+                                    <form method="post" action="{% url 'add_to_cart' veg.pk %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="quantity" value="1">
+                                        <button type="submit" class="w-full bg-slate-50 hover:bg-brand-50 text-slate-600 hover:text-brand-600 border border-slate-200 hover:border-brand-200 py-2.5 rounded-xl font-bold transition-all text-sm flex items-center justify-center gap-2">
+                                            <i class="fas fa-cart-plus"></i> Add to Cart
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-span-full py-10 text-center glass-panel rounded-2xl border-dashed border-2 border-slate-200">
+                            <i class="fas fa-seedling text-brand-300 text-4xl mb-3"></i>
+                            <h4 class="font-heading font-bold text-slate-700">More fresh products coming soon!</h4>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Recent Orders History -->
+                <div id="orders" class="glass-panel p-8 rounded-3xl overflow-hidden fade-in-up" style="animation-delay: 0.7s;">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="font-heading font-bold text-2xl text-slate-800">Order History</h3>
+                            <p class="text-slate-500 text-sm mt-1">Track your recent and past deliveries.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto rounded-xl border border-slate-100 bg-white/50">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50 border-b border-slate-100 text-xs uppercase font-bold text-slate-500 tracking-wider">
+                                <tr>
+                                    <th class="px-6 py-4">Order ID</th>
+                                    <th class="px-6 py-4">Item</th>
+                                    <th class="px-6 py-4">Date Ordered</th>
+                                    <th class="px-6 py-4 text-right">Total Price</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 text-sm">
+                                {% for order in orders reversed %}
+                                {% if forloop.counter <= 5 %}
+                                <tr class="hover:bg-brand-50/30 transition-colors">
+                                    <td class="px-6 py-4 font-mono text-slate-500 font-medium">#ORD-{{ order.id }}</td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                                <i class="fas fa-box"></i>
+                                            </div>
+                                            <span class="font-bold text-slate-700">{{ order.supplier_inventory.vegetable_name }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-slate-600 font-medium">{{ order.ordered_at|date:"M d, Y" }}</td>
+                                    <td class="px-6 py-4 text-right font-heading font-bold text-brand-600">₹{{ order.total_price }}</td>
+                                </tr>
+                                {% endif %}
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="px-6 py-10 text-center text-slate-500 font-medium">No orders found. Time to place your first order!</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if orders|length > 5 %}
+                    <div class="mt-4 text-center">
+                        <a href="#" class="text-sm font-bold text-brand-600 hover:text-brand-800">View All Orders</a>
+                    </div>
+                    {% endif %}
+                </div>
+
+            </div>
         </main>
     </div>
 </div>
 
 <script>
-function openSidebar() {
-    document.getElementById('sidebar').classList.remove('-translate-x-full');
-    document.getElementById('overlay').classList.remove('hidden');
-}
-function closeSidebar() {
-    document.getElementById('sidebar').classList.add('-translate-x-full');
-    document.getElementById('overlay').classList.add('hidden');
-}
+    // Sidebar Mobile Toggle
+    function openSidebar() {
+        document.getElementById('sidebar').classList.remove('-translate-x-full');
+        document.getElementById('overlay').classList.remove('hidden', 'opacity-0');
+        document.getElementById('overlay').classList.add('opacity-100');
+    }
+    
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.add('-translate-x-full');
+        document.getElementById('overlay').classList.remove('opacity-100');
+        setTimeout(() => {
+            document.getElementById('overlay').classList.add('hidden');
+        }, 300);
+    }
+
+    // Khalti Integration
+    const khaltiPublicKey = "test_public_key_dc74e0fd57cb46cd93832aee0a390234";
+
+    // Checkout entire cart
+    function checkoutKhaltiCart(totalAmountStr) {
+        let amountInRs = parseFloat(totalAmountStr);
+        if (isNaN(amountInRs) || amountInRs <= 0) return;
+        
+        let amountInPaisa = amountInRs * 100;
+        
+        var khaltiConfig = {
+            "publicKey": khaltiPublicKey,
+            "productIdentity": "CART_" + new Date().getTime(),
+            "productName": "Krishi Connect Cart Checkout",
+            "productUrl": window.location.origin,
+            "paymentPreference": ["KHALTI", "EBANKING", "MOBILE_BANKING", "CONNECT_IPS", "SCT"],
+            "eventHandler": {
+                onSuccess(payload) {
+                    console.log("Khalti Success Payload:", payload);
+                    // Submit the actual form after successful payment
+                    document.getElementById('khalti-checkout-form').submit();
+                },
+                onError(error) {
+                    console.log("Khalti Error:", error);
+                    alert("Payment failed or cancelled!");
+                },
+                onClose() {
+                    console.log("Khalti widget closed");
+                }
+            }
+        };
+
+        var checkoutCart = new KhaltiCheckout(khaltiConfig);
+        checkoutCart.show({amount: amountInPaisa});
+    }
+
+    // Checkout single recommended product
+    function checkoutKhaltiSingle(pricePerUnitStr, productId) {
+        let amountInRs = parseFloat(pricePerUnitStr);
+        if (isNaN(amountInRs) || amountInRs <= 0) return;
+
+        let amountInPaisa = amountInRs * 100;
+
+        var khaltiConfig = {
+            "publicKey": khaltiPublicKey,
+            "productIdentity": "PROD_" + productId,
+            "productName": "Krishi Connect Product",
+            "productUrl": window.location.href,
+            "paymentPreference": ["KHALTI", "EBANKING", "MOBILE_BANKING", "CONNECT_IPS", "SCT"],
+            "eventHandler": {
+                onSuccess(payload) {
+                    console.log("Khalti Success Payload:", payload);
+                    // Submit the specific form after success
+                    document.getElementById('khalti-form-' + productId).submit();
+                },
+                onError(error) {
+                    console.log("Khalti Error:", error);
+                    alert("Payment failed or cancelled!");
+                },
+                onClose() {
+                    console.log("Khalti widget closed");
+                }
+            }
+        };
+
+        var checkoutSingle = new KhaltiCheckout(khaltiConfig);
+        checkoutSingle.show({amount: amountInPaisa});
+    }
 </script>
 </body>
 </html>

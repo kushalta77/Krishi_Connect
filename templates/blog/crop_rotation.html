@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Crop Rotation for Better Yields - Krishi Connect{% endblock %}
+{% block content %}
+
+<section class="relative py-20 bg-gradient-to-r from-green-600 to-green-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium mb-4 inline-block">Techniques</span>
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Crop Rotation for Better Yields</h1>
+        <div class="flex items-center justify-center gap-4 text-green-100 text-sm">
+            <span>July 28, 2024</span><span>•</span><span>4 min read</span>
+        </div>
+    </div>
+</section>
+
+<section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <img src="{{ MEDIA_URL }}blog/sustainable.jpg" alt="Crop Rotation" class="w-full h-80 object-cover rounded-2xl mb-10 shadow-lg">
+
+        <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-6 mb-10">
+            <p class="text-gray-700 text-lg leading-relaxed">How this traditional practice can improve soil fertility and increase overall farm productivity season after season.</p>
+        </div>
+
+        <div class="space-y-6 text-gray-600 leading-relaxed">
+            <p>Crop rotation is one of the oldest agricultural practices in the world — and one of the most effective. By systematically changing which crops are grown in each field from season to season, farmers can improve soil health, reduce pest and disease pressure, and increase yields without additional inputs.</p>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-yellow-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">The Science Behind Crop Rotation</h3>
+                <p class="mb-4">Different crops have different nutrient requirements and different effects on soil. Legumes fix atmospheric nitrogen into the soil, effectively fertilizing it for the next crop. Deep-rooted crops break up compacted soil layers.</p>
+                <ul class="space-y-2">
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Legumes can add 50–200 kg of nitrogen per hectare — equivalent to significant fertilizer savings</span></li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Breaking pest cycles reduces pesticide needs by 30–50% in rotated fields</span></li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Soil organic matter increases by 0.1–0.3% annually in well-rotated systems</span></li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-1 flex-shrink-0"></i><span>Weed pressure decreases as different crops compete differently with weed species</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-green-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">A Simple Rotation Plan for Nepal</h3>
+                <p class="mb-3">A basic 3-year rotation suitable for most Nepali vegetable farms: Year 1 — heavy feeders (tomatoes, cabbage, corn); Year 2 — legumes (beans, peas, lentils); Year 3 — root vegetables (carrots, radish, potato). This simple sequence breaks pest cycles, replenishes nitrogen, and maintains soil structure.</p>
+                <p>For rice-based farming systems in the Terai, alternating rice with legumes like lentils or mustard during the dry season is a proven approach that improves both soil health and farm income.</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-blue-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Planning Your Rotation</h3>
+                <p>Effective rotation requires planning ahead — knowing what you will grow in each field for the next 2–3 seasons. Krishi Connect's farm management tools include a simple rotation planner that tracks field history and suggests optimal next crops based on what was previously grown and current market demand.</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-orange-500">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Common Mistakes to Avoid</h3>
+                <p>The most common mistake is rotating within the same plant family — for example, following tomatoes with peppers or potatoes, all of which are in the nightshade family and share the same pests and diseases. Effective rotation requires moving to a completely different plant family each season.</p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2 mt-10 pt-8 border-t border-gray-100">
+            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-medium">Crop Rotation</span>
+            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-medium">Soil Fertility</span>
+            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-medium">Yield</span>
+        </div>
+        <div class="mt-10">
+            <a href="{% url 'blog' %}" class="inline-flex items-center text-green-600 hover:text-green-800 font-medium">
+                <i class="fas fa-arrow-left mr-2"></i> Back to All Articles
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -4,139 +4,263 @@
 {% block title %}About Us - Krishi Connect{% endblock %}
 
 {% block content %}
+<style>
+    :root {
+        --forest: #064e3b;
+        --forest-light: #0d9488;
+        --cream: #f8fafc;
+        --accent: #f59e0b;
+        --glass-bg: rgba(255, 255, 255, 0.7);
+        --glass-border: rgba(255, 255, 255, 0.4);
+    }
+
+    body { 
+        background-color: var(--cream); 
+        color: #334155; 
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-image: radial-gradient(#10b98115 1px, transparent 1px);
+        background-size: 32px 32px;
+    }
+
+    /* Premium Heading Font */
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+    
+    .heading-display {
+        font-family: 'Outfit', sans-serif;
+        letter-spacing: -0.02em;
+    }
+
+    /* Glassmorphism Classes */
+    .glass-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 2rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 35px 60px -15px rgba(16, 185, 129, 0.15);
+        border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    /* Gradient Text */
+    .text-gradient {
+        background: linear-gradient(135deg, #059669 0%, #0d9488 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    /* Floating Animation */
+    @keyframes floatAnimation {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+        100% { transform: translateY(0px); }
+    }
+    .floating-img {
+        animation: floatAnimation 6s ease-in-out infinite;
+    }
+
+    /* Reveal Animation for Scroll */
+    .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+    }
+    .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Icons */
+    .feature-icon-wrapper {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        border-radius: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+        transform: rotate(-5deg);
+        transition: all 0.3s ease;
+    }
+    
+    .glass-card:hover .feature-icon-wrapper {
+        transform: rotate(0deg) scale(1.1);
+    }
+
+    .blob-shape {
+        position: absolute;
+        filter: blur(60px);
+        z-index: -1;
+        opacity: 0.4;
+    }
+</style>
+
 <!-- Hero Section -->
-<section class="relative py-32 bg-gradient-to-br from-green-600 via-green-700 to-emerald-800 overflow-hidden">
-    <div class="absolute inset-0 opacity-10">
-        <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-    </div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <div class="inline-block mb-6 px-6 py-2 bg-white/20 backdrop-blur-sm rounded-full">
-            <span class="text-white font-semibold">🌾 Connecting Farmers to Future</span>
+<section class="relative pt-32 pb-24 px-6 overflow-hidden min-h-[90vh] flex items-center">
+    <!-- Abstract Background Blobs -->
+    <div class="blob-shape w-[500px] h-[500px] bg-emerald-300 rounded-full top-0 right-0 translate-x-1/3 -translate-y-1/3"></div>
+    <div class="blob-shape w-[400px] h-[400px] bg-teal-200 rounded-full bottom-0 left-0 -translate-x-1/3 translate-y-1/3 text-emerald-100"></div>
+
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16 relative z-10 w-full">
+        <!-- Text Content -->
+        <div class="lg:w-3/5 reveal active">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-emerald-100/80 backdrop-blur-md text-emerald-800 font-bold text-xs uppercase tracking-[0.2em] mb-8 border border-emerald-200 shadow-sm">
+                Empowering Nepal Since 2026
+            </span>
+            <h1 class="text-6xl lg:text-[5.5rem] font-black leading-[1.05] mb-8 heading-display text-slate-800">
+                Rooted in <span class="text-gradient">Trust.</span><br>Driven by Tech.
+            </h1>
+            <p class="text-xl text-slate-600 max-w-xl leading-relaxed mb-10 font-medium">
+                Krishi Connect is a revolutionary multi-vendor ecosystem designed to restore the balance between rural hard work and urban demand.
+            </p>
+            <div class="flex flex-wrap gap-4">
+                <a href="#mission" class="px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl transition-all shadow-lg hover:shadow-emerald-500/30 hover:-translate-y-1 flex items-center gap-2">
+                    Our Mission <i class="fas fa-arrow-down"></i>
+                </a>
+                <a href="{% url 'register' %}" class="px-8 py-4 bg-white/60 hover:bg-white backdrop-blur-md text-slate-800 font-bold rounded-2xl transition-all border border-slate-200 shadow-sm hover:shadow-md flex items-center gap-2">
+                    Join Community
+                </a>
+            </div>
         </div>
-        <h1 class="text-6xl md:text-7xl font-extrabold text-white mb-6 leading-tight">About Krishi Connect</h1>
-        <p class="text-2xl text-green-50 max-w-4xl mx-auto leading-relaxed">Revolutionizing agriculture through technology, connecting farmers, suppliers, and customers in one seamless marketplace</p>
-        <div class="mt-12 flex justify-center gap-4">
-            <div class="bg-white/20 backdrop-blur-sm px-8 py-4 rounded-xl">
-                <p class="text-4xl font-bold text-white">10K+</p>
-                <p class="text-green-100">Farmers</p>
-            </div>
-            <div class="bg-white/20 backdrop-blur-sm px-8 py-4 rounded-xl">
-                <p class="text-4xl font-bold text-white">500+</p>
-                <p class="text-green-100">Suppliers</p>
-            </div>
-            <div class="bg-white/20 backdrop-blur-sm px-8 py-4 rounded-xl">
-                <p class="text-4xl font-bold text-white">75+</p>
-                <p class="text-green-100">Districts</p>
+
+        <!-- Hero Image -->
+        <div class="lg:w-2/5 relative reveal active w-full" style="transition-delay: 0.2s;">
+            <div class="absolute inset-0 bg-gradient-to-tr from-emerald-400/20 to-teal-400/20 rounded-[3rem] transform rotate-6 scale-105 z-0 transition-transform duration-700 hover:rotate-3"></div>
+            <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=1600" 
+                 alt="Fresh organic agricultural farm products" 
+                 class="relative z-10 rounded-[2.5rem] shadow-2xl object-cover w-full h-[500px] border-4 border-white/50 floating-img">
+                 
+            <!-- Floating Badge -->
+            <div class="absolute -bottom-8 -left-8 bg-white/90 backdrop-blur-md p-6 rounded-3xl shadow-xl z-20 border border-emerald-100 flex items-center gap-4 animate-bounce" style="animation-duration: 4s;">
+                <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xl">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <div>
+                    <p class="font-bold text-slate-800 text-lg">100% Organic</p>
+                    <p class="text-slate-500 text-xs font-medium uppercase tracking-wider">Direct from Farms</p>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Mission Section -->
-<section class="py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div class="relative">
-                <div class="absolute -top-6 -left-6 w-72 h-72 bg-green-200 rounded-full blur-3xl opacity-30"></div>
-                <img src="{{ MEDIA_URL }}about/mission.jpg" alt="Our Mission" class="relative w-full h-[500px] object-cover rounded-2xl shadow-2xl">
+<section id="mission" class="py-32 relative z-10">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            
+            <!-- Stats -->
+            <div class="grid grid-cols-2 gap-6 reveal">
+                <div class="glass-card p-10 text-center flex flex-col justify-center border-b-4 border-b-emerald-500 bg-white/80">
+                    <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">
+                        <i class="fas fa-arrow-trend-up"></i>
+                    </div>
+                    <h2 class="text-5xl font-black mb-2 tracking-tight text-slate-800 heading-display">60%</h2>
+                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Income Boost</p>
+                </div>
+                <div class="glass-card p-10 text-center flex flex-col justify-center mt-12 border-b-4 border-b-teal-500 bg-white/80">
+                    <div class="w-14 h-14 bg-teal-50 text-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">
+                        <i class="fas fa-users-slash"></i>
+                    </div>
+                    <h2 class="text-5xl font-black mb-2 tracking-tight text-slate-800 heading-display">0</h2>
+                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Middlemen</p>
+                </div>
             </div>
-            <div>
-                <div class="inline-block mb-4 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
-                    OUR MISSION
-                </div>
-                <h2 class="text-5xl font-extrabold text-gray-900 mb-6 leading-tight">Empowering Agriculture Through Innovation</h2>
-                <p class="text-gray-600 text-lg mb-8 leading-relaxed">We're revolutionizing agriculture by creating a seamless three-tier marketplace that connects farmers directly with suppliers and customers, eliminating middlemen and ensuring fair prices for everyone.</p>
-                <div class="space-y-4">
-                    <div class="flex items-start gap-4 p-4 bg-green-50 rounded-xl">
-                        <div class="bg-green-600 p-2 rounded-lg">
-                            <i class="fas fa-chart-line text-white"></i>
+
+            <!-- Content -->
+            <div class="reveal" style="transition-delay: 0.2s;">
+                <h2 class="text-4xl lg:text-5xl font-black mb-8 leading-[1.1] heading-display text-slate-800">
+                    Empowering the heartbeat of Nepal's <span class="text-emerald-600">economy.</span>
+                </h2>
+                <p class="text-slate-500 text-lg leading-relaxed mb-8 font-medium">
+                    Our platform utilizes cutting-edge architecture paired with intelligent database management to handle real-time inventory tracking for thousands of farmers across Chitwan, Dhading, and beyond. We don't just list products; we manage the supply chain.
+                </p>
+                
+                <div class="space-y-6">
+                    <div class="flex items-start gap-5 glass-card p-5 border-none shadow-sm hover:shadow-md transition-all">
+                        <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-xl flex-shrink-0">
+                            <i class="fas fa-chart-pie"></i>
                         </div>
                         <div>
-                            <h4 class="font-bold text-gray-900 mb-1">Increase Productivity</h4>
-                            <p class="text-gray-600 text-sm">Smart farming tools and expert guidance</p>
+                            <h4 class="font-bold text-slate-800 text-lg mb-1">Real-time Market Demand</h4>
+                            <p class="text-sm text-slate-500 leading-relaxed">Advanced analytics predict exactly what buyers want, reducing crop waste and increasing sales efficiency.</p>
                         </div>
                     </div>
-                    <div class="flex items-start gap-4 p-4 bg-blue-50 rounded-xl">
-                        <div class="bg-blue-600 p-2 rounded-lg">
-                            <i class="fas fa-handshake text-white"></i>
+                    <div class="flex items-start gap-5 glass-card p-5 border-none shadow-sm hover:shadow-md transition-all">
+                        <div class="w-12 h-12 bg-teal-100 text-teal-600 rounded-xl flex items-center justify-center text-xl flex-shrink-0">
+                            <i class="fas fa-shield-halved"></i>
                         </div>
                         <div>
-                            <h4 class="font-bold text-gray-900 mb-1">Direct Market Access</h4>
-                            <p class="text-gray-600 text-sm">Connect with suppliers and customers instantly</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-4 p-4 bg-purple-50 rounded-xl">
-                        <div class="bg-purple-600 p-2 rounded-lg">
-                            <i class="fas fa-leaf text-white"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-gray-900 mb-1">Sustainable Practices</h4>
-                            <p class="text-gray-600 text-sm">Promote eco-friendly farming methods</p>
+                            <h4 class="font-bold text-slate-800 text-lg mb-1">Transparent Digital Ledger</h4>
+                            <p class="text-sm text-slate-500 leading-relaxed">End-to-end payment transparency ensures every farmer gets paid exactly what they deserve, instantly.</p>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Farm Produce/Landscape Image -->
+        <div class="mt-32 text-center reveal">
+            <div class="relative max-w-5xl mx-auto">
+                <div class="absolute inset-0 bg-emerald-600 transform rounded-[3rem] rotate-2 scale-105 opacity-10"></div>
+                <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&q=80&w=1600" 
+                     alt="Expansive golden agriculture field at sunset" 
+                     class="relative rounded-[2.5rem] shadow-2xl object-cover h-[400px] w-full border-8 border-white">
             </div>
         </div>
     </div>
 </section>
 
-<!-- How It Works Section -->
-<section class="py-24 bg-gradient-to-br from-gray-50 to-green-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-            <div class="inline-block mb-4 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
-                HOW IT WORKS
+<!-- Vision Section -->
+<section id="vision" class="py-24 relative z-10 bg-gradient-to-b from-white to-emerald-50">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <!-- Image -->
+            <div class="relative reveal">
+                <div class="absolute inset-0 bg-gradient-to-tr from-teal-400/20 to-emerald-400/20 rounded-[3rem] transform -rotate-3 scale-105 z-0"></div>
+                <img src="{{ MEDIA_URL }}about/vision.jpg" alt="Our Vision"
+                     class="relative z-10 rounded-[2.5rem] shadow-2xl object-cover w-full h-[420px] border-4 border-white/60">
             </div>
-            <h2 class="text-5xl font-extrabold text-gray-900 mb-4">Three-Tier Marketplace</h2>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto">A seamless flow from farm to table</p>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="relative">
-                <div class="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow">
-                    <div class="absolute -top-6 left-8 bg-gradient-to-br from-green-500 to-green-600 w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                        1
-                    </div>
-                    <div class="mt-4 mb-6">
-                        <div class="bg-green-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-4">
-                            <i class="fas fa-tractor text-green-600 text-3xl"></i>
+            <!-- Content -->
+            <div class="reveal" style="transition-delay: 0.2s;">
+                <span class="inline-block px-4 py-1.5 rounded-full bg-teal-100 text-teal-800 font-bold text-xs uppercase tracking-[0.2em] mb-6 border border-teal-200">Our Vision</span>
+                <h2 class="text-4xl lg:text-5xl font-black mb-6 leading-[1.1] heading-display text-slate-800">
+                    A <span class="text-gradient">Prosperous</span> Future for Every Farmer
+                </h2>
+                <p class="text-slate-500 text-lg leading-relaxed mb-8">
+                    We envision a Nepal where every farmer — regardless of location or resources — has equal access to markets, technology, and fair pricing. A future where agriculture is not just a livelihood but a thriving, dignified profession.
+                </p>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-teal-100 text-teal-600 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fas fa-globe"></i></div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 mb-1">Nationwide Digital Access</h4>
+                            <p class="text-sm text-slate-500">Bringing every district of Nepal into the digital agricultural economy.</p>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Farmers List</h3>
-                        <p class="text-gray-600">Farmers list their fresh vegetables with prices and quantities on the platform</p>
                     </div>
-                </div>
-                <div class="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
-                    <i class="fas fa-arrow-right text-green-400 text-3xl"></i>
-                </div>
-            </div>
-            <div class="relative">
-                <div class="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow">
-                    <div class="absolute -top-6 left-8 bg-gradient-to-br from-blue-500 to-blue-600 w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                        2
-                    </div>
-                    <div class="mt-4 mb-6">
-                        <div class="bg-blue-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-4">
-                            <i class="fas fa-truck text-blue-600 text-3xl"></i>
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fas fa-seedling"></i></div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 mb-1">Sustainable Growth</h4>
+                            <p class="text-sm text-slate-500">Promoting chemical-free, high-value crops that protect both farmers and the environment.</p>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Suppliers Buy</h3>
-                        <p class="text-gray-600">Suppliers purchase vegetables from farmers and add to their inventory with markup</p>
                     </div>
-                </div>
-                <div class="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
-                    <i class="fas fa-arrow-right text-blue-400 text-3xl"></i>
-                </div>
-            </div>
-            <div class="relative">
-                <div class="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow">
-                    <div class="absolute -top-6 left-8 bg-gradient-to-br from-purple-500 to-purple-600 w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                        3
-                    </div>
-                    <div class="mt-4 mb-6">
-                        <div class="bg-purple-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-4">
-                            <i class="fas fa-shopping-cart text-purple-600 text-3xl"></i>
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fas fa-hand-holding-heart"></i></div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 mb-1">Community Empowerment</h4>
+                            <p class="text-sm text-slate-500">Building farmer cooperatives and knowledge networks across rural Nepal.</p>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Customers Order</h3>
-                        <p class="text-gray-600">Customers browse and order fresh vegetables from supplier inventory</p>
                     </div>
                 </div>
             </div>
@@ -145,73 +269,148 @@
 </section>
 
 <!-- Values Section -->
-<section class="py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-            <div class="inline-block mb-4 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
-                OUR VALUES
-            </div>
-            <h2 class="text-5xl font-extrabold text-gray-900 mb-4">What Drives Us</h2>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto">Core principles that guide everything we do</p>
+<section id="values" class="py-24 relative z-10 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16 reveal">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-amber-100 text-amber-800 font-bold text-xs uppercase tracking-[0.2em] mb-6 border border-amber-200">Our Values</span>
+            <h2 class="text-4xl lg:text-5xl font-black mb-4 heading-display text-slate-800">What We Stand For</h2>
+            <p class="text-slate-500 text-lg max-w-2xl mx-auto">The principles that guide every decision we make at Krishi Connect.</p>
         </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="glass-card p-8 reveal">
+                <div class="feature-icon-wrapper"><i class="fas fa-lightbulb"></i></div>
+                <h3 class="text-2xl font-bold text-slate-800 mb-3">Innovation</h3>
+                <p class="text-slate-500 leading-relaxed">We constantly push boundaries — integrating AI, real-time data, and mobile-first design to solve the unique challenges of Nepali agriculture.</p>
+            </div>
+            <div class="glass-card p-8 reveal" style="transition-delay: 0.1s;">
+                <div class="feature-icon-wrapper" style="background: linear-gradient(135deg, #0d9488, #0891b2);"><i class="fas fa-recycle"></i></div>
+                <h3 class="text-2xl font-bold text-slate-800 mb-3">Sustainability</h3>
+                <p class="text-slate-500 leading-relaxed">Every feature we build considers long-term environmental impact. We promote organic practices and responsible resource use across the supply chain.</p>
+            </div>
+            <div class="glass-card p-8 reveal" style="transition-delay: 0.2s;">
+                <div class="feature-icon-wrapper" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><i class="fas fa-users"></i></div>
+                <h3 class="text-2xl font-bold text-slate-800 mb-3">Community</h3>
+                <p class="text-slate-500 leading-relaxed">Farmers, experts, suppliers, and buyers — we are one ecosystem. We build tools that strengthen relationships and foster trust across the entire chain.</p>
+            </div>
+            <div class="glass-card p-8 reveal" style="transition-delay: 0.3s;">
+                <div class="feature-icon-wrapper" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);"><i class="fas fa-balance-scale"></i></div>
+                <h3 class="text-2xl font-bold text-slate-800 mb-3">Respect for Tradition</h3>
+                <p class="text-slate-500 leading-relaxed">Modern technology should enhance, not replace, the wisdom passed down through generations of Nepali farmers. We honor that heritage in everything we build.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Values Section -->
+<section class="py-32 relative mt-16 rounded-[3rem] overflow-hidden mx-4 md:mx-10 shadow-2xl border border-emerald-700/50">
+    <div class="absolute inset-0 bg-gradient-to-br from-emerald-800 to-teal-900 -z-10">
+        <!-- Optional light decorative overlays -->
+        <div class="absolute -top-32 -right-32 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-32 -left-32 w-96 h-96 bg-teal-400/20 rounded-full blur-3xl"></div>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 relative z-10 text-white">
+        
+        <div class="text-center mb-20 reveal">
+            <span class="text-emerald-400 font-bold tracking-[0.2em] uppercase text-sm mb-4 block">Our Approach</span>
+            <h2 class="text-4xl lg:text-5xl font-black mb-6 heading-display">How We Empower Farmers</h2>
+            <div class="h-1.5 w-24 bg-gradient-to-r from-emerald-400 to-teal-400 mx-auto rounded-full"></div>
+            <p class="mt-8 text-xl text-slate-300 max-w-3xl mx-auto font-medium">
+                Krishi Connect bridges the gap between field and market — helping producers farm smarter, sell directly, and build stronger futures.
+            </p>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div class="group hover:scale-105 transition-transform">
-                <div class="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-2xl text-center h-full">
-                    <div class="bg-gradient-to-br from-green-500 to-green-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform">
-                        <i class="fas fa-lightbulb text-white text-3xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Innovation</h3>
-                    <p class="text-gray-600">Embracing cutting-edge technology to transform traditional farming</p>
+            <!-- Feature 1 -->
+            <div class="bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-[2rem] hover:bg-white/10 hover:-translate-y-2 transition-all duration-300 group reveal">
+                <div class="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center text-3xl mb-8 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all">
+                    <i class="fas fa-chart-line"></i>
                 </div>
+                <h3 class="text-2xl font-bold mb-4 font-heading text-white">Demand-Driven</h3>
+                <p class="text-slate-400 leading-relaxed text-sm">
+                    See what buyers in Kathmandu actually want — adjust crops and quantities to match urban demand and eliminate waste.
+                </p>
             </div>
-            <div class="group hover:scale-105 transition-transform">
-                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl text-center h-full">
-                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform">
-                        <i class="fas fa-leaf text-white text-3xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Sustainability</h3>
-                    <p class="text-gray-600">Protecting our environment for future generations</p>
+
+            <!-- Feature 2 -->
+            <div class="bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-[2rem] hover:bg-white/10 hover:-translate-y-2 transition-all duration-300 group reveal" style="transition-delay: 0.1s;">
+                <div class="w-16 h-16 bg-blue-500/20 text-blue-400 rounded-2xl flex items-center justify-center text-3xl mb-8 group-hover:scale-110 group-hover:bg-blue-500 group-hover:text-white transition-all">
+                    <i class="fas fa-truck-fast"></i>
                 </div>
+                <h3 class="text-2xl font-bold mb-4 font-heading text-white">Faster Delivery</h3>
+                <p class="text-slate-400 leading-relaxed text-sm">
+                    Same-day logistical connections reduce post-harvest losses, ensuring produce reaches tables at peak organic freshness.
+                </p>
             </div>
-            <div class="group hover:scale-105 transition-transform">
-                <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-2xl text-center h-full">
-                    <div class="bg-gradient-to-br from-purple-500 to-purple-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform">
-                        <i class="fas fa-users text-white text-3xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Community</h3>
-                    <p class="text-gray-600">Building strong, connected farming communities</p>
+
+            <!-- Feature 3 -->
+            <div class="bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-[2rem] hover:bg-white/10 hover:-translate-y-2 transition-all duration-300 group reveal" style="transition-delay: 0.2s;">
+                <div class="w-16 h-16 bg-amber-500/20 text-amber-400 rounded-2xl flex items-center justify-center text-3xl mb-8 group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-white transition-all">
+                    <i class="fas fa-hand-holding-dollar"></i>
                 </div>
+                <h3 class="text-2xl font-bold mb-4 font-heading text-white">Fair Earnings</h3>
+                <p class="text-slate-400 leading-relaxed text-sm">
+                    No delays, no deductions. Farmers set their own prices and receive full digital payment via Khalti or Bank Transfer.
+                </p>
             </div>
-            <div class="group hover:scale-105 transition-transform">
-                <div class="bg-gradient-to-br from-pink-50 to-pink-100 p-8 rounded-2xl text-center h-full">
-                    <div class="bg-gradient-to-br from-pink-500 to-pink-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform">
-                        <i class="fas fa-heart text-white text-3xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Integrity</h3>
-                    <p class="text-gray-600">Fair prices and transparent transactions for everyone</p>
+
+            <!-- Feature 4 -->
+            <div class="bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-[2rem] hover:bg-white/10 hover:-translate-y-2 transition-all duration-300 group reveal" style="transition-delay: 0.3s;">
+                <div class="w-16 h-16 bg-purple-500/20 text-purple-400 rounded-2xl flex items-center justify-center text-3xl mb-8 group-hover:scale-110 group-hover:bg-purple-500 group-hover:text-white transition-all">
+                    <i class="fas fa-leaf"></i>
                 </div>
+                <h3 class="text-2xl font-bold mb-4 font-heading text-white">Sustainable</h3>
+                <p class="text-slate-400 leading-relaxed text-sm">
+                    Access smart market trends and shift toward high-value, chemical-free crops that protect the family and soil.
+                </p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- CTA Section -->
-<section class="py-24 bg-gradient-to-br from-green-600 to-emerald-700 relative overflow-hidden">
-    <div class="absolute inset-0 opacity-10">
-        <div class="absolute top-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-    </div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <h2 class="text-5xl font-extrabold text-white mb-6">Join the Agricultural Revolution</h2>
-        <p class="text-2xl text-green-50 mb-12 max-w-3xl mx-auto">Whether you're a farmer, supplier, or customer, there's a place for you in our marketplace</p>
-        <div class="flex flex-wrap justify-center gap-6">
-            <a href="{% url 'register' %}" class="bg-white text-green-600 px-10 py-5 rounded-xl font-bold text-lg hover:bg-green-50 transition-colors shadow-2xl hover:scale-105 transform">
-                <i class="fas fa-user-plus mr-2"></i>Get Started Today
+<section class="py-32 relative overflow-hidden mt-10">
+    <div class="absolute inset-0 opacity-30" style="background-image: radial-gradient(#10b981 2px, transparent 2px); background-size: 50px 50px;"></div>
+    
+    <div class="max-w-4xl mx-auto px-6 relative z-10 text-center glass-card p-16 border-emerald-100 bg-white/70 reveal">
+        <div class="w-20 h-20 bg-emerald-600 text-white rounded-3xl flex items-center justify-center text-3xl mx-auto mb-8 shadow-xl shadow-emerald-200 transform rotate-12">
+            <i class="fas fa-seedling"></i>
+        </div>
+        <h2 class="text-5xl font-black mb-6 heading-display text-slate-800">Ready to join the digital harvest?</h2>
+        <p class="text-slate-500 text-xl mb-12 font-medium max-w-2xl mx-auto">
+            Whether you are a vendor looking for a wider digital market or a buyer seeking the ultimate fresh source—there is a place for you here.
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-5">
+            <a href="{% url 'register' %}" class="px-10 py-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-2xl transition-all shadow-xl hover:-translate-y-1 flex items-center justify-center gap-2">
+                <span>Join Platform Today</span> <i class="fas fa-arrow-right text-sm"></i>
             </a>
-            <a href="{% url 'home' %}" class="bg-green-800 text-white px-10 py-5 rounded-xl font-bold text-lg hover:bg-green-900 transition-colors shadow-2xl hover:scale-105 transform">
-                <i class="fas fa-home mr-2"></i>Back to Home
+            <a href="{% url 'home' %}" class="px-10 py-4 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold rounded-2xl transition-all border border-emerald-200 flex items-center justify-center gap-2">
+                Browse Marketplace
             </a>
         </div>
     </div>
 </section>
+
+<!-- Scroll Reveal Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const reveals = document.querySelectorAll(".reveal:not(.active)");
+
+        const revealOnScroll = () => {
+            for (let i = 0; i < reveals.length; i++) {
+                let windowHeight = window.innerHeight;
+                let elementTop = reveals[i].getBoundingClientRect().top;
+                let elementVisible = 100;
+
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        };
+
+        window.addEventListener("scroll", revealOnScroll);
+        // Trigger once on load
+        revealOnScroll();
+    });
+</script>
+
 {% endblock %}

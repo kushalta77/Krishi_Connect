@@ -4,148 +4,376 @@
 {% block title %}Marketplace | Krishi Connect{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gray-50 py-12 px-4">
-    <div class="max-w-7xl mx-auto">
+<style>
+    :root {
+        --brand-50: #f0fdf4;
+        --brand-100: #dcfce7;
+        --brand-500: #10b981;
+        --brand-600: #059669;
+        --brand-700: #047857;
+    }
 
-        <div class="mb-10 text-center">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">🌿 Marketplace</h1>
-            <p class="text-gray-500 text-lg">Fresh products listed directly by farmers</p>
+    body {
+        background-color: #f8fafc;
+        background-image: radial-gradient(var(--brand-100) 1px, transparent 1px);
+        background-size: 32px 32px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .heading-display {
+        font-family: 'Outfit', sans-serif;
+        letter-spacing: -0.02em;
+    }
+
+    .glass-sidebar {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05);
+    }
+
+    .product-card {
+        background: white;
+        border-radius: 1.5rem;
+        border: 1px solid #f1f5f9;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+    }
+
+    .product-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px -15px rgba(16, 185, 129, 0.2);
+        border-color: #a7f3d0;
+    }
+
+    .cat-btn {
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .cat-btn.active {
+        background: linear-gradient(135deg, var(--brand-500) 0%, var(--brand-600) 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        transform: scale(1.02);
+    }
+
+    .cat-btn:not(.active):hover {
+        background: var(--brand-50);
+        color: var(--brand-700);
+        transform: translateX(4px);
+    }
+
+    /* Status Badges */
+    .badge-fresh { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+    .badge-good { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
+    .badge-aging { background: #ffedd5; color: #9a3412; border: 1px solid #fed7aa; }
+    .badge-old { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+    /* Search Input Wrapper */
+    .search-wrapper {
+        background: white;
+        border-radius: 1rem;
+        padding: 4px;
+        box-shadow: 0 8px 25px -5px rgba(0,0,0,0.05);
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+    .search-wrapper:focus-within {
+        border-color: var(--brand-500);
+        box-shadow: 0 8px 30px -5px rgba(16, 185, 129, 0.15);
+    }
+</style>
+
+<div class="min-h-screen py-16 px-4 md:px-8">
+    <div class="max-w-[1400px] mx-auto">
+
+        <!-- Page Header -->
+        <div class="mb-14 text-center relative">
+            <div class="absolute inset-0 flex justify-center items-center pointer-events-none -translate-y-6">
+                <div class="w-64 h-64 bg-emerald-400/20 rounded-full blur-3xl"></div>
+            </div>
+            <h1 class="text-5xl md:text-6xl font-black text-slate-800 mb-4 heading-display relative z-10">
+                Fresh <span class="bg-gradient-to-r from-emerald-500 to-teal-500 text-transparent bg-clip-text">Marketplace</span>
+            </h1>
+            <p class="text-slate-500 text-lg md:text-xl font-medium relative z-10">Discover 100% organic produce directly from local farmers.</p>
         </div>
 
-        <div class="flex gap-8">
+        <div class="flex flex-col lg:flex-row gap-8">
 
-            <!-- Sidebar Filter -->
-            <aside class="w-52 flex-shrink-0">
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sticky top-6">
-                    <h3 class="font-bold text-gray-700 text-base mb-4">Categories</h3>
-                    <ul class="space-y-1">
+            <!-- Sidebar Filters -->
+            <aside class="w-full lg:w-64 flex-shrink-0">
+                <div class="glass-sidebar rounded-3xl p-6 sticky top-8 z-20">
+                    <h3 class="font-heading font-black text-slate-800 text-xl mb-6 flex items-center gap-2">
+                        <i class="fas fa-layer-group text-emerald-500"></i> Categories
+                    </h3>
+                    <ul class="space-y-2">
                         <li>
-                            <button onclick="filterCat('all')" id="btn-all"
-                                class="cat-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold bg-green-600 text-white transition-all">
-                                🌾 All
+                            <button onclick="filterCat('all')" id="btn-all" class="cat-btn active w-full text-left px-5 py-3.5 rounded-2xl text-sm font-bold flex items-center justify-between">
+                                <span class="flex items-center gap-3"><i class="fas fa-border-all w-4 text-center"></i> All Produce</span>
+                                <i class="fas fa-chevron-right text-[10px] opacity-60"></i>
                             </button>
                         </li>
                         <li>
-                            <button onclick="filterCat('vegetable')" id="btn-vegetable"
-                                class="cat-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 transition-all">
-                                🥦 Vegetables
+                            <button onclick="filterCat('vegetable')" id="btn-vegetable" class="cat-btn w-full text-left px-5 py-3.5 rounded-2xl text-sm font-bold text-slate-600 flex items-center justify-between">
+                                <span class="flex items-center gap-3"><i class="fas fa-carrot w-4 text-center text-orange-500"></i> Vegetables</span>
+                                <i class="fas fa-chevron-right text-[10px] opacity-0 transition-opacity drop-arrow"></i>
                             </button>
                         </li>
                         <li>
-                            <button onclick="filterCat('fruit')" id="btn-fruit"
-                                class="cat-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 transition-all">
-                                🍎 Fruits
+                            <button onclick="filterCat('fruit')" id="btn-fruit" class="cat-btn w-full text-left px-5 py-3.5 rounded-2xl text-sm font-bold text-slate-600 flex items-center justify-between">
+                                <span class="flex items-center gap-3"><i class="fas fa-apple-whole w-4 text-center text-red-500"></i> Fruits</span>
+                                <i class="fas fa-chevron-right text-[10px] opacity-0 transition-opacity drop-arrow"></i>
                             </button>
                         </li>
                         <li>
-                            <button onclick="filterCat('grain')" id="btn-grain"
-                                class="cat-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 transition-all">
-                                🌾 Grains
+                            <button onclick="filterCat('grain')" id="btn-grain" class="cat-btn w-full text-left px-5 py-3.5 rounded-2xl text-sm font-bold text-slate-600 flex items-center justify-between">
+                                <span class="flex items-center gap-3"><i class="fas fa-wheat-awn w-4 text-center text-amber-500"></i> Grains</span>
+                                <i class="fas fa-chevron-right text-[10px] opacity-0 transition-opacity drop-arrow"></i>
                             </button>
                         </li>
                         <li>
-                            <button onclick="filterCat('spice')" id="btn-spice"
-                                class="cat-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 transition-all">
-                                🌶️ Spices
+                            <button onclick="filterCat('spice')" id="btn-spice" class="cat-btn w-full text-left px-5 py-3.5 rounded-2xl text-sm font-bold text-slate-600 flex items-center justify-between">
+                                <span class="flex items-center gap-3"><i class="fas fa-pepper-hot w-4 text-center text-red-600"></i> Spices</span>
+                                <i class="fas fa-chevron-right text-[10px] opacity-0 transition-opacity drop-arrow"></i>
                             </button>
                         </li>
                         <li>
-                            <button onclick="filterCat('other')" id="btn-other"
-                                class="cat-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 transition-all">
-                                📦 Other
+                            <button onclick="filterCat('other')" id="btn-other" class="cat-btn w-full text-left px-5 py-3.5 rounded-2xl text-sm font-bold text-slate-600 flex items-center justify-between">
+                                <span class="flex items-center gap-3"><i class="fas fa-box-open w-4 text-center text-slate-400"></i> Other</span>
+                                <i class="fas fa-chevron-right text-[10px] opacity-0 transition-opacity drop-arrow"></i>
                             </button>
                         </li>
                     </ul>
+                    
+                    <div class="mt-8 p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
+                        <div class="text-emerald-800 text-sm font-bold flex items-center gap-2 mb-2">
+                            <i class="fas fa-truck-fast"></i> Fast Delivery
+                        </div>
+                        <p class="text-xs text-emerald-600/80 font-medium">Order before 2 PM for next day delivery straight from farm.</p>
+                    </div>
                 </div>
             </aside>
 
-            <!-- Products Grid -->
+            <!-- Products Grid Section -->
             <div class="flex-1">
-                <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Action Bar -->
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
+                    <!-- Search Input -->
+                    <div class="w-full md:w-96 search-wrapper relative flex items-center">
+                        <i class="fas fa-search text-emerald-500 ml-4 text-lg"></i>
+                        <input type="text" id="search-input" oninput="applyFilters()" placeholder="Search vegetables, fruits, farmers..."
+                            value="{{ search_query }}"
+                            class="w-full pl-3 pr-4 py-3 bg-transparent text-sm font-medium text-slate-700 focus:outline-none placeholder-slate-400">
+                    </div>
+                    
+                    <div class="text-slate-500 font-medium text-sm flex-shrink-0">
+                        <span id="product-count" class="font-bold text-slate-800">{{ vegetables|length }}</span> items found
+                    </div>
+                </div>
+
+                <!-- Product Grid -->
+                <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {% for veg in vegetables %}
-                    <div class="product-card bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow" data-category="{{ veg.category }}">
-                        {% if veg.image %}
-                        <img src="{{ veg.image.url }}" alt="{{ veg.name }}" class="w-full h-48 object-cover">
-                        {% else %}
-                        <div class="w-full h-48 bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center">
-                            <i class="fas fa-leaf text-6xl text-green-400"></i>
+                    <!-- Product Card -->
+                    <div class="product-card group relative"
+                        data-category="{{ veg.category }}"
+                        data-name="{{ veg.name|lower }}"
+                        data-farmer="{{ veg.farmer.first_name|lower }} {{ veg.farmer.last_name|lower }}">
+                        
+                        <!-- Image Container -->
+                        <div class="relative h-40 w-4/5 mx-auto overflow-hidden cursor-pointer rounded-xl" onclick="window.location='{% url 'product_detail' veg.pk %}'">
+                            {% if veg.image %}
+                            <img src="{{ veg.image.url }}" alt="{{ veg.name }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            {% else %}
+                            <div class="w-full h-full bg-slate-100 flex items-center justify-center">
+                                <i class="fas fa-leaf text-5xl text-emerald-200"></i>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Category Badge Top Right -->
+                            <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest text-emerald-800 shadow-sm border border-white/50 z-10">
+                                {{ veg.category }}
+                            </div>
+
+                            <!-- Farmer's Special Badge Top Left -->
+                            {% if veg.is_farmers_special %}
+                            <div class="absolute top-3 left-3 bg-amber-500 text-white px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center gap-1 z-10">
+                                <i class="fas fa-star text-[9px]"></i> Special
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Hover Overlay -->
+                            <div class="absolute inset-0 bg-slate-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </div>
-                        {% endif %}
-
-                        <div class="p-6">
-                            <div class="flex items-center justify-between mb-1">
-                                <h3 class="text-xl font-bold text-gray-800">{{ veg.name }}</h3>
-                                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-100 text-green-700 capitalize">{{ veg.category }}</span>
-                            </div>
-                            <p class="text-gray-400 text-sm mb-4">By {{ veg.farmer.first_name }} {{ veg.farmer.last_name }}</p>
-
-                            <div class="space-y-2 mb-4">
-                                <div class="flex justify-between text-sm">
-                                    <span class="text-gray-500">Available</span>
-                                    <span class="font-semibold text-gray-700">{{ veg.quantity }} {{ veg.unit }}</span>
-                                </div>
-                                <div class="flex justify-between text-sm">
-                                    <span class="text-gray-500">Price</span>
-                                    <span class="font-bold text-green-600">₹{{ veg.price_per_unit }}/{{ veg.unit }}</span>
-                                </div>
+                        
+                        <!-- Content -->
+                        <div class="p-4 flex flex-col gap-2 bg-white relative z-20">
+                            <div>
+                                <h3 class="font-heading font-bold text-xl text-slate-800 truncate mb-1 cursor-pointer hover:text-emerald-600 transition-colors" title="{{ veg.name }}" onclick="window.location='{% url 'product_detail' veg.pk %}'">{{ veg.name }}</h3>
+                                <p class="text-slate-500 text-xs font-medium flex items-center gap-1">
+                                    <i class="fas fa-house-chimney text-emerald-500/60"></i> Farmer: {{ veg.farmer.first_name }} {{ veg.farmer.last_name }}
+                                </p>
                             </div>
 
-                            {% if veg.description %}
-                            <p class="text-gray-400 text-sm mb-4">{{ veg.description|truncatewords:15 }}</p>
-                            {% endif %}
+                            <div>
+                                <!-- Price Row -->
+                                <div class="flex items-end justify-between font-bold mb-3">
+                                    <div>
+                                        {% if veg.discount_price %}
+                                        <div class="flex items-baseline gap-2">
+                                            <span class="text-2xl text-emerald-600 leading-none">₹{{ veg.discount_price }}</span>
+                                            <span class="text-xs text-slate-400 line-through">₹{{ veg.price_per_unit }}</span>
+                                        </div>
+                                        <span class="text-xs text-slate-500 font-medium">per {{ veg.unit }}</span>
+                                        {% else %}
+                                        <div class="flex items-baseline gap-1">
+                                            <span class="text-2xl text-emerald-600 leading-none">₹{{ veg.price_per_unit }}</span>
+                                            <span class="text-xs text-slate-500 font-medium">/ {{ veg.unit }}</span>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Stock</p>
+                                        <p class="text-sm text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md inline-block">{{ veg.quantity }} {{ veg.unit }}</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Freshness Status -->
+                                <div class="mb-4">
+                                    {% with status=veg.freshness_status %}
+                                        {% if status == 'fresh' %}<span class="badge-fresh text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">🟢 Fresh Today</span>
+                                        {% elif status == 'good' %}<span class="badge-good text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">🟡 Standard Good</span>
+                                        {% elif status == 'aging' %}<span class="badge-aging text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">🟠 Final Days</span>
+                                        {% elif status == 'expired' %}<span class="badge-old text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">🔴 Clearance</span>
+                                        {% endif %}
+                                    {% endwith %}
+                                </div>
 
-                            {% if user.is_authenticated and user.userprofile.role == 'customer' %}
-                            <a href="{% url 'product_detail' veg.pk %}" class="block w-full bg-green-600 hover:bg-green-700 text-white text-center font-semibold py-2.5 rounded-xl transition-colors">
-                                <i class="fas fa-shopping-cart mr-2"></i>Buy Now
-                            </a>
-                            {% elif not user.is_authenticated %}
-                            <a href="{% url 'login' %}?next={% url 'product_detail' veg.pk %}" class="block w-full bg-gray-100 hover:bg-gray-200 text-gray-600 text-center font-semibold py-2.5 rounded-xl transition-colors">
-                                <i class="fas fa-lock mr-2"></i>Login to Buy
-                            </a>
-                            {% endif %}
+                                <!-- Action Buttons -->
+                                {% if user.is_authenticated and user.userprofile.role == 'customer' %}
+                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                    <!-- Buy Now Route -->
+                                    <form method="post" action="{% url 'place_order' veg.pk %}" class="w-full">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="quantity" value="1">
+                                        <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl transition-all shadow-md text-sm flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-slate-400 focus:outline-none">
+                                            <i class="fas fa-bolt text-yellow-500"></i> Buy Now
+                                        </button>
+                                    </form>
+                                    
+                                    <!-- Add to Cart Route -->
+                                    <form method="post" action="{% url 'add_to_cart' veg.pk %}" class="w-full">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="quantity" value="1">
+                                        <button type="submit" class="w-full bg-emerald-50 hover:bg-emerald-500 hover:text-white border border-emerald-200 hover:border-emerald-500 text-emerald-700 font-bold py-2.5 rounded-xl transition-all shadow-sm text-sm flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
+                                            <i class="fas fa-cart-shopping"></i> Add Cart
+                                        </button>
+                                    </form>
+                                </div>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                     {% empty %}
-                    <div class="col-span-3 text-center py-20">
-                        <div class="w-24 h-24 bg-green-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-seedling text-green-300 text-5xl"></i>
+                    <div class="col-span-full flex flex-col items-center justify-center py-24 glass-sidebar rounded-3xl" id="empty-initial">
+                        <div class="w-24 h-24 bg-emerald-50 rounded-[2rem] flex items-center justify-center mb-6 shadow-inner border border-emerald-100 transform -rotate-6">
+                            <i class="fas fa-basket-shopping text-emerald-300 text-4xl"></i>
                         </div>
-                        <p class="text-gray-500 text-lg font-medium">No products listed yet</p>
+                        <h3 class="font-heading font-black text-2xl text-slate-800 mb-2">Marketplace is Empty</h3>
+                        <p class="text-slate-500 text-center max-w-sm">Farmers haven't listed any products yet. Check back soon for fresh organic produce!</p>
                     </div>
                     {% endfor %}
                 </div>
 
-                <!-- No results message -->
-                <div id="no-results" class="hidden text-center py-20">
-                    <div class="w-24 h-24 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-search text-gray-300 text-5xl"></i>
+                <!-- No Search Results (Hidden initially) -->
+                <div id="no-results" class="hidden flex-col items-center justify-center py-24 glass-sidebar rounded-3xl border border-dashed border-slate-300">
+                    <div class="w-20 h-20 bg-slate-100 rounded-[2rem] flex items-center justify-center mb-6 text-slate-400 text-3xl shadow-inner">
+                        <i class="fas fa-search"></i>
                     </div>
-                    <p class="text-gray-500 text-lg font-medium">No products in this category</p>
+                    <h3 class="font-heading font-black text-2xl text-slate-800 mb-2">No Matches Found</h3>
+                    <p class="text-slate-500 text-center text-sm">We couldn't find any products matching your search or category filter. Try adjusting your filters!</p>
+                    <button onclick="filterCat('all'); document.getElementById('search-input').value='';" class="mt-6 font-bold text-emerald-600 bg-emerald-50 px-6 py-2.5 rounded-xl hover:bg-emerald-100 transition-colors">
+                        Clear All Filters
+                    </button>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
 </div>
 
 <script>
+let activeCat = 'all';
+
 function filterCat(cat) {
+    activeCat = cat;
+    
+    // Reset all buttons styling
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.classList.add('text-slate-600');
+        
+        const arrow = btn.querySelector('.drop-arrow');
+        if(arrow) arrow.classList.remove('opacity-100');
+    });
+    
+    // Set active button styling
+    const activeBtn = document.getElementById('btn-' + cat);
+    if(activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.classList.remove('text-slate-600');
+        const arrow = activeBtn.querySelector('.drop-arrow');
+        if(arrow) arrow.classList.add('opacity-100');
+    }
+    
+    applyFilters();
+}
+
+function applyFilters() {
+    const query = document.getElementById('search-input').value.toLowerCase().trim();
     const cards = document.querySelectorAll('.product-card');
     let visible = 0;
+    
     cards.forEach(card => {
-        const show = cat === 'all' || card.dataset.category === cat;
-        card.style.display = show ? '' : 'none';
-        if (show) visible++;
+        const matchCat = activeCat === 'all' || card.dataset.category === activeCat;
+        const matchSearch = !query || card.dataset.name.includes(query) || card.dataset.farmer.includes(query);
+        const show = matchCat && matchSearch;
+        
+        if(show) {
+            card.style.display = 'block';
+            visible++;
+        } else {
+            card.style.display = 'none';
+        }
     });
-    document.getElementById('no-results').classList.toggle('hidden', visible > 0);
-
-    document.querySelectorAll('.cat-btn').forEach(btn => {
-        btn.classList.remove('bg-green-600', 'text-white');
-        btn.classList.add('text-gray-600', 'hover:bg-green-50');
-    });
-    const active = document.getElementById('btn-' + cat);
-    active.classList.add('bg-green-600', 'text-white');
-    active.classList.remove('text-gray-600', 'hover:bg-green-50');
+    
+    // Update counter
+    const counter = document.getElementById('product-count');
+    if(counter) counter.innerText = visible;
+    
+    // Toggle no results specific to filters
+    const noResultsDiv = document.getElementById('no-results');
+    const initialEmptyDiv = document.getElementById('empty-initial');
+    
+    if (visible === 0) {
+        // if user is actively searching/filtering, show 'no-search-results' message
+        if (cards.length > 0) {
+            noResultsDiv.style.display = 'flex';
+        }
+    } else {
+        noResultsDiv.style.display = 'none';
+    }
 }
+
+// Auto-apply on page load
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('search-input').value.trim()) {
+        applyFilters();
+    }
+});
 </script>
 {% endblock %}
