@@ -28,18 +28,7 @@ def login_view(request):
             if user:
                 login(request, user)
                 messages.success(request, 'Login successful!')
-                # Redirect based on user role
-                user_profile = user.userprofile
-                if user_profile.role == 'farmer':
-                    return redirect('farmer_dashboard')
-                elif user_profile.role == 'customer':
-                    return redirect('customer_dashboard')
-                elif user_profile.role == 'supplier':
-                    return redirect('supplier_dashboard')
-                elif user_profile.role == 'expert':
-                    return redirect('expert_dashboard')
-                else:
-                    return redirect('dashboard')
+                return redirect('dashboard')
             else:
                 messages.error(request, 'Invalid password')
         except User.DoesNotExist:
@@ -176,12 +165,9 @@ def logout_view(request):
 @login_required
 def dashboard(request):
     user_profile = request.user.userprofile
-    context = {
-        'user_role': user_profile.role,
-        'user_profile': user_profile
-    }
-    
-    if user_profile.role == 'farmer':
+    if user_profile.role == 'customer':
+        return redirect('customer_dashboard')
+    elif user_profile.role == 'farmer':
         vegetables = Vegetable.objects.filter(farmer=request.user)
         total_vegetables = vegetables.count()
         available_vegetables = vegetables.filter(available=True).count()
@@ -189,7 +175,9 @@ def dashboard(request):
         total_earnings = SupplierPurchase.objects.filter(vegetable__farmer=request.user).aggregate(total=Sum('total_price'))['total'] or 0
         total_orders = SupplierPurchase.objects.filter(vegetable__farmer=request.user).count()
         recent_purchases = SupplierPurchase.objects.filter(vegetable__farmer=request.user).order_by('-purchased_at')[:5]
-        context.update({
+        context = {
+            'user_role': user_profile.role,
+            'user_profile': user_profile,
             'vegetables': vegetables,
             'total_vegetables': total_vegetables,
             'available_vegetables': available_vegetables,
@@ -197,97 +185,37 @@ def dashboard(request):
             'total_earnings': total_earnings,
             'total_orders': total_orders,
             'recent_purchases': recent_purchases,
-        })
+        }
         return render(request, 'dashboard/farmer_dashboard.html', context)
     elif user_profile.role == 'expert':
-        return render(request, 'dashboard/expert_dashboard.html', context)
+        return render(request, 'dashboard/expert_dashboard.html', {'user_role': user_profile.role})
     elif user_profile.role == 'supplier':
         purchases = SupplierPurchase.objects.filter(supplier=request.user)
         inventory = SupplierInventory.objects.filter(supplier=request.user)
-        context['purchases'] = purchases
-        context['inventory'] = inventory
-        return render(request, 'dashboard/supplier_dashboard.html', context)
-    elif user_profile.role == 'customer':
-        orders = CustomerOrder.objects.filter(customer=request.user)
-        total_spent = orders.aggregate(total=Sum('total_price'))['total'] or 0
-        recommended = Vegetable.objects.filter(available=True).order_by('-created_at')[:3]
-        cart, _ = Cart.objects.get_or_create(customer=request.user)
-        context['orders'] = orders
-        context['total_spent'] = total_spent
-        context['recommended'] = recommended
-        context['cart'] = cart
-        return render(request, 'dashboard/customer_dashboard.html', context)
-    else:
-        return render(request, 'dashboard.html', context)
-
-@login_required
-def farmer_dashboard(request):
-    if request.user.userprofile.role != 'farmer':
-        return redirect('dashboard')
-    
-    vegetables = Vegetable.objects.filter(farmer=request.user)
-    total_vegetables = vegetables.count()
-    available_vegetables = vegetables.filter(available=True).count()
-    sold_out = vegetables.filter(available=False).count()
-    total_earnings = SupplierPurchase.objects.filter(vegetable__farmer=request.user).aggregate(total=Sum('total_price'))['total'] or 0
-    total_orders = SupplierPurchase.objects.filter(vegetable__farmer=request.user).count()
-    recent_purchases = SupplierPurchase.objects.filter(vegetable__farmer=request.user).order_by('-purchased_at')[:5]
-    
-    context = {
-        'user_role': 'farmer',
-        'vegetables': vegetables,
-        'total_vegetables': total_vegetables,
-        'available_vegetables': available_vegetables,
-        'sold_out': sold_out,
-        'total_earnings': total_earnings,
-        'total_orders': total_orders,
-        'recent_purchases': recent_purchases,
-    }
-    return render(request, 'dashboard/farmer_dashboard.html', context)
+        return render(request, 'dashboard/supplier_dashboard.html', {
+            'user_role': user_profile.role,
+            'purchases': purchases,
+            'inventory': inventory,
+        })
+    return redirect('home')
 
 @login_required
 def customer_dashboard(request):
-    if request.user.userprofile.role != 'customer':
-        return redirect('dashboard')
-    
+    """Customer dashboard view at /customer/dashboard/"""
+    user_profile = request.user.userprofile
     orders = CustomerOrder.objects.filter(customer=request.user)
     total_spent = orders.aggregate(total=Sum('total_price'))['total'] or 0
     recommended = Vegetable.objects.filter(available=True).order_by('-created_at')[:3]
     cart, _ = Cart.objects.get_or_create(customer=request.user)
-    
     context = {
-        'user_role': 'customer',
+        'user_role': user_profile.role,
+        'user_profile': user_profile,
         'orders': orders,
         'total_spent': total_spent,
         'recommended': recommended,
         'cart': cart,
     }
     return render(request, 'dashboard/customer_dashboard.html', context)
-
-@login_required
-def supplier_dashboard(request):
-    if request.user.userprofile.role != 'supplier':
-        return redirect('dashboard')
-    
-    purchases = SupplierPurchase.objects.filter(supplier=request.user)
-    inventory = SupplierInventory.objects.filter(supplier=request.user)
-    
-    context = {
-        'user_role': 'supplier',
-        'purchases': purchases,
-        'inventory': inventory,
-    }
-    return render(request, 'dashboard/supplier_dashboard.html', context)
-
-@login_required
-def expert_dashboard(request):
-    if request.user.userprofile.role != 'expert':
-        return redirect('dashboard')
-    
-    context = {
-        'user_role': 'expert',
-    }
-    return render(request, 'dashboard/expert_dashboard.html', context)
 
 def about(request):
     return render(request, 'about.html')
@@ -546,7 +474,7 @@ def place_order(request, pk):
         vegetable.save()
 
         messages.success(request, f'Order placed for {quantity} {vegetable.unit} of {vegetable.name}!')
-        return redirect('dashboard')
+        return redirect('customer_marketplace')
 
     return redirect('product_detail', pk=pk)
 
@@ -579,7 +507,10 @@ def add_to_cart(request, pk):
             item = CartItem(cart=cart, vegetable=vegetable, quantity=quantity)
         item.save()
         messages.success(request, f'{vegetable.name} added to cart!')
-
+        # redirect back to customer marketplace if that's where they came from
+        referer = request.META.get('HTTP_REFERER', '')
+        if 'customer/marketplace' in referer:
+            return redirect('customer_marketplace')
     return redirect('product_detail', pk=pk)
 
 @login_required
@@ -587,7 +518,7 @@ def cart_view(request):
     if request.user.userprofile.role != 'customer':
         return redirect('dashboard')
     cart, _ = Cart.objects.get_or_create(customer=request.user)
-    return render(request, 'cart.html', {'cart': cart})
+    return render(request, 'dashboard/customer_cart.html', {'cart': cart})
 
 @login_required
 def remove_from_cart(request, pk):
@@ -689,8 +620,45 @@ def customer_marketplace(request):
         messages.error(request, 'Only customers can access this page')
         return redirect('dashboard')
     
-    inventory = SupplierInventory.objects.filter(available=True)
-    return render(request, 'dashboard/customer_marketplace.html', {'inventory': inventory})
+    q = request.GET.get('q', '')
+    
+    # Get all available products from Vegetable
+    vegetables = list(Vegetable.objects.filter(available=True))
+    
+    # Get all available products from SupplierInventory
+    inventory = list(SupplierInventory.objects.filter(available=True))
+    
+    # Filter by search query
+    if q:
+        vegetables = [v for v in vegetables if q.lower() in v.name.lower()]
+        inventory = [i for i in inventory if q.lower() in i.vegetable_name.lower()]
+    
+    # Mark source type and add necessary attributes for template compatibility
+    for v in vegetables:
+        v.source = 'vegetable'
+        v.vegetable_name = v.name
+        v.supplier_first_name = v.farmer.first_name
+        v.supplier_last_name = v.farmer.last_name
+        v.supplier_id = v.farmer.id
+    
+    for i in inventory:
+        i.source = 'inventory'
+        i.supplier_first_name = i.supplier.first_name
+        i.supplier_last_name = i.supplier.last_name
+        i.supplier_id = i.supplier.id
+    
+    # Combine both lists
+    combined_products = vegetables + inventory
+    
+    # Create a custom paginator for combined results
+    paginator = Paginator(combined_products, 25)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Get cart for floating icon
+    cart, _ = Cart.objects.get_or_create(customer=request.user)
+    
+    return render(request, 'dashboard/dashboard_marketplace.html', {'page_obj': page_obj, 'search_query': q, 'paginator': paginator, 'cart': cart})
 
 @login_required
 def order_from_supplier(request, pk):
@@ -719,7 +687,10 @@ def order_from_supplier(request, pk):
         messages.success(request, 'Order placed successfully')
         return redirect('customer_marketplace')
     
-    return render(request, 'dashboard/order_vegetable.html', {'inventory': inventory})
+    # Get cart for floating icon
+    cart, _ = Cart.objects.get_or_create(customer=request.user)
+    
+    return render(request, 'dashboard/order_vegetable_dashboard.html', {'inventory': inventory, 'cart': cart})
 
 # Weather View
 def reports_view(request):

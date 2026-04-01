@@ -192,26 +192,17 @@
         <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto pb-6">
             <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mb-2">Menu</p>
 
-            <a href="{% url 'dashboard' %}" class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-white shadow-[0_0_20px_rgba(74,222,128,0.1)]">
-                <i class="fas fa-grid-2 w-5 text-center text-lg"></i> 
+            <a href="{% url 'customer_dashboard' %}" class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-white shadow-[0_0_20px_rgba(74,222,128,0.1)]">
+                <i class="fas fa-chart-line w-5 text-center text-lg"></i> 
                 <span>Dashboard</span>
             </a>
-            <a href="{% url 'public_marketplace' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+            <a href="{% url 'customer_marketplace' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium hover:text-white">
                 <i class="fas fa-store w-5 text-center text-lg"></i> 
                 <span>Marketplace</span>
             </a>
             <a href="#orders" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
                 <i class="fas fa-box-open w-5 text-center text-lg"></i> 
                 <span>My Orders</span>
-            </a>
-            <a href="#cart" class="nav-item flex items-center justify-between px-4 py-3.5 rounded-xl text-slate-300 font-medium group">
-                <div class="flex items-center gap-4">
-                    <i class="fas fa-shopping-basket w-5 text-center text-lg group-hover:text-brand-400 transition-colors"></i> 
-                    <span>Shopping Cart</span>
-                </div>
-                {% if cart.items.all %}
-                <span class="bg-brand-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">{{ cart.items.count }}</span>
-                {% endif %}
             </a>
 
             <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Others</p>
@@ -256,7 +247,7 @@
                         <input type="text" name="q" placeholder="Search vegetables..." class="pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 hover:border-brand-300 focus:border-brand-500 rounded-xl text-sm text-slate-700 outline-none w-64 focus:ring-4 focus:ring-brand-500/10 transition-all shadow-inner">
                     </form>
                 </div>
-                <a href="{% url 'public_marketplace' %}" class="hidden sm:flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                <a href="{% url 'customer_marketplace' %}" class="hidden sm:flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
                     <i class="fas fa-store text-brand-400"></i> Explore Shop
                 </a>
             </div>
@@ -567,6 +558,18 @@
 
             </div>
         </main>
+
+        <!-- Floating Cart Icon (Right Side Middle) -->
+        <a href="{% url 'cart' %}" class="fixed right-8 top-1/2 -translate-y-1/2 z-40 group">
+            <div class="w-16 h-16 bg-brand-500 hover:bg-brand-600 text-white rounded-full shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110 border-2 border-white">
+                <i class="fas fa-shopping-cart text-2xl"></i>
+                {% if cart.items.count > 0 %}
+                <span class="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center shadow-lg border-2 border-white group-hover:scale-110 transition-transform">
+                    {{ cart.items.count }}
+                </span>
+                {% endif %}
+            </div>
+        </a>
     </div>
 </div>
 

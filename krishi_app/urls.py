@@ -6,16 +6,8 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
     path('logout/', views.logout_view, name='logout'),
-    
-    # Main dashboard (generic - redirects based on role)
-    path('dashboard/', views.dashboard, name='dashboard'),
-    
-    # Role-specific dashboards with prefixes
-    path('farmer/dashboard/', views.farmer_dashboard, name='farmer_dashboard'),
+    path('farmer/dashboard/', views.dashboard, name='dashboard'),
     path('customer/dashboard/', views.customer_dashboard, name='customer_dashboard'),
-    path('supplier/dashboard/', views.supplier_dashboard, name='supplier_dashboard'),
-    path('expert/dashboard/', views.expert_dashboard, name='expert_dashboard'),
-    
     path('about/', views.about, name='about'),
     path('blog/', views.blog, name='blog'),
     path('blog/organic-farming-future/', views.blog_organic_future, name='blog_organic_future'),
