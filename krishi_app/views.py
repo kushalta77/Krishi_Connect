@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
+from django.urls import reverse
+from decimal import Decimal
 import re
 import requests
 from django.conf import settings
@@ -366,12 +368,14 @@ def add_vegetable(request):
         return redirect('dashboard')
     
     if request.method == 'POST':
-        Vegetable.objects.create(
+        # Create Vegetable (old system for backward compatibility)
+        veg = Vegetable.objects.create(
             farmer=request.user,
             name=request.POST['name'],
             category=request.POST.get('category', 'vegetable'),
             quantity=request.POST.get('stock') or request.POST.get('quantity'),
             unit=request.POST['unit'],
+            min_order_qty=request.POST.get('min_order_qty') or 1,
             base_price=request.POST.get('base_price') or request.POST['price_per_unit'],
             price_per_unit=request.POST['price_per_unit'],
             discount_price=request.POST.get('discount_price') or None,
@@ -381,6 +385,29 @@ def add_vegetable(request):
             description=request.POST.get('description', ''),
             image=request.FILES.get('image')
         )
+        
+        # Also create Product (for bulk cart system)
+        from products.models import Product, Category as ProductCategory
+        
+        # Get or create category
+        cat_map = {'vegetable': 'Vegetable', 'fruit': 'Fruit', 'grain': 'Grain', 'spice': 'Spice', 'other': 'Other'}
+        cat_name = cat_map.get(request.POST.get('category', 'vegetable'), 'Vegetable')
+        category, _ = ProductCategory.objects.get_or_create(name=cat_name)
+        
+        Product.objects.create(
+            farmer=request.user,
+            category=category,
+            name=request.POST['name'],
+            description=request.POST.get('description', ''),
+            price_per_unit=float(request.POST['price_per_unit']),
+            unit=request.POST['unit'],
+            stock_quantity=float(request.POST.get('stock') or request.POST.get('quantity')),
+            min_order_qty=float(request.POST.get('min_order_qty') or 1),
+            harvest_date=request.POST.get('harvest_date') or None,
+            image=request.FILES.get('image'),
+            is_active=True
+        )
+        
         messages.success(request, 'Product added successfully')
         return redirect('farmer_products')
     return render(request, 'dashboard/add_vegetable.html')
@@ -393,6 +420,7 @@ def edit_vegetable(request, pk):
         vegetable.category = request.POST.get('category', vegetable.category)
         vegetable.quantity = request.POST['quantity']
         vegetable.unit = request.POST['unit']
+        vegetable.min_order_qty = request.POST.get('min_order_qty') or vegetable.min_order_qty
         vegetable.base_price = request.POST.get('base_price') or vegetable.base_price
         vegetable.price_per_unit = request.POST['price_per_unit']
         vegetable.discount_price = request.POST.get('discount_price') or None
@@ -404,6 +432,31 @@ def edit_vegetable(request, pk):
             vegetable.image = request.FILES['image']
         vegetable.available = request.POST.get('available') == 'on'
         vegetable.save()
+        
+        # Sync to Product model (bulk cart system)
+        from products.models import Product, Category as ProductCategory
+        
+        cat_map = {'vegetable': 'Vegetable', 'fruit': 'Fruit', 'grain': 'Grain', 'spice': 'Spice', 'other': 'Other'}
+        cat_name = cat_map.get(request.POST.get('category', 'vegetable'), 'Vegetable')
+        category, _ = ProductCategory.objects.get_or_create(name=cat_name)
+        
+        # Update or create Product with same name
+        product, created = Product.objects.update_or_create(
+            farmer=request.user,
+            name=vegetable.name,
+            defaults={
+                'category': category,
+                'description': vegetable.description,
+                'price_per_unit': float(vegetable.price_per_unit),
+                'unit': vegetable.unit,
+                'stock_quantity': float(vegetable.quantity),
+                'min_order_qty': float(vegetable.min_order_qty),
+                'harvest_date': vegetable.harvest_date,
+                'image': vegetable.image,
+                'is_active': vegetable.available
+            }
+        )
+        
         messages.success(request, 'Product updated successfully')
         return redirect('farmer_products')
     return render(request, 'dashboard/edit_vegetable.html', {'vegetable': vegetable})
@@ -414,8 +467,17 @@ def view_vegetable(request, pk):
     return render(request, 'dashboard/view_vegetable.html', {'vegetable': vegetable})
 
 @login_required
+@login_required
 def delete_vegetable(request, pk):
     vegetable = get_object_or_404(Vegetable, pk=pk, farmer=request.user)
+    
+    # Also delete synced Product (bulk cart system)
+    from products.models import Product
+    Product.objects.filter(
+        farmer=request.user,
+        name=vegetable.name
+    ).delete()
+    
     vegetable.delete()
     messages.success(request, 'Vegetable deleted successfully')
     return redirect('farmer_products')
@@ -427,7 +489,20 @@ def public_marketplace(request):
 
 def product_detail(request, pk):
     vegetable = get_object_or_404(Vegetable, pk=pk, available=True)
-    return render(request, 'product_detail.html', {'vegetable': vegetable})
+    # Check if user is authenticated and is a customer
+    is_customer = request.user.is_authenticated and hasattr(request.user, 'userprofile') and request.user.userprofile.role == 'customer'
+    
+    # If public user (not authenticated), show public product detail template
+    if not request.user.is_authenticated:
+        return render(request, 'public_product_detail.html', {'vegetable': vegetable})
+    
+    # If authenticated customer, show customer marketplace product detail
+    if is_customer:
+        return render(request, 'product_detail.html', {'vegetable': vegetable})
+    
+    # If authenticated but not a customer (farmer/supplier), redirect to home
+    messages.error(request, 'Only customers can view this page')
+    return redirect('home')
 
 @login_required
 def place_order(request, pk):
@@ -480,7 +555,13 @@ def place_order(request, pk):
 
 @login_required
 def add_to_cart(request, pk):
-    if request.user.userprofile.role != 'customer':
+    # Check if user is authenticated first
+    if not request.user.is_authenticated:
+        messages.error(request, '🔐 Please login first to add items to cart')
+        return redirect('login')
+    
+    # Check if user is a customer
+    if not hasattr(request.user, 'userprofile') or request.user.userprofile.role != 'customer':
         messages.error(request, 'Only customers can add to cart')
         return redirect('login')
 
@@ -488,7 +569,10 @@ def add_to_cart(request, pk):
 
     if request.method == 'POST':
         try:
-            quantity = float(request.POST.get('quantity', '1').strip())
+            quantity_str = request.POST.get('quantity', '1').strip()
+            if not quantity_str:
+                quantity_str = '1'
+            quantity = Decimal(quantity_str)
         except (ValueError, TypeError):
             messages.error(request, 'Please enter a valid quantity')
             return redirect('customer_marketplace')
@@ -498,26 +582,30 @@ def add_to_cart(request, pk):
             messages.error(request, 'Quantity must be greater than 0')
             return redirect('customer_marketplace')
         
-        # Edge case: Check stock availability
-        if quantity > float(vegetable.quantity):
+        # Edge case: Check stock availability for new quantity
+        if quantity > vegetable.quantity:
             messages.error(request, f'Only {vegetable.quantity} {vegetable.unit} available')
             return redirect('customer_marketplace')
         
-        # Add to cart
         cart, _ = Cart.objects.get_or_create(customer=request.user)
+        
         try:
             item = CartItem.objects.get(cart=cart, vegetable=vegetable)
-            # Edge case: Check if adding more would exceed available stock
-            if item.quantity + quantity > float(vegetable.quantity):
-                messages.warning(request, f'Maximum available for {vegetable.name} is {vegetable.quantity} {vegetable.unit}')
+            new_total = item.quantity + Decimal('1')
+            if new_total > vegetable.quantity:
+                messages.warning(request, f'Cannot add more. Only {vegetable.quantity} {vegetable.unit} available. You already have {item.quantity} in cart.')
                 return redirect('customer_marketplace')
-            item.quantity += quantity
+            item.quantity = new_total
+            item.save()
+            messages.success(request, f'✓ {vegetable.name} quantity updated to {item.quantity} {vegetable.unit}')
         except CartItem.DoesNotExist:
-            item = CartItem(cart=cart, vegetable=vegetable, quantity=quantity)
+            min_qty = vegetable.min_order_qty
+            if min_qty > vegetable.quantity:
+                messages.error(request, f'Only {vegetable.quantity} {vegetable.unit} available')
+                return redirect('customer_marketplace')
+            item = CartItem.objects.create(cart=cart, vegetable=vegetable, quantity=min_qty)
+            messages.success(request, f'✓ {vegetable.name} added to cart! (Min order: {min_qty} {vegetable.unit})')
         
-        item.save()
-        messages.success(request, f'{vegetable.name} added to cart! (Qty: {item.quantity} {vegetable.unit})')
-        # Redirect back to customer marketplace
         return redirect('customer_marketplace')
     
     return redirect('customer_marketplace')
@@ -570,8 +658,14 @@ def decrease_cart_quantity(request, pk):
 
 @login_required
 def buy_now_action(request, pk):
-    """Add product to cart and redirect to cart page (for 'Buy Now' button)."""
-    if request.user.userprofile.role != 'customer':
+    """Add product to cart and redirect to checkout page (for 'Buy Now' button)."""
+    # Check if user is authenticated first
+    if not request.user.is_authenticated:
+        messages.error(request, '🔐 Please login first to buy products')
+        return redirect('login')
+    
+    # Check if user is a customer
+    if not hasattr(request.user, 'userprofile') or request.user.userprofile.role != 'customer':
         messages.error(request, 'Only customers can buy products')
         return redirect('login')
 
@@ -579,7 +673,7 @@ def buy_now_action(request, pk):
 
     if request.method == 'POST':
         try:
-            quantity = float(request.POST.get('quantity', '1').strip())
+            quantity = Decimal(request.POST.get('quantity', '1').strip())
         except (ValueError, TypeError):
             messages.error(request, 'Please enter a valid quantity')
             return redirect('customer_marketplace')
@@ -590,7 +684,7 @@ def buy_now_action(request, pk):
             return redirect('customer_marketplace')
         
         # Edge case: Check stock availability
-        if quantity > float(vegetable.quantity):
+        if quantity > vegetable.quantity:
             messages.error(request, f'Only {vegetable.quantity} {vegetable.unit} of {vegetable.name} available')
             return redirect('customer_marketplace')
         
@@ -599,19 +693,89 @@ def buy_now_action(request, pk):
         try:
             item = CartItem.objects.get(cart=cart, vegetable=vegetable)
             # Check if adding more quantity would exceed stock
-            if item.quantity + quantity > float(vegetable.quantity):
+            if item.quantity + quantity > vegetable.quantity:
                 messages.warning(request, f'You already have {item.quantity} {vegetable.unit} of this. Only {vegetable.quantity} available total.')
-                return redirect('cart')
+                checkout_url = reverse('checkout_page')
+                return redirect(f'{checkout_url}?items={item.pk}')
             item.quantity += quantity
         except CartItem.DoesNotExist:
             item = CartItem(cart=cart, vegetable=vegetable, quantity=quantity)
         
         item.save()
-        messages.success(request, f'{quantity} {vegetable.unit} of {vegetable.name} added to cart!')
-        # Redirect to cart page immediately
-        return redirect('cart')
+        messages.success(request, f'{quantity} {vegetable.unit} of {vegetable.name} added!')
+        # Redirect to checkout page with only this item
+        checkout_url = reverse('checkout_page')
+        return redirect(f'{checkout_url}?items={item.pk}')
     
     return redirect('customer_marketplace')
+
+@login_required
+def buy_selected_items(request):
+    """Process payment for selected cart items"""
+    if request.method == 'POST':
+        if request.user.userprofile.role != 'customer':
+            return redirect('dashboard')
+        
+        # Get selected item IDs
+        selected_items_str = request.POST.get('selected_items', '')
+        if not selected_items_str:
+            messages.error(request, 'No items selected')
+            return redirect('cart')
+        
+        try:
+            selected_item_ids = list(map(int, selected_items_str.split(',')))
+        except (ValueError, AttributeError):
+            messages.error(request, 'Invalid item selection')
+            return redirect('cart')
+        
+        # Get cart and validate items
+        cart, _ = Cart.objects.get_or_create(customer=request.user)
+        selected_items = cart.items.filter(id__in=selected_item_ids).select_related('vegetable')
+        
+        if not selected_items:
+            messages.error(request, 'Selected items not found in cart')
+            return redirect('cart')
+        
+        # Validate stock for selected items
+        for item in selected_items:
+            if item.quantity > item.vegetable.quantity:
+                messages.error(request, f'Only {item.vegetable.quantity} {item.vegetable.unit} of {item.vegetable.name} available')
+                return redirect('cart')
+        
+        # Create orders for selected items
+        try:
+            for item in selected_items:
+                inv, _ = SupplierInventory.objects.get_or_create(
+                    supplier=item.vegetable.farmer,
+                    vegetable_name=item.vegetable.name,
+                    defaults={
+                        'quantity': item.vegetable.quantity,
+                        'unit': item.vegetable.unit,
+                        'price_per_unit': item.vegetable.price_per_unit,
+                        'image': item.vegetable.image,
+                    }
+                )
+                CustomerOrder.objects.create(
+                    customer=request.user,
+                    supplier_inventory=inv,
+                    quantity=item.quantity,
+                    total_price=item.quantity * item.vegetable.price_per_unit
+                )
+                # Update vegetable stock
+                item.vegetable.quantity -= item.quantity
+                if item.vegetable.quantity <= 0:
+                    item.vegetable.available = False
+                item.vegetable.save()
+            
+            # Remove only selected items from cart
+            selected_items.delete()
+            messages.success(request, 'Order placed successfully!')
+            return redirect('customer_orders')
+        except Exception as e:
+            messages.error(request, f'Error processing order: {str(e)}')
+            return redirect('cart')
+    
+    return redirect('cart')
 
 @login_required
 def checkout_cart(request):
@@ -747,6 +911,50 @@ def customer_marketplace(request):
     return render(request, 'dashboard/dashboard_marketplace.html', {'page_obj': page_obj, 'search_query': q, 'paginator': paginator, 'cart': cart})
 
 @login_required
+def customer_orders(request):
+    """Display all orders placed by the customer."""
+    if request.user.userprofile.role != 'customer':
+        messages.error(request, 'Only customers can view orders')
+        return redirect('dashboard')
+    
+    # Get all orders for the customer
+    orders = CustomerOrder.objects.filter(customer=request.user).select_related('supplier_inventory').order_by('-ordered_at')
+    
+    # Filter by status if provided
+    status_filter = request.GET.get('status', '')
+    if status_filter:
+        orders = orders.filter(status=status_filter)
+    
+    # Calculate statistics
+    total_orders = CustomerOrder.objects.filter(customer=request.user).count()
+    pending_orders = CustomerOrder.objects.filter(customer=request.user, status='pending').count()
+    confirmed_orders = CustomerOrder.objects.filter(customer=request.user, status='confirmed').count()
+    delivered_orders = CustomerOrder.objects.filter(customer=request.user, status='delivered').count()
+    total_spent = CustomerOrder.objects.filter(customer=request.user).aggregate(total=Sum('total_price'))['total'] or 0
+    
+    # Pagination
+    paginator = Paginator(orders, 10)
+    page_number = request.GET.get('page')
+    orders_page = paginator.get_page(page_number)
+    
+    # Get cart for floating icon
+    cart, _ = Cart.objects.get_or_create(customer=request.user)
+    
+    context = {
+        'orders': orders_page,
+        'total_orders': total_orders,
+        'pending_orders': pending_orders,
+        'confirmed_orders': confirmed_orders,
+        'delivered_orders': delivered_orders,
+        'total_spent': total_spent,
+        'status_filter': status_filter,
+        'paginator': paginator,
+        'cart': cart,
+    }
+    
+    return render(request, 'dashboard/customer_orders.html', context)
+
+@login_required
 def order_from_supplier(request, pk):
     if request.user.userprofile.role != 'customer':
         messages.error(request, 'Only customers can order')
@@ -861,6 +1069,76 @@ def weather_view(request):
             error = 'Please enter a city name.'
     
     return render(request, 'weather.html', {'weather_data': weather_data, 'error': error})
+
+
+@login_required
+def checkout_page(request):
+    """Display checkout page with shipping address and order summary"""
+    if request.user.userprofile.role != 'customer':
+        return redirect('dashboard')
+    
+    cart, _ = Cart.objects.get_or_create(customer=request.user)
+    
+    # Check if specific items are selected from cart
+    selected_items_param = request.GET.get('items', '')
+    if selected_items_param:
+        try:
+            selected_item_ids = list(map(int, selected_items_param.split(',')))
+            cart_items = cart.items.filter(id__in=selected_item_ids).select_related('vegetable').all()
+        except (ValueError, AttributeError):
+            cart_items = cart.items.select_related('vegetable').all()
+    else:
+        # Show all items if coming from "Buy Now" product page
+        cart_items = cart.items.select_related('vegetable').all()
+    
+    if not cart_items:
+        messages.error(request, 'Your cart is empty')
+        return redirect('cart')
+    
+    # Calculate totals
+    items_total = sum(float(item.subtotal()) for item in cart_items)
+    delivery_fee = 160  # Fixed delivery fee
+    tax = round(items_total * 0.05, 2)  # 5% tax
+    total_price = items_total + delivery_fee + tax
+    
+    context = {
+        'cart_items': cart_items,
+        'items_total': items_total,
+        'delivery_fee': delivery_fee,
+        'tax': tax,
+        'total_price': total_price,
+        'selected_items_param': selected_items_param,  # Pass back to template
+    }
+    
+    return render(request, 'dashboard/checkout.html', context)
+
+
+@login_required
+def update_checkout_address(request):
+    """Update user address during checkout"""
+    if request.method == 'POST':
+        phone_number = request.POST.get('phone_number', '').strip()
+        address = request.POST.get('address', '').strip()
+        
+        if not phone_number or not address:
+            messages.error(request, 'Phone number and address are required')
+            return redirect('checkout_page')
+        
+        # Validate phone number is 10 digits
+        if not phone_number.isdigit() or len(phone_number) != 10:
+            messages.error(request, 'Phone number must be exactly 10 digits')
+            return redirect('checkout_page')
+        
+        # Update user profile
+        user_profile = request.user.userprofile
+        user_profile.phone_number = phone_number
+        user_profile.address = address
+        user_profile.save()
+        
+        messages.success(request, 'Address updated successfully')
+        return redirect('checkout_page')
+    
+    return redirect('checkout_page')
 
 
 def feedback_view(request):

@@ -1,62 +1,124 @@
 {% extends 'base.html' %}
-{% block title %}My Orders — Krishi Connect{% endblock %}
+{% load static %}
+
+{% block title %}My Orders - Customer{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold text-green-800 mb-6">📦 My Orders</h1>
+<div class="min-h-screen bg-gray-50 py-12">
+    <div class="max-w-6xl mx-auto px-4">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-green-800 mb-2">
+                <i class="fas fa-history text-green-600 mr-3"></i>My Bulk Orders
+            </h1>
+            <p class="text-gray-600">Track and manage your bulk product orders</p>
+        </div>
 
-    <!-- Status Filter -->
-    <div class="mb-6 flex gap-2 flex-wrap">
-        <a href="{% url 'my_orders' %}" class="px-4 py-2 rounded-lg font-medium transition
-            {% if not status_filter %}bg-green-600 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
-            All Orders
-        </a>
-        <a href="?status=active" class="px-4 py-2 rounded-lg font-medium transition
-            {% if status_filter == 'active' %}bg-blue-600 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
-            Active Orders
-        </a>
-        <a href="?status=completed" class="px-4 py-2 rounded-lg font-medium transition
-            {% if status_filter == 'completed' %}bg-green-600 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
-            Completed Orders
-        </a>
-        <a href="?status=cancelled" class="px-4 py-2 rounded-lg font-medium transition
-            {% if status_filter == 'cancelled' %}bg-red-600 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
-            Cancelled Orders
-        </a>
-    </div>
-
-    {% if orders %}
-    <div class="space-y-4">
-        {% for order in orders %}
-        <div class="bg-white rounded-xl shadow p-4 flex items-center gap-4">
-            {% if order.product.image %}
-                <img src="{{ order.product.image.url }}" class="w-16 h-16 rounded-lg object-cover">
-            {% else %}
-                <div class="w-16 h-16 rounded-lg bg-green-50 flex items-center justify-center text-2xl">🌿</div>
-            {% endif %}
-            <div class="flex-1">
-                <h3 class="font-bold text-gray-800">{{ order.product.name }}</h3>
-                <p class="text-sm text-gray-500">{{ order.quantity }} kg × ₹{{ order.product.price_per_kg }}/kg</p>
-                <p class="text-xs text-gray-400">{{ order.ordered_at|date:"d M Y, H:i" }}</p>
-            </div>
-            <div class="text-right">
-                <p class="font-bold text-green-700">₹{{ order.total_price }}</p>
-                <span class="text-xs px-2 py-1 rounded-full
-                    {% if order.status == 'completed' %}bg-green-100 text-green-700
-                    {% elif order.status == 'active' %}bg-blue-100 text-blue-700
-                    {% elif order.status == 'cancelled' %}bg-red-100 text-red-700{% endif %}">
-                    {{ order.get_status_display }}
-                </span>
+        <!-- Status Filters -->
+        <div class="bg-white rounded-lg shadow-md p-4 mb-8">
+            <h3 class="font-bold text-sm mb-3">Filter by Status</h3>
+            <div class="flex flex-wrap gap-2">
+                <a href="{% url 'my_orders' %}" class="px-4 py-2 rounded-full text-sm {% if not status_filter %}bg-green-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %} hover:bg-green-600 hover:text-white transition">
+                    All Orders
+                </a>
+                <a href="?status=pending" class="px-4 py-2 rounded-full text-sm {% if status_filter == 'pending' %}bg-yellow-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %} hover:bg-yellow-600 hover:text-white transition">
+                    ⏳ Pending Review
+                </a>
+                <a href="?status=accepted" class="px-4 py-2 rounded-full text-sm {% if status_filter == 'accepted' %}bg-blue-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %} hover:bg-blue-600 hover:text-white transition">
+                    ✅ Accepted
+                </a>
+                <a href="?status=shipped" class="px-4 py-2 rounded-full text-sm {% if status_filter == 'shipped' %}bg-purple-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %} hover:bg-purple-600 hover:text-white transition">
+                    🚚 Shipped
+                </a>
+                <a href="?status=delivered" class="px-4 py-2 rounded-full text-sm {% if status_filter == 'delivered' %}bg-green-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %} hover:bg-green-600 hover:text-white transition">
+                    🎁 Delivered
+                </a>
             </div>
         </div>
-        {% endfor %}
+
+        <!-- Orders List -->
+        {% if orders %}
+        <div class="space-y-4">
+            {% for order in orders %}
+            <div class="bg-white rounded-lg shadow-md p-6 border-l-4 {% if order.status == 'pending' %}border-yellow-400{% elif order.status == 'accepted' %}border-blue-400{% elif order.status == 'shipped' %}border-purple-400{% elif order.status == 'delivered' %}border-green-400{% else %}border-red-400{% endif %}">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <!-- Order & Product -->
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Order ID</p>
+                        <p class="text-xl font-bold text-gray-800">#{{ order.id }}</p>
+                        <p class="text-sm text-gray-600 mt-2">📦 {{ order.product.name }}</p>
+                    </div>
+
+                    <!-- Quantity & Amount -->
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Order Details</p>
+                        <p class="text-lg font-semibold text-gray-800">{{ order.quantity }} {{ order.product.unit }}</p>
+                        <p class="text-sm text-green-600 font-bold">₹{{ order.total_price|floatformat:0 }}</p>
+                    </div>
+
+                    <!-- Farmer -->
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Farmer</p>
+                        <p class="text-lg font-semibold text-gray-800">{{ order.product.farmer.first_name }} {{ order.product.farmer.last_name }}</p>
+                        <p class="text-xs text-gray-500">{{ order.product.farmer.userprofile.phone_number }}</p>
+                    </div>
+
+                    <!-- Status -->
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Status</p>
+                        <p class="text-lg font-bold">
+                            {% if order.status == 'pending' %}
+                            <span class="text-yellow-600">⏳ Pending</span>
+                            {% elif order.status == 'accepted' %}
+                            <span class="text-blue-600">✅ Accepted</span>
+                            {% elif order.status == 'shipped' %}
+                            <span class="text-purple-600">🚚 Shipped</span>
+                            {% elif order.status == 'delivered' %}
+                            <span class="text-green-600">🎁 Delivered</span>
+                            {% else %}
+                            <span class="text-red-600">✖️ {{ order.get_status_display }}</span>
+                            {% endif %}
+                        </p>
+                        <p class="text-xs text-gray-500">{{ order.ordered_at|date:"d M Y" }}</p>
+                    </div>
+                </div>
+
+                <!-- Delivery Info -->
+                <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                    <p class="text-sm font-semibold text-gray-700 mb-2">📮 Delivery Information</p>
+                    <p class="text-sm text-gray-700">
+                        <strong>{{ order.delivery_mode|upper }}:</strong> 
+                        {{ order.delivery_address|truncatewords:15 }}
+                    </p>
+                </div>
+
+                <!-- Farmer Notes -->
+                {% if order.farmer_notes %}
+                <div class="bg-blue-50 rounded-lg p-4 mb-4 border border-blue-200">
+                    <p class="text-sm font-semibold text-blue-900 mb-1">💬 Farmer's Message</p>
+                    <p class="text-sm text-blue-800">{{ order.farmer_notes }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Timeline -->
+                <div class="text-xs text-gray-500 space-y-1">
+                    <p>📝 Ordered: {{ order.ordered_at|date:"d M Y, H:i" }}</p>
+                    {% if order.accepted_at %}<p class="text-green-600">✅ Accepted: {{ order.accepted_at|date:"d M Y, H:i" }}</p>{% endif %}
+                    {% if order.shipped_at %}<p class="text-purple-600">🚚 Shipped: {{ order.shipped_at|date:"d M Y, H:i" }}</p>{% endif %}
+                    {% if order.delivered_at %}<p class="text-blue-600">🎁 Delivered: {{ order.delivered_at|date:"d M Y, H:i" }}</p>{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-16 bg-white rounded-lg shadow">
+            <i class="fas fa-shopping-bag text-gray-300 text-6xl mb-4"></i>
+            <p class="text-xl text-gray-500">You haven't placed any orders yet.</p>
+            <a href="{% url 'marketplace' %}" class="inline-block mt-4 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition">
+                Browse Marketplace
+            </a>
+        </div>
+        {% endif %}
     </div>
-    {% else %}
-    <div class="text-center py-20 text-gray-400">
-        <p class="text-5xl mb-4">📭</p>
-        <p class="text-xl">No orders yet.</p>
-        <a href="{% url 'marketplace' %}" class="mt-4 inline-block text-green-600 hover:underline">Browse Marketplace</a>
-    </div>
-    {% endif %}
 </div>
 {% endblock %}

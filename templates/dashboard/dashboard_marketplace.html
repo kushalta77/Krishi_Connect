@@ -146,7 +146,7 @@
                 <i class="fas fa-store w-5 text-center text-lg"></i> 
                 <span>Marketplace</span>
             </a>
-            <a href="#orders" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium hover:text-white">
+            <a href="{% url 'customer_orders' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium hover:text-white">
                 <i class="fas fa-box-open w-5 text-center text-lg"></i> 
                 <span>My Orders</span>
             </a>
@@ -188,11 +188,19 @@
                 </div>
 
                 <!-- Search Bar -->
-                <div class="mb-8">
-                    <form action="{% url 'customer_marketplace' %}" method="get" class="relative">
+                <div class="mb-8 flex gap-3">
+                    <form action="{% url 'customer_marketplace' %}" method="get" class="relative flex-1">
                         <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                        <input type="text" name="q" placeholder="Search vegetables..." value="{{ search_query }}" class="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 hover:border-brand-300 focus:border-brand-500 rounded-xl text-sm text-slate-700 outline-none focus:ring-4 focus:ring-brand-500/10 transition-all shadow-sm">
+                        <input type="text" name="q" placeholder="Search " value="{{ search_query }}" class="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 hover:border-brand-300 focus:border-brand-500 rounded-xl text-sm text-slate-700 outline-none focus:ring-4 focus:ring-brand-500/10 transition-all shadow-sm">
                     </form>
+                    <select id="categoryFilter" onchange="filterByCategory()" class="bg-white border border-slate-200 hover:border-brand-300 rounded-xl px-4 py-3 text-sm text-slate-700 font-semibold shadow-sm focus:outline-none focus:ring-4 focus:ring-brand-500/10 cursor-pointer">
+                        <option value="all">🌿 All Categories</option>
+                        <option value="vegetable">🥦 Vegetables</option>
+                        <option value="fruit">🍎 Fruits</option>
+                        <option value="grain">🌾 Grains</option>
+                        <option value="spice">🌶️ Spices</option>
+                        <option value="other">📦 Other</option>
+                    </select>
                 </div>
 
                 {% if search_query %}
@@ -202,7 +210,7 @@
                 <!-- Products Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-12">
                     {% for item in page_obj %}
-                    <div class="product-card group relative fade-in-up">
+                    <div class="product-card group relative fade-in-up" data-category="{% if item.source == 'vegetable' %}{{ item.category }}{% else %}other{% endif %}">
 
                         <!-- Image Container -->
                         <div class="relative h-40 w-4/5 mx-auto overflow-hidden cursor-pointer rounded-xl mt-4"
@@ -249,10 +257,12 @@
                                         </div>
                                         {% endif %}
                                     </div>
+                                    {% if item.source == 'vegetable' and item.min_order_qty and item.min_order_qty > 1 %}
                                     <div class="text-right">
-                                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Stock</p>
-                                        <p class="text-sm text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md inline-block">{{ item.quantity }} {{ item.unit }}</p>
+                                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Min Order</p>
+                                        <p class="text-sm text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md inline-block">{{ item.min_order_qty }} {{ item.unit }}</p>
                                     </div>
+                                    {% endif %}
                                 </div>
 
                                 <!-- Action Buttons -->
@@ -264,8 +274,8 @@
                                     <form method="post" action="{% url 'buy_now_action' item.id %}" class="w-full">
                                         {% csrf_token %}
                                         <input type="hidden" name="quantity" value="1">
-                                        <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl transition-all shadow-md text-sm flex items-center justify-center gap-1.5">
-                                            <i class="fas fa-bolt text-yellow-400"></i> Buy Now
+                                        <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl transition-all shadow-md text-sm flex items-center justify-center">
+                                            Buy Now
                                         </button>
                                     </form>
                                     <form method="post" action="{% url 'add_to_cart' item.id %}" class="w-full">
@@ -278,7 +288,7 @@
                                 </div>
                                 {% else %}
                                 <a href="{% url 'order_from_supplier' item.id %}" class="block w-full bg-slate-900 hover:bg-slate-800 text-white text-center font-bold py-2.5 rounded-xl transition-all text-sm">
-                                    <i class="fas fa-bolt text-yellow-400 mr-1"></i> Buy Now
+                                    Buy Now
                                 </a>
                                 {% endif %}
                             </div>
@@ -376,6 +386,13 @@
 </div>
 
 <script>
+    function filterByCategory() {
+        const cat = document.getElementById('categoryFilter').value;
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.style.display = (cat === 'all' || card.dataset.category === cat) ? '' : 'none';
+        });
+    }
+
     function openSidebar() {
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');

@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ vegetable.name }} | Krishi Connect Marketplace{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-slate-50 py-12 px-4 md:px-8">
+    <div class="max-w-5xl mx-auto">
+        
+        <!-- Back Button -->
+        <div class="mb-6 flex items-center gap-3">
+            <a href="{% url 'public_marketplace' %}" class="inline-flex items-center gap-2 text-slate-600 hover:text-emerald-600 font-medium transition-colors">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Marketplace</span>
+            </a>
+        </div>
+
+        <!-- Messages -->
+        {% for message in messages %}
+        <div class="flex items-center gap-3 p-4 rounded-xl border text-sm mb-6 {% if message.tags == 'success' %}bg-green-50 border-green-200 text-green-700{% elif message.tags == 'warning' %}bg-yellow-50 border-yellow-200 text-yellow-700{% else %}bg-red-50 border-red-200 text-red-700{% endif %}">
+            <i class="fas {% if message.tags == 'success' %}fa-check-circle text-green-500{% elif message.tags == 'warning' %}fa-exclamation-triangle text-yellow-500{% else %}fa-exclamation-circle text-red-500{% endif %}"></i>
+            {{ message }}
+        </div>
+        {% endfor %}
+
+        <!-- Product Details Card -->
+        <div class="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class="grid md:grid-cols-2 gap-8 p-8 md:p-12">
+                
+                <!-- Product Image -->
+                <div class="flex flex-col items-center justify-center">
+                    {% if vegetable.image %}
+                    <img src="{{ vegetable.image.url }}" alt="{{ vegetable.name }}" class="w-full h-auto rounded-2xl object-cover shadow-md">
+                    {% else %}
+                    <div class="w-full aspect-square bg-gradient-to-br from-emerald-50 to-teal-100 rounded-2xl flex items-center justify-center shadow-md">
+                        <i class="fas fa-leaf text-emerald-300 text-8xl"></i>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Product Details -->
+                <div class="flex flex-col justify-between">
+                    
+                    <!-- Header Info -->
+                    <div>
+                        <!-- Category & Status Badges -->
+                        <div class="flex flex-wrap items-center gap-2 mb-6">
+                            <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-700 uppercase tracking-widest">
+                                {{ vegetable.category }}
+                            </span>
+                            {% if vegetable.available %}
+                            <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-green-100 text-green-700 uppercase">
+                                ✓ In Stock
+                            </span>
+                            {% else %}
+                            <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-red-100 text-red-700 uppercase">
+                                ✗ Out of Stock
+                            </span>
+                            {% endif %}
+                            
+                            {% if vegetable.is_farmers_special %}
+                            <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-yellow-100 text-yellow-700 uppercase">
+                                ⭐ Farmer's Special
+                            </span>
+                            {% endif %}
+
+                            {% with status=vegetable.freshness_status %}
+                                {% if status == 'fresh' %}
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-green-100 text-green-700 uppercase">🟢 Fresh</span>
+                                {% elif status == 'good' %}
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-lime-100 text-lime-700 uppercase">🟡 Good</span>
+                                {% elif status == 'aging' %}
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-orange-100 text-orange-700 uppercase">🟠 Aging</span>
+                                {% elif status == 'expired' %}
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-red-100 text-red-700 uppercase">🔴 Old</span>
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+
+                        <!-- Product Name -->
+                        <h1 class="text-4xl font-bold text-slate-800 mb-2">{{ vegetable.name }}</h1>
+                        
+                        <!-- Farmer Info -->
+                        <div class="flex items-center gap-3 mb-8 pb-8 border-b border-gray-100">
+                            <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600 font-bold text-lg">
+                                {{ vegetable.farmer.first_name|first|upper }}
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Farmer</p>
+                                <p class="text-lg font-semibold text-slate-800">{{ vegetable.farmer.first_name }} {{ vegetable.farmer.last_name }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        {% if vegetable.description %}
+                        <div class="mb-8">
+                            <h3 class="text-sm font-bold text-slate-600 uppercase tracking-widest mb-3">Description</h3>
+                            <p class="text-slate-600 leading-relaxed">{{ vegetable.description }}</p>
+                        </div>
+                        {% endif %}
+
+                        <!-- Product Details -->
+                        <div class="grid grid-cols-2 gap-4 mb-8">
+                            <div class="bg-slate-50 rounded-xl p-4">
+                                <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1">Available Quantity</p>
+                                <p class="text-2xl font-bold text-emerald-600">{{ vegetable.quantity }} <span class="text-sm text-slate-500">{{ vegetable.unit }}</span></p>
+                            </div>
+                            <div class="bg-slate-50 rounded-xl p-4">
+                                <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1">Unit</p>
+                                <p class="text-2xl font-bold text-slate-800">{{ vegetable.unit }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Price & Action Button -->
+                    <div class="mt-12 pt-8 border-t border-gray-100">
+                        <div class="mb-8">
+                            <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-2">Price per Unit</p>
+                            {% if vegetable.discount_price %}
+                            <div class="flex items-baseline gap-3">
+                                <span class="text-4xl font-black text-emerald-600">₹{{ vegetable.discount_price }}</span>
+                                <span class="text-xl text-slate-400 line-through">₹{{ vegetable.price_per_unit }}</span>
+                                <span class="text-sm font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded">Discounted!</span>
+                            </div>
+                            {% else %}
+                            <p class="text-4xl font-black text-emerald-600">₹{{ vegetable.price_per_unit }}</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <!-- Buy Now -->
+                            <form method="post" action="{% url 'buy_now_action' vegetable.pk %}" class="w-full">
+                                {% csrf_token %}
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-lg hover:shadow-xl text-base flex items-center justify-center gap-2 focus:ring-2 focus:ring-slate-400 focus:outline-none">
+                                    <i class="fas fa-bolt"></i>
+                                    <span>Buy Now</span>
+                                </button>
+                            </form>
+                            
+                            <!-- Add to Cart -->
+                            <form method="post" action="{% url 'add_to_cart' vegetable.pk %}" class="w-full">
+                                {% csrf_token %}
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-lg hover:shadow-xl text-base flex items-center justify-center gap-2 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <span>Add Cart</span>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Login Note -->
+                        <div class="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-4 text-center">
+                            <p class="text-sm text-blue-700">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                <span class="font-medium">Login required to complete your purchase</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Products -->
+        <div class="mt-16">
+            <h2 class="text-3xl font-bold text-slate-800 mb-8">Explore More Products</h2>
+            <div class="text-center text-slate-600">
+                <a href="{% url 'public_marketplace' %}" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-xl transition-colors shadow-lg hover:shadow-xl">
+                    <i class="fas fa-store"></i>
+                    <span>Back to Marketplace</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

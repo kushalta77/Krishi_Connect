@@ -24,6 +24,7 @@ class Vegetable(models.Model):
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='vegetable')
     quantity = models.DecimalField(max_digits=10, decimal_places=2)
     unit = models.CharField(max_length=20, choices=[('kg', 'Kilogram'), ('ton', 'Ton'), ('quintal', 'Quintal')])
+    min_order_qty = models.DecimalField(max_digits=10, decimal_places=2, default=1)
     base_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     price_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
     discount_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)

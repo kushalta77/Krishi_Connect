@@ -109,46 +109,16 @@
                     <h3 class="font-heading font-black text-slate-800 text-xl mb-6 flex items-center gap-2">
                         <i class="fas fa-layer-group text-emerald-500"></i> Categories
                     </h3>
-                    <ul class="space-y-2">
-                        <li>
-                            <button onclick="filterCat('all')" id="btn-all" class="cat-btn active w-full text-left px-5 py-3.5 rounded-2xl text-sm font-bold flex items-center justify-between">
-                                <span class="flex items-center gap-3"><i class="fas fa-border-all w-4 text-center"></i> All Produce</span>
-                                <i class="fas fa-chevron-right text-[10px] opacity-60"></i>
-                            </button>
-                        </li>
-                        <li>
-                            <button onclick="filterCat('vegetable')" id="btn-vegetable" class="cat-btn w-full text-left px-5 py-3.5 rounded-2xl text-sm font-bold text-slate-600 flex items-center justify-between">
-                                <span class="flex items-center gap-3"><i class="fas fa-carrot w-4 text-center text-orange-500"></i> Vegetables</span>
-                                <i class="fas fa-chevron-right text-[10px] opacity-0 transition-opacity drop-arrow"></i>
-                            </button>
-                        </li>
-                        <li>
-                            <button onclick="filterCat('fruit')" id="btn-fruit" class="cat-btn w-full text-left px-5 py-3.5 rounded-2xl text-sm font-bold text-slate-600 flex items-center justify-between">
-                                <span class="flex items-center gap-3"><i class="fas fa-apple-whole w-4 text-center text-red-500"></i> Fruits</span>
-                                <i class="fas fa-chevron-right text-[10px] opacity-0 transition-opacity drop-arrow"></i>
-                            </button>
-                        </li>
-                        <li>
-                            <button onclick="filterCat('grain')" id="btn-grain" class="cat-btn w-full text-left px-5 py-3.5 rounded-2xl text-sm font-bold text-slate-600 flex items-center justify-between">
-                                <span class="flex items-center gap-3"><i class="fas fa-wheat-awn w-4 text-center text-amber-500"></i> Grains</span>
-                                <i class="fas fa-chevron-right text-[10px] opacity-0 transition-opacity drop-arrow"></i>
-                            </button>
-                        </li>
-                        <li>
-                            <button onclick="filterCat('spice')" id="btn-spice" class="cat-btn w-full text-left px-5 py-3.5 rounded-2xl text-sm font-bold text-slate-600 flex items-center justify-between">
-                                <span class="flex items-center gap-3"><i class="fas fa-pepper-hot w-4 text-center text-red-600"></i> Spices</span>
-                                <i class="fas fa-chevron-right text-[10px] opacity-0 transition-opacity drop-arrow"></i>
-                            </button>
-                        </li>
-                        <li>
-                            <button onclick="filterCat('other')" id="btn-other" class="cat-btn w-full text-left px-5 py-3.5 rounded-2xl text-sm font-bold text-slate-600 flex items-center justify-between">
-                                <span class="flex items-center gap-3"><i class="fas fa-box-open w-4 text-center text-slate-400"></i> Other</span>
-                                <i class="fas fa-chevron-right text-[10px] opacity-0 transition-opacity drop-arrow"></i>
-                            </button>
-                        </li>
-                    </ul>
-                    
-                    <div class="mt-8 p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
+                    <select onchange="filterCat(this.value)" id="category-dropdown" class="w-full border border-slate-200 hover:border-emerald-400 rounded-2xl px-4 py-3 text-sm font-bold text-slate-600 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 cursor-pointer transition-all">
+                        <option value="all">🌿 All Produce</option>
+                        <option value="vegetable">🥕 Vegetables</option>
+                        <option value="fruit">🍎 Fruits</option>
+                        <option value="grain">🌾 Grains</option>
+                        <option value="spice">🌶️ Spices</option>
+                        <option value="other">📦 Other</option>
+                    </select>
+
+                    <div class="mt-6 p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
                         <div class="text-emerald-800 text-sm font-bold flex items-center gap-2 mb-2">
                             <i class="fas fa-truck-fast"></i> Fast Delivery
                         </div>
@@ -260,8 +230,8 @@
                                     <form method="post" action="{% url 'buy_now_action' veg.pk %}" class="w-full">
                                         {% csrf_token %}
                                         <input type="hidden" name="quantity" value="1">
-                                        <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl transition-all shadow-md text-sm flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-slate-400 focus:outline-none">
-                                            <i class="fas fa-bolt text-yellow-500"></i> Buy Now
+                                        <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl transition-all shadow-md text-sm flex items-center justify-center focus:ring-2 focus:ring-slate-400 focus:outline-none">
+                                            Buy Now
                                         </button>
                                     </form>
                                     
@@ -311,25 +281,7 @@ let activeCat = 'all';
 
 function filterCat(cat) {
     activeCat = cat;
-    
-    // Reset all buttons styling
-    document.querySelectorAll('.cat-btn').forEach(btn => {
-        btn.classList.remove('active');
-        btn.classList.add('text-slate-600');
-        
-        const arrow = btn.querySelector('.drop-arrow');
-        if(arrow) arrow.classList.remove('opacity-100');
-    });
-    
-    // Set active button styling
-    const activeBtn = document.getElementById('btn-' + cat);
-    if(activeBtn) {
-        activeBtn.classList.add('active');
-        activeBtn.classList.remove('text-slate-600');
-        const arrow = activeBtn.querySelector('.drop-arrow');
-        if(arrow) arrow.classList.add('opacity-100');
-    }
-    
+    document.getElementById('category-dropdown').value = cat;
     applyFilters();
 }
 

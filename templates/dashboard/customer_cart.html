@@ -99,6 +99,57 @@
 </head>
 <body class="min-h-screen text-slate-800 font-sans selection:bg-brand-200">
 
+<!-- Payment Method Selection Modal -->
+<div id="paymentModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-[999] p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-in fade-in zoom-in duration-300">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-2xl font-heading font-bold text-slate-800">Choose Payment Method</h3>
+            <button onclick="closePaymentModal()" class="text-slate-400 hover:text-slate-600 text-2xl">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Khalti Wallet Option -->
+        <button onclick="proceedToKhalti()" class="w-full mb-4 p-6 border-2 border-slate-200 hover:border-fuchsia-500 rounded-2xl transition-all hover:bg-fuchsia-50/30 group">
+            <div class="flex items-center gap-4">
+                <div class="w-16 h-16 bg-fuchsia-100 rounded-2xl flex items-center justify-center group-hover:bg-fuchsia-200 transition-colors">
+                    <i class="fas fa-wallet text-2xl text-fuchsia-600"></i>
+                </div>
+                <div class="flex-1 text-left">
+                    <p class="font-heading font-bold text-slate-800 text-lg">Khalti Wallet</p>
+                    <p class="text-slate-500 text-sm">Fast & Secure Payment</p>
+                </div>
+                <i class="fas fa-chevron-right text-slate-300 group-hover:text-fuchsia-500 transition-colors"></i>
+            </div>
+        </button>
+
+        <!-- eSewa Wallet Option -->
+        <button onclick="proceedToESewa()" class="w-full p-6 border-2 border-slate-200 hover:border-green-500 rounded-2xl transition-all hover:bg-green-50/30 group">
+            <div class="flex items-center gap-4">
+                <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center group-hover:bg-green-200 transition-colors">
+                    <i class="fas fa-credit-card text-2xl text-green-600"></i>
+                </div>
+                <div class="flex-1 text-left">
+                    <p class="font-heading font-bold text-slate-800 text-lg">eSewa Wallet</p>
+                    <p class="text-slate-500 text-sm">Easy Online Payment</p>
+                </div>
+                <i class="fas fa-chevron-right text-slate-300 group-hover:text-green-500 transition-colors"></i>
+            </div>
+        </button>
+
+        <!-- Cancel Button -->
+        <button onclick="closePaymentModal()" class="w-full mt-6 px-6 py-3 border-2 border-slate-200 text-slate-700 font-semibold rounded-xl hover:bg-slate-50 transition-colors">
+            Cancel
+        </button>
+    </div>
+</div>
+
+<!-- Hidden Khalti Form -->
+<form id="khalti-checkout-form" method="post" action="{% url 'buy_selected_items' %}" style="display:none;">
+    {% csrf_token %}
+    <input type="hidden" name="selected_items" id="selectedItemsInput">
+</form>
+
 <div id="overlay" onclick="closeSidebar()" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-all duration-300 opacity-0"></div>
 
 <div class="flex h-screen overflow-hidden">
@@ -150,7 +201,7 @@
                 <i class="fas fa-store w-5 text-center text-lg"></i> 
                 <span>Marketplace</span>
             </a>
-            <a href="#orders" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+            <a href="{% url 'customer_orders' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
                 <i class="fas fa-box-open w-5 text-center text-lg"></i> 
                 <span>My Orders</span>
             </a>
@@ -177,6 +228,15 @@
     <!-- Main Content Area -->
     <div class="flex-1 flex flex-col overflow-hidden relative">
 
+        <!-- Header (for mobile) -->
+        <div class="bg-white border-b border-slate-200 py-4 shadow-sm flex md:hidden items-center justify-between px-4">
+            <button onclick="openSidebar()" class="text-slate-600 hover:text-slate-900">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+            <h1 class="font-heading font-bold text-xl text-slate-900">My Cart</h1>
+            <div class="w-6"></div>
+        </div>
+
         <!-- Scrollable Content -->
         <main class="flex-1 overflow-y-auto px-4 pb-12 pt-4">
             <div class="max-w-4xl mx-auto">
@@ -190,34 +250,15 @@
                             </h3>
                             <p class="text-slate-500 text-sm mt-1">Review your items before checkout.</p>
                         </div>
-                        
-                        {% if cart.items.all %}
-                        <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
-                            <div class="text-right flex-1 sm:flex-initial">
-                                <p class="text-xs text-slate-500 font-medium">Total Amount</p>
-                                <p class="text-2xl font-heading font-bold text-slate-800">₹{{ cart.total|floatformat:0 }}</p>
-                            </div>
-                            
-                            <!-- Khalti Payment Form -->
-                            <form id="khalti-checkout-form" method="post" action="{% url 'checkout_cart' %}">
-                                {% csrf_token %}
-                                <button type="button" onclick="checkoutKhaltiCart('{{ cart.total|floatformat:0 }}')" class="khalti-btn px-6 py-3.5 rounded-xl font-bold flex items-center justify-center gap-3 text-sm w-full sm:w-auto">
-                                    <img src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-logo.svg" alt="Khalti" class="h-4 brightness-0 invert">
-                                    Buy Now with Khalti
-                                </button>
-                            </form>
-                        </div>
-                        {% else %}
-                        <a href="{% url 'customer_marketplace' %}" class="bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-brand-500/30 text-sm flex items-center gap-2">
-                            <i class="fas fa-plus"></i> Add Items
-                        </a>
-                        {% endif %}
                     </div>
 
                     <div class="overflow-x-auto">
                         <table class="w-full min-w-max">
                             <thead>
                                 <tr class="bg-slate-50/50 text-slate-500 text-xs uppercase tracking-widest font-bold">
+                                    <th class="px-4 py-5 text-center w-12">
+                                        <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)" class="w-4 h-4 cursor-pointer rounded accent-brand-600">
+                                    </th>
                                     <th class="px-8 py-5 text-left">Product Detail</th>
                                     <th class="px-6 py-5 text-left">Price</th>
                                     <th class="px-6 py-5 text-left">Quantity/Qty</th>
@@ -227,7 +268,10 @@
                             </thead>
                             <tbody class="divide-y divide-slate-100">
                                 {% for item in cart.items.all %}
-                                <tr class="hover:bg-slate-50/50 transition-colors group">
+                                <tr class="hover:bg-slate-50/50 transition-colors group" data-item-id="{{ item.pk }}" data-item-price="{{ item.subtotal }}">
+                                    <td class="px-4 py-5 text-center">
+                                        <input type="checkbox" class="item-checkbox w-4 h-4 cursor-pointer rounded accent-brand-600" onchange="updateSelectedTotal()">
+                                    </td>
                                     <td class="px-8 py-5">
                                         <div class="flex items-center gap-4">
                                             {% if item.vegetable.image %}
@@ -300,6 +344,31 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <!-- Bottom Summary Section -->
+                    {% if cart.items.all %}
+                    <div class="px-8 py-8 border-t border-slate-100 bg-gradient-to-r from-slate-50 to-slate-100/50">
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+                            <div>
+                                <p class="text-slate-600 text-sm font-medium mb-1">Order Summary</p>
+                                <p class="text-slate-500 text-xs">Selected items: <span class="font-bold text-slate-800" id="selectedCount">0</span> of <span class="font-bold">{{ cart.items.all|length }}</span></p>
+                            </div>
+                            
+                            <div class="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto">
+                                <div class="text-center sm:text-right flex-1 sm:flex-initial border-r-0 sm:border-r border-slate-300 pr-0 sm:pr-6">
+                                    <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2">Selected Total</p>
+                                    <p class="text-4xl font-heading font-bold text-slate-800">₹<span id="selectedTotal">0</span></p>
+                                </div>
+                                
+                                <!-- Buy Selected Button -->
+                                <button onclick="proceedToPayment()" class="w-full sm:w-auto px-8 py-3.5 bg-brand-600 hover:bg-brand-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-sm hover:scale-105" id="buySelectedBtn" disabled>
+                                    <span>Buy Selected</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
 
             </div>
@@ -310,38 +379,140 @@
 <script>
     const khaltiPublicKey = "test_public_key_dc74e0fd57cb46cd93832aee0a390234";
 
-    function checkoutKhaltiCart(totalAmountStr) {
-        let amountInRs = parseFloat(totalAmountStr);
-        let amountInPaisa = Math.round(amountInRs * 100);
+    // Get all selected items
+    function getSelectedItems() {
+        const checkboxes = document.querySelectorAll('.item-checkbox:checked');
+        const items = [];
+        checkboxes.forEach(checkbox => {
+            const row = checkbox.closest('tr');
+            items.push({
+                id: row.dataset.itemId,
+                price: parseFloat(row.dataset.itemPrice)
+            });
+        });
+        return items;
+    }
+
+    // Update selected total dynamically
+    function updateSelectedTotal() {
+        const selectedItems = getSelectedItems();
+        let total = 0;
+        selectedItems.forEach(item => {
+            total += item.price;
+        });
+        
+        document.getElementById('selectedCount').textContent = selectedItems.length;
+        document.getElementById('selectedTotal').textContent = Math.round(total);
+        
+        // Enable/disable buy button
+        const buyBtn = document.getElementById('buySelectedBtn');
+        if (selectedItems.length > 0) {
+            buyBtn.disabled = false;
+        } else {
+            buyBtn.disabled = true;
+        }
+    }
+
+    // Toggle select all
+    function toggleSelectAll(selectAllCheckbox) {
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+        updateSelectedTotal();
+    }
+
+    // Show payment modal
+    function proceedToPayment() {
+        const selectedItems = getSelectedItems();
+        if (selectedItems.length === 0) {
+            alert('Please select at least one item');
+            return;
+        }
+        // Store selected items and redirect to checkout
+        const itemIds = selectedItems.map(item => item.id).join(',');
+        window.location.href = `{% url 'checkout_page' %}?items=${itemIds}`;
+    }
+
+    // Close payment modal
+    function closePaymentModal() {
+        document.getElementById('paymentModal').classList.add('hidden');
+    }
+
+    // Close modal on outside click
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('paymentModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePaymentModal();
+            }
+        });
+        // Close on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePaymentModal();
+            }
+        });
+    });
+
+    // Proceed to Khalti payment
+    function proceedToKhalti() {
+        const selectedItems = getSelectedItems();
+        if (selectedItems.length === 0) {
+            alert('Please select at least one item');
+            return;
+        }
+
+        let totalAmount = 0;
+        selectedItems.forEach(item => {
+            totalAmount += item.price;
+        });
+
+        let amountInPaisa = Math.round(totalAmount * 100);
 
         const config = {
             publicKey: khaltiPublicKey,
-            productIdentity: "cart-checkout",
+            productIdentity: "cart-selection",
             productName: "Krishi Connect Order",
             productUrl: window.location.href,
             paymentPreference: ["KHALTI", "EBANKING", "MOBILE_BANKING", "CONNECT_IPS", "SCT"],
             amount: amountInPaisa,
             currency: "NPR",
-            table: "cart_checkout",
+            table: "cart_selection",
             transactionPin: false,
             maximumRefundDays: 4,
             mobile: "",
             literacy: "en",
             eventHandler: {
                 onSuccess(payload) {
+                    // Store selected items
+                    const itemIds = selectedItems.map(item => item.id).join(',');
+                    document.getElementById('selectedItemsInput').value = itemIds;
                     document.getElementById('khalti-checkout-form').submit();
                 },
                 onError(error) {
                     console.error('Error:', error);
+                    closePaymentModal();
                 },
                 onClose() {
                     console.log('checkout window closed');
+                    closePaymentModal();
                 },
             },
         };
 
         const checkout = new KhaltiCheckout(config);
         checkout.show({amount: amountInPaisa});
+    }
+
+    // Proceed to eSewa payment
+    function proceedToESewa() {
+        const selectedItems = getSelectedItems();
+        if (selectedItems.length === 0) {
+            alert('Please select at least one item');
+            return;
+        }
+        alert('eSewa integration coming soon! For now, please use Khalti.');
+        closePaymentModal();
     }
 
     function openSidebar() {

@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Bulk Marketplace | Krishi Connect{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-white py-12">
+    <div class="max-w-7xl mx-auto px-4">
+        <!-- Header -->
+        <div class="mb-12">
+            <h1 class="text-4xl font-bold text-green-800 mb-2">Bulk Marketplace</h1>
+            <p class="text-gray-600">Order fresh produce directly from farmers in bulk quantities</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h3 class="font-bold text-lg mb-4">Filter by Category</h3>
+            <div class="flex flex-wrap gap-2">
+                <a href="{% url 'marketplace' %}" class="px-4 py-2 rounded-full {% if not selected_category %}bg-green-600 text-white{% else %}bg-gray-100 text-gray-700{% endif %} hover:bg-green-600 hover:text-white transition">
+                    All
+                </a>
+                {% for category in categories %}
+                <a href="?category={{ category.id }}" class="px-4 py-2 rounded-full {% if selected_category == category.id|stringformat:'s' %}bg-green-600 text-white{% else %}bg-gray-100 text-gray-700{% endif %} hover:bg-green-600 hover:text-white transition">
+                    {{ category.name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        {% if products %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for product in products %}
+            <div class="bg-white rounded-lg shadow-lg hover:shadow-xl transition overflow-hidden border-l-4 border-green-500">
+                <!-- Image -->
+                {% if product.image %}
+                <div class="h-40 overflow-hidden bg-gray-200">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover hover:scale-105 transition">
+                </div>
+                {% else %}
+                <div class="h-40 bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center">
+                    <i class="fas fa-leaf text-green-400 text-4xl"></i>
+                </div>
+                {% endif %}
+
+                <!-- Content -->
+                <div class="p-4">
+                    <h3 class="text-xl font-bold text-gray-800 mb-1">{{ product.name }}</h3>
+                    <p class="text-sm text-gray-500 mb-3">by <strong>{{ product.farmer.first_name }} {{ product.farmer.last_name }}</strong></p>
+
+                    <!-- Bulk Info -->
+                    <div class="bg-blue-50 rounded-lg p-3 mb-4 border border-blue-200">
+                        <p class="text-xs text-gray-600"><strong>Min Order:</strong> {{ product.min_order_qty }} {{ product.unit }}</p>
+                        <p class="text-xs text-gray-600"><strong>Available:</strong> {{ product.stock_quantity }} {{ product.unit }}</p>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="mb-4">
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Price per {{ product.unit }}</p>
+                        <p class="text-3xl font-bold text-green-600">₹{{ product.price_per_unit|floatformat:0 }}</p>
+                    </div>
+
+                    <!-- Description -->
+                    {% if product.description %}
+                    <p class="text-sm text-gray-600 mb-4 line-clamp-2">{{ product.description }}</p>
+                    {% endif %}
+
+                    <!-- Status Badge -->
+                    {% if product.is_available %}
+                    <div class="mb-4 inline-block px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
+                        ✓ In Stock
+                    </div>
+                    {% else %}
+                    <div class="mb-4 inline-block px-3 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-full">
+                        Out of Stock
+                    </div>
+                    {% endif %}
+
+                    <!-- CTA -->
+                    {% if product.is_available %}
+                    <a href="{% url 'product_detail' product.pk %}" class="block w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition text-center">
+                        <i class="fas fa-shopping-cart mr-2"></i>View & Order
+                    </a>
+                    {% else %}
+                    <button disabled class="w-full bg-gray-400 text-white font-bold py-2 px-4 rounded-lg text-center cursor-not-allowed">
+                        Unavailable
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-16">
+            <i class="fas fa-inbox text-gray-300 text-6xl mb-4"></i>
+            <p class="text-xl text-gray-500">No products available in this category.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

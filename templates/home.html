@@ -78,27 +78,27 @@
             <i class="fas fa-leaf"></i> Nepal's #1 Organic Agriculture Portal
         </div>
         <h1 class="text-5xl md:text-7xl font-black mb-4 text-white drop-shadow-2xl" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.8);" data-en="Krishi Connect Nepal" data-ne="कृषि कनेक्ट नेपाल">
-            कृषि कनेक्ट नेपाल
+            Krishi Connect Nepal
         </h1>
         <h2 class="text-2xl md:text-3xl font-light mb-6 text-green-100" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.7);" data-en="AgroConnect - Smart Agriculture Portal" data-ne="AgroConnect - आधुनिक कृषि पोर्टल">
-            AgroConnect - आधुनिक कृषि पोर्टल
+            AgroConnect - Smart Agriculture Portal
         </h2>
         <p class="text-lg md:text-xl mb-12 text-white/90 max-w-3xl mx-auto leading-relaxed" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.6);" data-en="Connecting traditional knowledge with modern technology for Nepal's agricultural revolution" data-ne="हाम्रो पुर्खाको परम्परागत जैविक कृषिलाई आधुनिक प्रविधिसँग जोडेर नेपालको कृषि क्रान्तिमा सहभागी बनौं">
-            हाम्रो पुर्खाको परम्परागत जैविक कृषिलाई आधुनिक प्रविधिसँग जोडेर नेपालको कृषि क्रान्तिमा सहभागी बनौं
+            Connecting traditional knowledge with modern technology for Nepal's agricultural revolution
         </p>
         <div class="flex flex-col sm:flex-row gap-6 justify-center items-center flex-wrap">
             <a href="{% url 'organic_crops' %}" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-10 py-4 rounded-full font-bold hover:from-green-600 hover:to-green-700 transition-all duration-300 shadow-2xl transform hover:scale-105 flex items-center gap-2" data-en="Explore Organic Crops" data-ne="जैविक बाली खोज्नुहोस्">
                 <i class="fas fa-seedling"></i>
-                <span>जैविक बाली खोज्नुहोस्</span>
+                <span>Explore Organic Crops</span>
             </a>
             <a href="{% url 'weather' %}" class="border-2 border-white/60 text-white px-10 py-4 rounded-full font-bold hover:bg-white/15 backdrop-blur-sm transition-all duration-300 shadow-xl hover:scale-105 flex items-center gap-2" data-en="Check Weather" data-ne="मौसम जाँच गर्नुहोस्">
                 <i class="fas fa-cloud-sun"></i>
-                <span>मौसम जाँच गर्नुहोस्</span>
+                <span>Check Weather</span>
             </a>
             {% if user.is_authenticated and user.role == 'farmer' %}
             <a href="{% url 'add_vegetable' %}" class="border-2 border-white/60 text-white px-10 py-4 rounded-full font-bold hover:bg-white/15 backdrop-blur-sm transition-all duration-300 shadow-xl hover:scale-105 flex items-center gap-2" data-en="List New Product" data-ne="नयाँ उत्पादन सूचीबद्ध गर्नुहोस्">
                 <i class="fas fa-plus-circle"></i>
-                <span>नयाँ उत्पादन सूचीबद्ध गर्नुहोस्</span>
+                <span>List New Product</span>
             </a>
             {% endif %}
         </div>
@@ -264,8 +264,8 @@
 <section class="relative py-20 bg-gradient-to-b from-green-50 to-white">
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            <h2 class="text-4xl font-bold text-green-800 mb-6 handwriting" data-en="Everything You Need for Organic Farming" data-ne="जैविक खेतीका लागि आवश्यक सबै">जैविक खेतीका लागि आवश्यक सबै</h2>
-            <p class="text-xl text-green-600 max-w-2xl mx-auto handwriting-casual" data-en="Combining traditional knowledge with modern technology" data-ne="परम्परागत ज्ञान र आधुनिक प्रविधिको संयोजन">परम्परागत ज्ञान र आधुनिक प्रविधिको संयोजन</p>
+            <h2 class="text-4xl font-bold text-green-800 mb-6 handwriting" data-en="Everything You Need for Organic Farming" data-ne="जैविक खेतीका लागि आवश्यक सबै">Everything You Need for Organic Farming</h2>
+            <p class="text-xl text-green-600 max-w-2xl mx-auto handwriting-casual" data-en="Combining traditional knowledge with modern technology" data-ne="परम्परागत ज्ञान र आधुनिक प्रविधिको संयोजन">Combining traditional knowledge with modern technology</p>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -273,10 +273,10 @@
                 <div class="bg-gradient-to-br from-green-400 to-green-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
                     <i class="fas fa-leaf text-white text-3xl"></i>
                 </div>
-                <h3 class="text-2xl font-bold mb-3 text-green-800" data-en="Organic Crops" data-ne="जैविक बाली">जैविक बाली</h3>
-                <p class="text-green-600 mb-4" data-en="Traditional and modern crop management" data-ne="परम्परागत र आधुनिक बाली व्यवस्थापन">परम्परागत र आधुनिक बाली व्यवस्थापन</p>
+                <h3 class="text-2xl font-bold mb-3 text-green-800" data-en="Organic Crops" data-ne="जैविक बाली">Organic Crops</h3>
+                <p class="text-green-600 mb-4" data-en="Traditional and modern crop management" data-ne="परम्परागत र आधुनिक बाली व्यवस्थापन">Traditional and modern crop management</p>
                 <a href="{% url 'organic_crops' %}" class="inline-flex items-center text-green-700 hover:text-green-900 font-semibold group-hover:translate-x-1 transition-all" data-en="Explore" data-ne="अन्वेषण गर्नुहोस्">
-                    <span>अन्वेषण गर्नुहोस्</span> <i class="fas fa-arrow-right ml-2"></i>
+                    <span>Explore</span> <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>
             
@@ -284,10 +284,10 @@
                 <div class="bg-gradient-to-br from-blue-400 to-blue-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
                     <i class="fas fa-cloud-sun text-white text-3xl"></i>
                 </div>
-                <h3 class="text-2xl font-bold mb-3 text-blue-800" data-en="Weather Insights" data-ne="मौसम जानकारी">मौसम जानकारी</h3>
-                <p class="text-blue-600 mb-4" data-en="Real-time weather data and forecasts" data-ne="वास्तविक समयमा मौसम र पूर्वानुमान">वास्तविक समयमा मौसम र पूर्वानुमान</p>
+                <h3 class="text-2xl font-bold mb-3 text-blue-800" data-en="Weather Insights" data-ne="मौसम जानकारी">Weather Insights</h3>
+                <p class="text-blue-600 mb-4" data-en="Real-time weather data and forecasts" data-ne="वास्तविक समयमा मौसम र पूर्वानुमान">Real-time weather data and forecasts</p>
                 <a href="{% url 'weather' %}" class="inline-flex items-center text-blue-700 hover:text-blue-900 font-semibold group-hover:translate-x-1 transition-all" data-en="Check Weather" data-ne="मौसम हेर्नुहोस्">
-                    <span>मौसम हेर्नुहोस्</span> <i class="fas fa-arrow-right ml-2"></i>
+                    <span>Check Weather</span> <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>
             
@@ -295,10 +295,10 @@
                 <div class="bg-gradient-to-br from-orange-400 to-orange-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
                     <i class="fas fa-chart-line text-white text-3xl"></i>
                 </div>
-                <h3 class="text-2xl font-bold mb-3 text-orange-800" data-en="Market Prices" data-ne="बजार मूल्य">बजार मूल्य</h3>
-                <p class="text-orange-600 mb-4" data-en="Fair prices for organic products" data-ne="जैविक उत्पादनको न्यायोचित मूल्य">जैविक उत्पादनको न्यायोचित मूल्य</p>
+                <h3 class="text-2xl font-bold mb-3 text-orange-800" data-en="Market Prices" data-ne="बजार मूल्य">Market Prices</h3>
+                <p class="text-orange-600 mb-4" data-en="Fair prices for organic products" data-ne="जैविक उत्पादनको न्यायोचित मूल्य">Fair prices for organic products</p>
                 <a href="{% url 'public_marketplace' %}" class="inline-flex items-center text-orange-700 hover:text-orange-900 font-semibold group-hover:translate-x-1 transition-all" data-en="View Prices" data-ne="मूल्य हेर्नुहोस्">
-                    <span>मूल्य हेर्नुहोस्</span> <i class="fas fa-arrow-right ml-2"></i>
+                    <span>View Prices</span> <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>
             
@@ -306,28 +306,11 @@
                 <div class="bg-gradient-to-br from-purple-400 to-purple-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
                     <i class="fas fa-users text-white text-3xl"></i>
                 </div>
-                <h3 class="text-2xl font-bold mb-3 text-purple-800" data-en="Farmer Community" data-ne="किसान समुदाय">किसान समुदाय</h3>
-                <p class="text-purple-600 mb-4" data-en="Connect with experienced farmers and experts" data-ne="अनुभवी किसान र विशेषज्ञसँग जोडिनुहोस्">अनुभवी किसान र विशेषज्ञसँग जोडिनुहोस्</p>
+                <h3 class="text-2xl font-bold mb-3 text-purple-800" data-en="Farmer Community" data-ne="किसान समुदाय">Farmer Community</h3>
+                <p class="text-purple-600 mb-4" data-en="Connect with experienced farmers and experts" data-ne="अनुभवी किसान र विशेषज्ञसँग जोडिनुहोस्">Connect with experienced farmers and experts</p>
                 <a href="{% url 'blog' %}" class="inline-flex items-center text-purple-700 hover:text-purple-900 font-semibold group-hover:translate-x-1 transition-all" data-en="Join Discussion" data-ne="छलफलमा सहभागी">
-                    <span>छलफलमा सहभागी</span> <i class="fas fa-arrow-right ml-2"></i>
+                    <span>Join Discussion</span> <i class="fas fa-arrow-right ml-2"></i>
                 </a>
-            </div>
-            
-            <div class="group bg-white/80 backdrop-blur-sm p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 text-center border border-red-100 hover:border-red-300 hover:-translate-y-2">
-                <div class="bg-gradient-to-br from-red-400 to-red-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-                    <i class="fas fa-plus-circle text-white text-3xl"></i>
-                </div>
-                <h3 class="text-2xl font-bold mb-3 text-red-800" data-en="List Your Products" data-ne="आफ्नो उत्पादन सूचीबद्ध गर्नुहोस्">आफ्नो उत्पादन सूचीबद्ध गर्नुहोस्</h3>
-                <p class="text-red-600 mb-4" data-en="Sell your organic produce directly to buyers" data-ne="आफ्नो जैविक उत्पादन सीधा खरीदकर्तालाई बेच्नुहोस्">आफ्नो जैविक उत्पादन सीधा खरीदकर्तालाई बेच्नुहोस्</p>
-                {% if user.is_authenticated and user.role == 'farmer' %}
-                <a href="{% url 'add_vegetable' %}" class="inline-flex items-center text-red-700 hover:text-red-900 font-semibold group-hover:translate-x-1 transition-all" data-en="Start Listing" data-ne="सूचीबद्ध गर्न थाल्नुहोस्">
-                    <span>सूचीबद्ध गर्न थाल्नुहोस्</span> <i class="fas fa-arrow-right ml-2"></i>
-                </a>
-                {% else %}
-                <a href="{% url 'register' %}" class="inline-flex items-center text-red-700 hover:text-red-900 font-semibold group-hover:translate-x-1 transition-all" data-en="Learn More" data-ne="थप जान्नुहोस्">
-                    <span>थप जान्नुहोस्</span> <i class="fas fa-arrow-right ml-2"></i>
-                </a>
-                {% endif %}
             </div>
         </div>
     </div>
@@ -371,7 +354,7 @@
 <section class="py-16 bg-gradient-to-b from-white to-green-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-4xl font-bold text-green-800 mb-4 handwriting" data-en="About Us" data-ne="हाम्रो बारेमा">हाम्रो बारेमा</h2>
+            <h2 class="text-4xl font-bold text-green-800 mb-4 handwriting" data-en="About Us" data-ne="हाम्रो बहेकु">About Us</h2>
         </div>
         {% if about_us %}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -401,9 +384,9 @@
                 <div class="overflow-hidden rounded-lg mb-4">
                     <img src="{{ MEDIA_URL }}about/mission.jpg" alt="हाम्रो मिशन" class="w-full h-48 object-cover hover:scale-110 transition-transform duration-700">
                 </div>
-                <h3 class="text-xl font-semibold mb-3 text-green-800" data-en="Our Mission" data-ne="हाम्रो मिशन">हाम्रो मिशन</h3>
-                <div class="text-gray-600 mb-4" data-en="To bring agricultural revolution in Nepal through integration of technology and traditional knowledge" data-ne="प्रविधि र परम्परागत ज्ञानको एकीकरणमार्फत नेपालमा कृषि क्रान्ति ल्याउनु">
-                    प्रविधि र परम्परागत ज्ञानको एकीकरणमार्फत नेपालमा कृषि क्रान्ति ल्याउनु
+                <h3 class="text-xl font-semibold mb-3 text-green-800" data-en="Our Mission" data-ne="हाम्रो मिशन">Our Mission</h3>
+                <div class="text-gray-600 mb-4" data-en="To bring agricultural revolution in Nepal through integration of technology and traditional knowledge" data-ne="प्रविधि र परम्परागत ज्ञानकु एकीकरणमार्फ़ नेपालमा कृषि क्रान्ति ल्याउनु">
+                    To bring agricultural revolution in Nepal through integration of technology and traditional knowledge
                 </div>
                 <a href="{% url 'about' %}#mission" class="inline-flex items-center text-green-600 hover:text-green-800 font-medium group">
                     <span data-en="View Details" data-ne="विस्तृत हेर्नुहोस्">View Details</span>
@@ -415,9 +398,9 @@
                 <div class="overflow-hidden rounded-lg mb-4">
                     <img src="{{ MEDIA_URL }}about/vision.jpg" alt="हाम्रो दृष्टिकोण" class="w-full h-48 object-cover hover:scale-110 transition-transform duration-700">
                 </div>
-                <h3 class="text-xl font-semibold mb-3 text-green-800" data-en="Our Vision" data-ne="हाम्रो दृष्टिकोण">हाम्रो दृष्टिकोण</h3>
-                <div class="text-gray-600 mb-4" data-en="Sustainable and prosperous agricultural technology for all Nepali farmers" data-ne="सबै नेपाली किसानहरूको लागि दिगो र समृद्ध कृषि प्रविधि">
-                    सबै नेपाली किसानहरूको लागि दिगो र समृद्ध कृषि प्रविधि
+                <h3 class="text-xl font-semibold mb-3 text-green-800" data-en="Our Vision" data-ne="हाम्रो दृष्तिकोण">Our Vision</h3>
+                <div class="text-gray-600 mb-4" data-en="Sustainable and prosperous agricultural technology for all Nepali farmers" data-ne="सबै नेपाली किसानहरूको लागि दिगो र समृद् कृषि प्रविधि">
+                    Sustainable and prosperous agricultural technology for all Nepali farmers
                 </div>
                 <a href="{% url 'about' %}#vision" class="inline-flex items-center text-green-600 hover:text-green-800 font-medium group">
                     <span data-en="View Details" data-ne="विस्तृत हेर्नुहोस्">View Details</span>
@@ -429,9 +412,9 @@
                 <div class="overflow-hidden rounded-lg mb-4">
                     <img src="{{ MEDIA_URL }}about/values.jpg" alt="हाम्रो मूल्यमान्यता" class="w-full h-48 object-cover hover:scale-110 transition-transform duration-700">
                 </div>
-                <h3 class="text-xl font-semibold mb-3 text-green-800" data-en="Our Values" data-ne="हाम्रो मूल्यमान्यता">हाम्रो मूल्यमान्यता</h3>
-                <div class="text-gray-600 mb-4" data-en="Innovation, sustainability, community and respect for traditional agricultural wisdom" data-ne="नवाचार, दिगोपन, समुदाय र परम्परागत कृषि बुद्धिको सम्मान">
-                    नवाचार, दिगोपन, समुदाय र परम्परागत कृषि बुद्धिको सम्मान
+                <h3 class="text-xl font-semibold mb-3 text-green-800" data-en="Our Values" data-ne="हाम्रो मूल्यमान्यता">Our Values</h3>
+                <div class="text-gray-600 mb-4" data-en="Innovation, sustainability, community and respect for traditional agricultural wisdom" data-ne="नवाचार, दिगोपन, समुदाय र परम्परागत कृषि बुद्धिको संमान">
+                    Innovation, sustainability, community and respect for traditional agricultural wisdom
                 </div>
                 <a href="{% url 'about' %}#values" class="inline-flex items-center text-green-600 hover:text-green-800 font-medium group">
                     <span data-en="View Details" data-ne="विस्तृत हेर्नुहोस्">View Details</span>
@@ -453,15 +436,17 @@
 <section class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-4xl font-bold text-green-800 mb-4" data-en="Our Solutions" data-ne="हाम्रो समाधान">हाम्रो समाधान</h2>
+            <h2 class="text-4xl font-bold text-green-800 mb-4" data-en="Our Solutions" data-ne="हाम्रो समाधान">Our Solutions</h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="bg-white rounded-lg shadow-lg p-8 text-center hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-transparent hover:border-green-100">
                 <div class="bg-gradient-to-br from-green-400 to-green-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 transform hover:rotate-12 transition-transform duration-300">
                     <i class="fas fa-cog text-white text-3xl"></i>
                 </div>
-                <h3 class="text-2xl font-bold mb-4 text-green-800" data-en="Smart Farming" data-ne="स्मार्ट खेती">स्मार्ट खेती</h3>
-                <p class="text-gray-600 mb-6" data-en="Modern technology for optimal crop management" data-ne="उत्तम बाली व्यवस्थापनका लागि आधुनिक प्रविधि">उत्तम बाली व्यवस्थापनका लागि आधुनिक प्रविधि</p>
+                <h3 class="text-2xl font-bold mb-4 text-green-800" data-en="Smart Farming" data-ne="स्मार्ट खेती">
+                    <span>Smart Farming</span>
+                </h3>
+                <p class="text-gray-600 mb-6" data-en="Modern technology for optimal crop management" data-ne="उत्तम बाली व्यवस्थापनका लागि आधुनिक प्रविधि">Modern technology for optimal crop management</p>
                 <a href="{% url 'solutions' %}" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center group shadow-md hover:shadow-lg">
                     <span data-en="Learn More" data-ne="थप जान्नुहोस्">थप जान्नुहोस्</span>
                     <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
@@ -471,8 +456,8 @@
                 <div class="bg-gradient-to-br from-green-400 to-green-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 transform hover:scale-110 transition-transform duration-300">
                     <i class="fas fa-chart-bar text-white text-3xl"></i>
                 </div>
-                <h3 class="text-2xl font-bold mb-4 text-green-800" data-en="Market Intelligence" data-ne="बजार बुद्धिमत्ता">बजार बुद्धिमत्ता</h3>
-                <p class="text-gray-600 mb-6" data-en="Real-time market prices and forecasting" data-ne="वास्तविक समयमा बजार मूल्य र पूर्वानुमान">वास्तविक समयमा बजार मूल्य र पूर्वानुमान</p>
+                <h3 class="text-2xl font-bold mb-4 text-green-800" data-en="Market Intelligence" data-ne="बजार बुद्धिमत्ता">Market Intelligence</h3>
+                <p class="text-gray-600 mb-6" data-en="Real-time market prices and forecasting" data-ne="वास्तविक समयमा बजार मूल्य र पूर्वानुमान">Real-time market prices and forecasting</p>
                 <a href="{% url 'solutions' %}" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center group shadow-md hover:shadow-lg">
                     <span data-en="Learn More" data-ne="थप जान्नुहोस्">थप जान्नुहोस्</span>
                     <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
@@ -486,7 +471,7 @@
 <section class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-4xl font-bold text-green-800 mb-4 handwriting" data-en="Latest Blog Posts" data-ne="नवीनतम ब्लग">नवीनतम ब्लग</h2>
+            <h2 class="text-4xl font-bold text-green-800 mb-4 handwriting" data-en="Latest Blog Posts" data-ne="नवीनतम ब्लग">Latest Blog Posts</h2>
         </div>
         {% if recent_blogs %}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -525,8 +510,8 @@
                     <img src="{{ MEDIA_URL }}blog/organic_benefits.jpg" alt="जैविक खेतीका फाइदाहरू" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700">
                 </div>
                 <div class="p-6">
-                    <h3 class="text-lg font-semibold mb-2 text-green-800 group-hover:text-green-600 transition-colors" data-en="Benefits of Organic Farming" data-ne="जैविक खेतीका फाइदाहरू">जैविक खेतीका फाइदाहरू</h3>
-                    <p class="text-gray-600 mb-4 text-sm" data-en="Discover the benefits of organic farming for Nepali farmers" data-ne="नेपाली किसानहरूका लागि जैविक खेतीका फाइदाहरू पत्ता लगाउनुहोस्">नेपाली किसानहरूका लागि जैविक खेतीका फाइदाहरू पत्ता लगाउनुहोस्</p>
+                    <h3 class="text-lg font-semibold mb-2 text-green-800 group-hover:text-green-600 transition-colors" data-en="Benefits of Organic Farming" data-ne="जैविक खेतीका फाइदाहरू">Benefits of Organic Farming</h3>
+                    <p class="text-gray-600 mb-4 text-sm" data-en="Discover the benefits of organic farming for Nepali farmers" data-ne="नेपाली किसानहरूका लागि जैविक खेतीका फाइदाहरू पत्ता लगाउनुहोस्">Discover the benefits of organic farming for Nepali farmers</p>
                     <div class="flex items-center justify-between text-xs text-gray-500 mb-4">
                         <span>Jan 13, 2026</span>
                         <span>150 views</span>
@@ -543,8 +528,8 @@
                     <img src="{{ MEDIA_URL }}blog/sustainable.jpg" alt="दिगो खेती" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700">
                 </div>
                 <div class="p-6">
-                    <h3 class="text-lg font-semibold mb-2 text-green-800 group-hover:text-green-600 transition-colors" data-en="Sustainable Farming" data-ne="दिगो खेती">दिगो खेती</h3>
-                    <p class="text-gray-600 mb-4 text-sm" data-en="Learn about sustainable farming practices" data-ne="दिगो खेती अभ्यासहरूको बारेमा जान्नुहोस्">दिगो खेती अभ्यासहरूको बारेमा जान्नुहोस्</p>
+                    <h3 class="text-lg font-semibold mb-2 text-green-800 group-hover:text-green-600 transition-colors" data-en="Sustainable Farming" data-ne="दिगो खेती">Sustainable Farming</h3>
+                    <p class="text-gray-600 mb-4 text-sm" data-en="Learn about sustainable farming practices" data-ne="दिगो खेती अभ्यासहरूको बारेमा जान्नुहोस्">Learn about sustainable farming practices</p>
                     <div class="flex items-center justify-between text-xs text-gray-500 mb-4">
                         <span>Jan 12, 2026</span>
                         <span>120 views</span>
@@ -561,8 +546,8 @@
                     <img src="{{ MEDIA_URL }}blog/climate_change.jpg" alt="जलवायु परिवर्तन" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700">
                 </div>
                 <div class="p-6">
-                    <h3 class="text-lg font-semibold mb-2 text-green-800 group-hover:text-green-600 transition-colors" data-en="Climate Change & Agriculture" data-ne="जलवायु परिवर्तन र कृषि">जलवायु परिवर्तन र कृषि</h3>
-                    <p class="text-gray-600 mb-4 text-sm" data-en="Impact of climate change on farming" data-ne="खेतीमा जलवायु परिवर्तनको प्रभाव">खेतीमा जलवायु परिवर्तनको प्रभाव</p>
+                    <h3 class="text-lg font-semibold mb-2 text-green-800 group-hover:text-green-600 transition-colors" data-en="Climate Change & Agriculture" data-ne="जलवायु परिवर्तन र कृषि">Climate Change & Agriculture</h3>
+                    <p class="text-gray-600 mb-4 text-sm" data-en="Impact of climate change on farming" data-ne="खेतीमा जलवायु परिवर्तनको प्रभाव">Impact of climate change on farming</p>
                     <div class="flex items-center justify-between text-xs text-gray-500 mb-4">
                         <span>Jan 11, 2026</span>
                         <span>200 views</span>

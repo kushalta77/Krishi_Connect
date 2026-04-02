@@ -1,0 +1,401 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders | Krishi Connect</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        heading: ['"Outfit"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+        .sidebar { background: linear-gradient(160deg, #14532d 0%, #166534 100%); border-right: 1px solid rgba(255,255,255,0.1); }
+        .nav-item { position: relative; overflow: hidden; transition: all 0.3s ease; }
+        .nav-item::before { content: ''; position: absolute; left: 0; top: 0; width: 3px; height: 100%; background-color: #4ade80; transform: scaleY(0); transition: transform 0.3s ease; }
+        .nav-item:hover::before, .nav-item.active::before { transform: scaleY(1); }
+        .nav-item:hover, .nav-item.active { background: rgba(255, 255, 255, 0.1); color: #fff; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .order-card {
+            background: white;
+            border-radius: 1.25rem;
+            border: 1px solid #e2e8f0;
+            padding: 1.75rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .order-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+        }
+        .order-card:hover {
+            box-shadow: 0 20px 40px rgba(34, 197, 94, 0.15);
+            transform: translateY(-4px);
+            border-color: #bbf7d0;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .status-pending { background: linear-gradient(135deg, #fef3c7 0%, #fce7b6 100%); color: #b45309; }
+        .status-confirmed { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #1e40af; }
+        .status-delivered { background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); color: #15803d; }
+        .product-image {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 1rem;
+            object-fit: cover;
+            border: 2px solid #e2e8f0;
+        }
+        .filter-btn {
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 font-sans">
+
+<div id="overlay" onclick="closeSidebar()" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-all duration-300 opacity-0"></div>
+
+<div class="flex h-screen overflow-hidden">
+
+    <!-- Premium Sidebar -->
+    <aside id="sidebar" class="fixed md:static z-50 w-[280px] h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0 transition-transform duration-500 ease-out">
+        
+        <!-- Brand Logo -->
+        <div class="px-8 py-8 relative">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center border border-white/20 shadow-lg">
+                    <i class="fas fa-leaf text-2xl text-brand-400"></i>
+                </div>
+                <div>
+                    <h2 class="font-heading font-bold text-2xl text-white tracking-tight">Krishi<span class="text-brand-400">Connect</span></h2>
+                    <p class="text-brand-200/80 text-xs tracking-wider uppercase font-semibold mt-1">Farm to Home</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Profile Card -->
+        <div class="mx-6 mb-8 mt-2 p-1 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 shadow-lg relative overflow-hidden group">
+            <div class="absolute inset-0 bg-brand-600/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+            <div class="relative p-4 flex items-center gap-4">
+                <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-xl font-heading font-bold text-brand-700 shadow-md">
+                    {{ user.first_name|first|upper }}
+                </div>
+                <div class="min-w-0 flex-1">
+                    <p class="font-heading font-semibold text-white text-md truncate">{{ user.first_name }} {{ user.last_name }}</p>
+                    <span class="inline-flex items-center gap-1.5 text-[10px] bg-brand-400/20 text-brand-200 px-2 py-0.5 rounded-full mt-1 font-bold uppercase tracking-wider">
+                        <i class="fas fa-circle text-brand-400" style="font-size:6px"></i> Active Customer
+                    </span>
+                    <a href="{% url 'customer_profile' %}" class="mt-2 flex items-center gap-1 text-[10px] text-brand-300 hover:text-white transition-colors">
+                        <i class="fas fa-user-cog" style="font-size:9px"></i> View Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto pb-6">
+            <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mb-2">Menu</p>
+
+            <a href="{% url 'customer_dashboard' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-slate-300 hover:text-white">
+                <i class="fas fa-chart-line w-5 text-center text-lg"></i> 
+                <span>Dashboard</span>
+            </a>
+            <a href="{% url 'customer_marketplace' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium hover:text-white">
+                <i class="fas fa-store w-5 text-center text-lg"></i> 
+                <span>Marketplace</span>
+            </a>
+            <a href="{% url 'customer_orders' %}" class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-white shadow-[0_0_20px_rgba(74,222,128,0.1)]">
+                <i class="fas fa-box-open w-5 text-center text-lg"></i> 
+                <span>My Orders</span>
+            </a>
+
+            <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Others</p>
+            <a href="{% url 'weather' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium hover:text-white">
+                <i class="fas fa-cloud-sun w-5 text-center text-lg"></i> 
+                <span>Weather Updates</span>
+            </a>
+        </nav>
+
+        <!-- Logout Area -->
+        <div class="p-6 border-t border-white/10 mt-auto bg-black/10">
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="w-full flex items-center justify-center gap-3 py-3.5 bg-red-500/10 hover:bg-red-500 border border-red-500/20 hover:border-red-500 rounded-xl text-red-400 hover:text-white font-medium transition-all duration-300 shadow-lg">
+                    <i class="fas fa-power-off"></i> 
+                    <span>Logout</span>
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col overflow-hidden relative">
+
+        <!-- Top Header -->
+        <header class="bg-white border-b border-slate-200 px-8 py-6 shadow-sm flex-shrink-0">
+            <div class="flex items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-4xl font-heading font-bold text-slate-900">📦 My Orders</h1>
+                    <p class="text-slate-500 text-base mt-2">Track and manage all your purchases</p>
+                </div>
+                <button onclick="openSidebar()" class="md:hidden w-10 h-10 flex items-center justify-center bg-brand-50 text-brand-600 rounded-xl hover:bg-brand-100 transition-colors">
+                    <i class="fas fa-bars text-lg"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="flex-1 overflow-y-auto px-8 py-8">
+
+            {% for message in messages %}
+            <div class="flex items-center gap-3 p-4 rounded-xl border text-sm mb-6 {% if message.tags == 'success' %}bg-green-50 border-green-200 text-green-700{% else %}bg-red-50 border-red-200 text-red-700{% endif %}">
+                <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                {{ message }}
+            </div>
+            {% endfor %}
+
+            <!-- Statistics Section -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-10">
+                <div class="stat-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-sm font-bold text-slate-500 uppercase tracking-wider">Total Orders</span>
+                        <i class="fas fa-box text-2xl text-brand-200"></i>
+                    </div>
+                    <p class="text-3xl font-heading font-bold text-slate-800">{{ total_orders }}</p>
+                </div>
+                <div class="stat-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-sm font-bold text-slate-500 uppercase tracking-wider">Pending</span>
+                        <i class="fas fa-hourglass-half text-2xl text-yellow-200"></i>
+                    </div>
+                    <p class="text-3xl font-heading font-bold text-yellow-600">{{ pending_orders }}</p>
+                </div>
+                <div class="stat-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-sm font-bold text-slate-500 uppercase tracking-wider">Confirmed</span>
+                        <i class="fas fa-check-circle text-2xl text-blue-200"></i>
+                    </div>
+                    <p class="text-3xl font-heading font-bold text-blue-600">{{ confirmed_orders }}</p>
+                </div>
+                <div class="stat-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-sm font-bold text-slate-500 uppercase tracking-wider">Delivered</span>
+                        <i class="fas fa-truck text-2xl text-green-200"></i>
+                    </div>
+                    <p class="text-3xl font-heading font-bold text-green-600">{{ delivered_orders }}</p>
+                </div>
+                <div class="stat-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-sm font-bold text-slate-500 uppercase tracking-wider">Spent</span>
+                        <i class="fas fa-rupiah-sign text-2xl text-brand-200"></i>
+                    </div>
+                    <p class="text-3xl font-heading font-bold text-brand-600">₹{{ total_spent|floatformat:0 }}</p>
+                </div>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 mb-8">
+                <div class="flex items-center gap-3 mb-4">
+                    <i class="fas fa-filter text-slate-400 text-lg"></i>
+                    <h3 class="font-heading font-bold text-slate-800">Filter Orders</h3>
+                </div>
+                <div class="flex flex-wrap gap-3">
+                    <a href="{% url 'customer_orders' %}" class="filter-btn px-5 py-2.5 text-sm font-bold rounded-lg transition {% if not status_filter %}bg-brand-600 text-white shadow-lg shadow-brand-600/30{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}">
+                        <i class="fas fa-list mr-2"></i>All Orders ({{ total_orders }})
+                    </a>
+                    <a href="?status=pending" class="filter-btn px-5 py-2.5 text-sm font-bold rounded-lg transition {% if status_filter == 'pending' %}bg-yellow-600 text-white shadow-lg shadow-yellow-600/30{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}">
+                        <i class="fas fa-hourglass-half mr-2"></i>Pending ({{ pending_orders }})
+                    </a>
+                    <a href="?status=confirmed" class="filter-btn px-5 py-2.5 text-sm font-bold rounded-lg transition {% if status_filter == 'confirmed' %}bg-blue-600 text-white shadow-lg shadow-blue-600/30{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}">
+                        <i class="fas fa-check-circle mr-2"></i>Confirmed ({{ confirmed_orders }})
+                    </a>
+                    <a href="?status=delivered" class="filter-btn px-5 py-2.5 text-sm font-bold rounded-lg transition {% if status_filter == 'delivered' %}bg-green-600 text-white shadow-lg shadow-green-600/30{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}">
+                        <i class="fas fa-truck mr-2"></i>Delivered ({{ delivered_orders }})
+                    </a>
+                </div>
+            </div>
+
+            <!-- Orders List -->
+            {% if orders %}
+            <div class="space-y-5 mb-8">
+                {% for order in orders %}
+                <div class="order-card">
+                    <div class="flex gap-6">
+                        <!-- Product Image -->
+                        <div class="flex-shrink-0">
+                            <div class="w-20 h-20 bg-gradient-to-br from-brand-100 to-emerald-100 rounded-xl flex items-center justify-center border-2 border-brand-100">
+                                <i class="fas fa-leaf text-3xl text-brand-500"></i>
+                            </div>
+                        </div>
+
+                        <!-- Order Details -->
+                        <div class="flex-1 min-w-0">
+                            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
+                                <div>
+                                    <h3 class="text-xl font-heading font-bold text-slate-900">{{ order.supplier_inventory.vegetable_name }}</h3>
+                                    <div class="flex items-center gap-2 mt-2 text-slate-500">
+                                        <i class="fas fa-calendar-alt text-brand-500"></i>
+                                        <span class="text-sm">{{ order.ordered_at|date:"d M Y, H:i" }}</span>
+                                    </div>
+                                </div>
+                                <span class="status-badge status-{{ order.status }}">
+                                    {% if order.status == 'pending' %}
+                                    <i class="fas fa-hourglass-half"></i> Pending
+                                    {% elif order.status == 'confirmed' %}
+                                    <i class="fas fa-check-circle"></i> Confirmed
+                                    {% else %}
+                                    <i class="fas fa-truck"></i> Delivered
+                                    {% endif %}
+                                </span>
+                            </div>
+
+                            <!-- Order Info Grid -->
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-100">
+                                <div class="bg-gradient-to-br from-slate-50 to-slate-100 p-3 rounded-lg">
+                                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Quantity</p>
+                                    <p class="text-lg font-heading font-bold text-slate-800">{{ order.quantity }} kg</p>
+                                </div>
+                                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-3 rounded-lg">
+                                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Unit Price</p>
+                                    <p class="text-lg font-heading font-bold text-blue-600">₹{{ order.supplier_inventory.price_per_unit }}</p>
+                                </div>
+                                <div class="bg-gradient-to-br from-brand-50 to-brand-100 p-3 rounded-lg">
+                                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Total</p>
+                                    <p class="text-lg font-heading font-bold text-brand-600">₹{{ order.total_price|floatformat:0 }}</p>
+                                </div>
+                                <div class="bg-gradient-to-br from-slate-50 to-slate-100 p-3 rounded-lg">
+                                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Order ID</p>
+                                    <p class="text-lg font-heading font-bold text-slate-800">#{{ order.id }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if orders.has_other_pages %}
+            <div class="flex items-center justify-center gap-2 py-8">
+                {% if orders.has_previous %}
+                <a href="?page=1{% if status_filter %}&status={{ status_filter }}{% endif %}" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition font-bold">
+                    <i class="fas fa-angles-left"></i>
+                </a>
+                <a href="?page={{ orders.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition font-bold">
+                    <i class="fas fa-angle-left"></i>
+                </a>
+                {% endif %}
+
+                <div class="flex items-center gap-1">
+                    {% for num in orders.paginator.page_range %}
+                        {% if orders.number == num %}
+                        <button class="w-10 h-10 flex items-center justify-center bg-brand-600 text-white rounded-lg font-bold shadow-lg shadow-brand-600/30">{{ num }}</button>
+                        {% elif num > orders.number|add:'-3' and num < orders.number|add:'3' %}
+                        <a href="?page={{ num }}{% if status_filter %}&status={{ status_filter }}{% endif %}" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition font-bold">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                {% if orders.has_next %}
+                <a href="?page={{ orders.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition font-bold">
+                    <i class="fas fa-angle-right"></i>
+                </a>
+                <a href="?page={{ orders.paginator.num_pages }}{% if status_filter %}&status={{ status_filter }}{% endif %}" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition font-bold">
+                    <i class="fas fa-angles-right"></i>
+                </a>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {% else %}
+            <div class="text-center py-20">
+                <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-slate-100 to-slate-200 rounded-full mb-8">
+                    <i class="fas fa-inbox text-5xl text-slate-400"></i>
+                </div>
+                <h3 class="text-3xl font-heading font-bold text-slate-800 mb-3">No Orders Yet</h3>
+                <p class="text-slate-500 text-lg mb-1">You haven't placed any orders{% if status_filter %} with status "{{ status_filter }}"{% endif %}.</p>
+                <p class="text-slate-400 mb-8">Start browsing our marketplace to find fresh products!</p>
+                <a href="{% url 'customer_marketplace' %}" class="inline-flex items-center gap-3 bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white font-bold px-8 py-4 rounded-xl transition-all shadow-lg shadow-brand-600/30 hover:shadow-brand-700/40">
+                    <i class="fas fa-store text-xl"></i> Browse Marketplace
+                </a>
+            </div>
+            {% endif %}
+
+        </main>
+    </div>
+
+</div>
+
+<script>
+    function openSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+        setTimeout(() => overlay.style.opacity = '1', 10);
+    }
+
+    function closeSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        sidebar.classList.add('-translate-x-full');
+        overlay.style.opacity = '0';
+        setTimeout(() => overlay.classList.add('hidden'), 300);
+    }
+</script>
+
+</body>
+</html>
