@@ -641,19 +641,13 @@ def increase_cart_quantity(request, pk):
 
 @login_required
 def decrease_cart_quantity(request, pk):
-    """Decrease the quantity of a cart item, or remove it if quantity reaches 0."""
     item = get_object_or_404(CartItem, pk=pk, cart__customer=request.user)
-    
-    if item.quantity > 1:
+    min_qty = item.vegetable.min_order_qty
+    if item.quantity - 1 < min_qty:
+        messages.error(request, f'Minimum order quantity for {item.vegetable.name} is {min_qty} {item.vegetable.unit}. Cannot go below that.')
+    else:
         item.quantity -= 1
         item.save()
-        messages.success(request, f'Decreased quantity of {item.vegetable.name}')
-    else:
-        # Remove item if quantity would become 0
-        item_name = item.vegetable.name
-        item.delete()
-        messages.success(request, f'{item_name} removed from cart')
-    
     return redirect('cart')
 
 @login_required
@@ -741,6 +735,9 @@ def buy_selected_items(request):
             if item.quantity > item.vegetable.quantity:
                 messages.error(request, f'Only {item.vegetable.quantity} {item.vegetable.unit} of {item.vegetable.name} available')
                 return redirect('cart')
+            if item.quantity < item.vegetable.min_order_qty:
+                messages.error(request, f'Minimum order quantity for {item.vegetable.name} is {item.vegetable.min_order_qty} {item.vegetable.unit}.')
+                return redirect('cart')
         
         # Create orders for selected items
         try:
@@ -789,6 +786,9 @@ def checkout_cart(request):
     for item in items:
         if item.quantity > item.vegetable.quantity:
             messages.error(request, f'Only {item.vegetable.quantity} {item.vegetable.unit} of {item.vegetable.name} available')
+            return redirect('cart')
+        if item.quantity < item.vegetable.min_order_qty:
+            messages.error(request, f'Minimum order quantity for {item.vegetable.name} is {item.vegetable.min_order_qty} {item.vegetable.unit}.')
             return redirect('cart')
     for item in items:
         inv, _ = SupplierInventory.objects.get_or_create(
@@ -1097,17 +1097,15 @@ def checkout_page(request):
     
     # Calculate totals
     items_total = sum(float(item.subtotal()) for item in cart_items)
-    delivery_fee = 160  # Fixed delivery fee
-    tax = round(items_total * 0.05, 2)  # 5% tax
-    total_price = items_total + delivery_fee + tax
+    delivery_fee = 150
+    total_price = items_total + delivery_fee
     
     context = {
         'cart_items': cart_items,
         'items_total': items_total,
         'delivery_fee': delivery_fee,
-        'tax': tax,
         'total_price': total_price,
-        'selected_items_param': selected_items_param,  # Pass back to template
+        'selected_items_param': selected_items_param,
     }
     
     return render(request, 'dashboard/checkout.html', context)
