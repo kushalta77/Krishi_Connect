@@ -186,7 +186,7 @@
                             <!-- Actions -->
                             <div class="mt-8">
                                 <div class="grid grid-cols-2 gap-3">
-                                    <form method="post" action="{% url 'place_order' vegetable.pk %}">
+                                    <form method="post" action="{% url 'buy_now_action' vegetable.pk %}">
                                         {% csrf_token %}
                                         <input type="hidden" name="quantity" value="1">
                                         <button type="submit"

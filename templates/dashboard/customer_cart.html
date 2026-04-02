@@ -131,6 +131,9 @@
                     <span class="inline-flex items-center gap-1.5 text-[10px] bg-brand-400/20 text-brand-200 px-2 py-0.5 rounded-full mt-1 font-bold uppercase tracking-wider">
                         <i class="fas fa-circle text-brand-400" style="font-size:6px"></i> Active Customer
                     </span>
+                    <a href="{% url 'customer_profile' %}" class="mt-2 flex items-center gap-1 text-[10px] text-brand-300 hover:text-white transition-colors">
+                        <i class="fas fa-user-cog" style="font-size:9px"></i> View Profile
+                    </a>
                 </div>
             </div>
         </div>
@@ -247,9 +250,23 @@
                                         <p class="text-xs text-slate-400">per {{ item.vegetable.unit }}</p>
                                     </td>
                                     <td class="px-6 py-5">
-                                        <div class="inline-flex items-center justify-center bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
-                                            <span class="font-bold text-slate-700 text-sm">{{ item.quantity }}</span>
-                                            <span class="ml-1 text-xs text-slate-500">{{ item.vegetable.unit }}</span>
+                                        <div class="inline-flex items-center gap-2 bg-slate-100 px-2 py-1.5 rounded-lg border border-slate-200">
+                                            <form method="post" action="{% url 'decrease_cart_quantity' item.pk %}" class="inline">
+                                                {% csrf_token %}
+                                                <button type="submit" class="w-7 h-7 flex items-center justify-center rounded-md bg-slate-200 text-slate-600 hover:bg-brand-500 hover:text-white transition-colors font-bold text-sm">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                            </form>
+                                            <div class="min-w-[40px] text-center">
+                                                <span class="font-bold text-slate-700 text-sm">{{ item.quantity }}</span>
+                                                <span class="ml-1 text-xs text-slate-500">{{ item.vegetable.unit }}</span>
+                                            </div>
+                                            <form method="post" action="{% url 'increase_cart_quantity' item.pk %}" class="inline">
+                                                {% csrf_token %}
+                                                <button type="submit" class="w-7 h-7 flex items-center justify-center rounded-md bg-slate-200 text-slate-600 hover:bg-brand-500 hover:text-white transition-colors font-bold text-sm">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                     <td class="px-6 py-5">

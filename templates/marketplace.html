@@ -257,7 +257,7 @@
                                 {% if user.is_authenticated and user.userprofile.role == 'customer' %}
                                 <div class="grid grid-cols-2 gap-2 mt-auto">
                                     <!-- Buy Now Route -->
-                                    <form method="post" action="{% url 'place_order' veg.pk %}" class="w-full">
+                                    <form method="post" action="{% url 'buy_now_action' veg.pk %}" class="w-full">
                                         {% csrf_token %}
                                         <input type="hidden" name="quantity" value="1">
                                         <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl transition-all shadow-md text-sm flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-slate-400 focus:outline-none">

@@ -1,0 +1,77 @@
+<aside id="sidebar" class="fixed md:static z-50 w-[280px] h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0 transition-transform duration-500 ease-out">
+
+    <!-- Brand Logo -->
+    <div class="px-8 py-8">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center border border-white/20 shadow-lg">
+                <i class="fas fa-leaf text-2xl text-brand-400"></i>
+            </div>
+            <div>
+                <h2 class="font-bold text-2xl text-white tracking-tight">Krishi<span class="text-brand-400">Connect</span></h2>
+                <p class="text-brand-200/80 text-xs tracking-wider uppercase font-semibold mt-1">Farm to Home</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Profile Card -->
+    <div class="mx-6 mb-8 mt-2 p-1 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 shadow-lg relative overflow-hidden group">
+        <div class="absolute inset-0 bg-brand-600/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+        <div class="relative p-4 flex items-center gap-4">
+            <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-xl font-bold text-brand-700 shadow-md">
+                {{ user.first_name|first|upper }}
+            </div>
+            <div class="min-w-0 flex-1">
+                <p class="font-semibold text-white text-md truncate">{{ user.first_name }} {{ user.last_name }}</p>
+                <span class="inline-flex items-center gap-1.5 text-[10px] bg-brand-400/20 text-brand-200 px-2 py-0.5 rounded-full mt-1 font-bold uppercase tracking-wider">
+                    <i class="fas fa-circle text-brand-400" style="font-size:6px"></i> Active Customer
+                </span>
+                <a href="{% url 'customer_profile' %}" class="mt-2 flex items-center gap-1 text-[10px] text-brand-300 hover:text-white transition-colors">
+                    <i class="fas fa-user-cog" style="font-size:9px"></i> View Profile
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Links -->
+    <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto pb-6">
+        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mb-2">Menu</p>
+
+        <a href="{% url 'customer_dashboard' %}" class="nav-item {% if active_page == 'dashboard' %}active text-white{% else %}text-slate-300{% endif %} flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium">
+            <i class="fas fa-chart-line w-5 text-center text-lg"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="{% url 'public_marketplace' %}" class="nav-item {% if active_page == 'marketplace' %}active text-white{% else %}text-slate-300{% endif %} flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium">
+            <i class="fas fa-store w-5 text-center text-lg"></i>
+            <span>Marketplace</span>
+        </a>
+        <a href="{% url 'cart' %}" class="nav-item {% if active_page == 'cart' %}active text-white{% else %}text-slate-300{% endif %} flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium">
+            <i class="fas fa-shopping-cart w-5 text-center text-lg"></i>
+            <span>My Cart</span>
+        </a>
+        <a href="{% url 'customer_orders' %}" class="nav-item {% if active_page == 'orders' %}active text-white{% else %}text-slate-300{% endif %} flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium">
+            <i class="fas fa-box-open w-5 text-center text-lg"></i>
+            <span>My Orders</span>
+        </a>
+
+        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Others</p>
+        <a href="{% url 'customer_profile' %}" class="nav-item {% if active_page == 'profile' %}active text-white{% else %}text-slate-300{% endif %} flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium">
+            <i class="fas fa-user-cog w-5 text-center text-lg"></i>
+            <span>My Profile</span>
+        </a>
+        <a href="{% url 'weather' %}" class="nav-item {% if active_page == 'weather' %}active text-white{% else %}text-slate-300{% endif %} flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium">
+            <i class="fas fa-cloud-sun w-5 text-center text-lg"></i>
+            <span>Weather Updates</span>
+        </a>
+    </nav>
+
+    <!-- Logout -->
+    <div class="p-6 border-t border-white/10 mt-auto bg-black/10">
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="w-full flex items-center justify-center gap-3 py-3.5 bg-red-500/10 hover:bg-red-500 border border-red-500/20 hover:border-red-500 rounded-xl text-red-400 hover:text-white font-medium transition-all duration-300 shadow-lg">
+                <i class="fas fa-power-off"></i>
+                <span>Logout</span>
+            </button>
+        </form>
+    </div>
+</aside>

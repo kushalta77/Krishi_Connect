@@ -488,30 +488,39 @@ def add_to_cart(request, pk):
 
     if request.method == 'POST':
         try:
-            quantity = float(request.POST.get('quantity', '').strip())
+            quantity = float(request.POST.get('quantity', '1').strip())
         except (ValueError, TypeError):
             messages.error(request, 'Please enter a valid quantity')
-            return redirect('product_detail', pk=pk)
+            return redirect('customer_marketplace')
+        
+        # Edge case: Validate quantity is positive
         if quantity <= 0:
-            messages.error(request, 'Enter a valid quantity')
-            return redirect('product_detail', pk=pk)
+            messages.error(request, 'Quantity must be greater than 0')
+            return redirect('customer_marketplace')
+        
+        # Edge case: Check stock availability
         if quantity > float(vegetable.quantity):
             messages.error(request, f'Only {vegetable.quantity} {vegetable.unit} available')
-            return redirect('product_detail', pk=pk)
-
+            return redirect('customer_marketplace')
+        
+        # Add to cart
         cart, _ = Cart.objects.get_or_create(customer=request.user)
         try:
             item = CartItem.objects.get(cart=cart, vegetable=vegetable)
+            # Edge case: Check if adding more would exceed available stock
+            if item.quantity + quantity > float(vegetable.quantity):
+                messages.warning(request, f'Maximum available for {vegetable.name} is {vegetable.quantity} {vegetable.unit}')
+                return redirect('customer_marketplace')
             item.quantity += quantity
         except CartItem.DoesNotExist:
             item = CartItem(cart=cart, vegetable=vegetable, quantity=quantity)
+        
         item.save()
-        messages.success(request, f'{vegetable.name} added to cart!')
-        # redirect back to customer marketplace if that's where they came from
-        referer = request.META.get('HTTP_REFERER', '')
-        if 'customer/marketplace' in referer:
-            return redirect('customer_marketplace')
-    return redirect('product_detail', pk=pk)
+        messages.success(request, f'{vegetable.name} added to cart! (Qty: {item.quantity} {vegetable.unit})')
+        # Redirect back to customer marketplace
+        return redirect('customer_marketplace')
+    
+    return redirect('customer_marketplace')
 
 @login_required
 def cart_view(request):
@@ -526,6 +535,83 @@ def remove_from_cart(request, pk):
     item.delete()
     messages.success(request, 'Item removed from cart')
     return redirect('cart')
+
+@login_required
+def increase_cart_quantity(request, pk):
+    """Increase the quantity of a cart item."""
+    item = get_object_or_404(CartItem, pk=pk, cart__customer=request.user)
+    
+    # Check if increasing quantity won't exceed available stock
+    if item.quantity < item.vegetable.quantity:
+        item.quantity += 1
+        item.save()
+        messages.success(request, f'Increased quantity of {item.vegetable.name}')
+    else:
+        messages.warning(request, f'Only {item.vegetable.quantity} {item.vegetable.unit} available')
+    
+    return redirect('cart')
+
+@login_required
+def decrease_cart_quantity(request, pk):
+    """Decrease the quantity of a cart item, or remove it if quantity reaches 0."""
+    item = get_object_or_404(CartItem, pk=pk, cart__customer=request.user)
+    
+    if item.quantity > 1:
+        item.quantity -= 1
+        item.save()
+        messages.success(request, f'Decreased quantity of {item.vegetable.name}')
+    else:
+        # Remove item if quantity would become 0
+        item_name = item.vegetable.name
+        item.delete()
+        messages.success(request, f'{item_name} removed from cart')
+    
+    return redirect('cart')
+
+@login_required
+def buy_now_action(request, pk):
+    """Add product to cart and redirect to cart page (for 'Buy Now' button)."""
+    if request.user.userprofile.role != 'customer':
+        messages.error(request, 'Only customers can buy products')
+        return redirect('login')
+
+    vegetable = get_object_or_404(Vegetable, pk=pk, available=True)
+
+    if request.method == 'POST':
+        try:
+            quantity = float(request.POST.get('quantity', '1').strip())
+        except (ValueError, TypeError):
+            messages.error(request, 'Please enter a valid quantity')
+            return redirect('customer_marketplace')
+        
+        # Edge case: Validate quantity
+        if quantity <= 0:
+            messages.error(request, 'Quantity must be greater than 0')
+            return redirect('customer_marketplace')
+        
+        # Edge case: Check stock availability
+        if quantity > float(vegetable.quantity):
+            messages.error(request, f'Only {vegetable.quantity} {vegetable.unit} of {vegetable.name} available')
+            return redirect('customer_marketplace')
+        
+        # Add to cart (duplicate products will increase quantity automatically)
+        cart, _ = Cart.objects.get_or_create(customer=request.user)
+        try:
+            item = CartItem.objects.get(cart=cart, vegetable=vegetable)
+            # Check if adding more quantity would exceed stock
+            if item.quantity + quantity > float(vegetable.quantity):
+                messages.warning(request, f'You already have {item.quantity} {vegetable.unit} of this. Only {vegetable.quantity} available total.')
+                return redirect('cart')
+            item.quantity += quantity
+        except CartItem.DoesNotExist:
+            item = CartItem(cart=cart, vegetable=vegetable, quantity=quantity)
+        
+        item.save()
+        messages.success(request, f'{quantity} {vegetable.unit} of {vegetable.name} added to cart!')
+        # Redirect to cart page immediately
+        return redirect('cart')
+    
+    return redirect('customer_marketplace')
 
 @login_required
 def checkout_cart(request):
