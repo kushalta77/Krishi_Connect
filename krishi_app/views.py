@@ -10,6 +10,10 @@ from django.urls import reverse
 from decimal import Decimal
 import re
 import requests
+import uuid
+import hmac
+import hashlib
+import base64
 from django.conf import settings
 from .models import UserProfile, Vegetable, SupplierPurchase, SupplierInventory, CustomerOrder, Cart, CartItem, Feedback
 from django.db.models import Sum, Avg
@@ -174,9 +178,20 @@ def dashboard(request):
         total_vegetables = vegetables.count()
         available_vegetables = vegetables.filter(available=True).count()
         sold_out = vegetables.filter(available=False).count()
-        total_earnings = SupplierPurchase.objects.filter(vegetable__farmer=request.user).aggregate(total=Sum('total_price'))['total'] or 0
-        total_orders = SupplierPurchase.objects.filter(vegetable__farmer=request.user).count()
-        recent_purchases = SupplierPurchase.objects.filter(vegetable__farmer=request.user).order_by('-purchased_at')[:5]
+        
+        sp_earnings = SupplierPurchase.objects.filter(vegetable__farmer=request.user).aggregate(total=Sum('total_price'))['total'] or 0
+        co_earnings = CustomerOrder.objects.filter(supplier_inventory__supplier=request.user).aggregate(total=Sum('total_price'))['total'] or 0
+        total_earnings = sp_earnings + co_earnings
+        
+        sp_orders = SupplierPurchase.objects.filter(vegetable__farmer=request.user).count()
+        co_orders = CustomerOrder.objects.filter(supplier_inventory__supplier=request.user).count()
+        total_orders = sp_orders + co_orders
+        
+        # Merge recent
+        recent_sp = list(SupplierPurchase.objects.filter(vegetable__farmer=request.user).order_by('-purchased_at')[:5])
+        recent_co = list(CustomerOrder.objects.filter(supplier_inventory__supplier=request.user).order_by('-ordered_at')[:5])
+        recent_purchases = sorted(recent_sp + recent_co, key=lambda x: getattr(x, 'purchased_at', getattr(x, 'ordered_at', None)), reverse=True)[:5]
+        
         context = {
             'user_role': user_profile.role,
             'user_profile': user_profile,
@@ -706,12 +721,17 @@ def buy_now_action(request, pk):
 @login_required
 def buy_selected_items(request):
     """Process payment for selected cart items"""
-    if request.method == 'POST':
+    if request.method in ['POST', 'GET']:
         if request.user.userprofile.role != 'customer':
             return redirect('dashboard')
         
         # Get selected item IDs
-        selected_items_str = request.POST.get('selected_items', '')
+        selected_items_str = request.POST.get('selected_items') or request.GET.get('selected_items', '')
+        
+        # Handle case where eSewa appends ?data= blindly to the URL causing "28?data=..."
+        if selected_items_str and '?' in selected_items_str:
+            selected_items_str = selected_items_str.split('?')[0]
+            
         if not selected_items_str:
             messages.error(request, 'No items selected')
             return redirect('cart')
@@ -739,6 +759,10 @@ def buy_selected_items(request):
                 messages.error(request, f'Minimum order quantity for {item.vegetable.name} is {item.vegetable.min_order_qty} {item.vegetable.unit}.')
                 return redirect('cart')
         
+        # Check if this is an eSewa success callback (Safely checking the raw query string because of duplicate ? signs)
+        is_paid = 'data=' in request.META.get('QUERY_STRING', '')
+        order_status = 'confirmed' if is_paid else 'pending'
+
         # Create orders for selected items
         try:
             for item in selected_items:
@@ -756,7 +780,8 @@ def buy_selected_items(request):
                     customer=request.user,
                     supplier_inventory=inv,
                     quantity=item.quantity,
-                    total_price=item.quantity * item.vegetable.price_per_unit
+                    total_price=item.quantity * item.vegetable.price_per_unit,
+                    status=order_status
                 )
                 # Update vegetable stock
                 item.vegetable.quantity -= item.quantity
@@ -790,6 +815,10 @@ def checkout_cart(request):
         if item.quantity < item.vegetable.min_order_qty:
             messages.error(request, f'Minimum order quantity for {item.vegetable.name} is {item.vegetable.min_order_qty} {item.vegetable.unit}.')
             return redirect('cart')
+    # Safely checking the raw query string for eSewa's data payload
+    is_paid = 'data=' in request.META.get('QUERY_STRING', '')
+    order_status = 'confirmed' if is_paid else 'pending'
+    
     for item in items:
         inv, _ = SupplierInventory.objects.get_or_create(
             supplier=item.vegetable.farmer,
@@ -805,7 +834,8 @@ def checkout_cart(request):
             customer=request.user,
             supplier_inventory=inv,
             quantity=item.quantity,
-            total_price=item.quantity * item.vegetable.price_per_unit
+            total_price=item.quantity * item.vegetable.price_per_unit,
+            status=order_status
         )
         item.vegetable.quantity -= item.quantity
         if item.vegetable.quantity <= 0:
@@ -872,18 +902,14 @@ def customer_marketplace(request):
     
     q = request.GET.get('q', '')
     
-    # Get all available products from Vegetable
+    # Get all available products from Vegetable (direct from Farmers)
     vegetables = list(Vegetable.objects.filter(available=True))
-    
-    # Get all available products from SupplierInventory
-    inventory = list(SupplierInventory.objects.filter(available=True))
     
     # Filter by search query
     if q:
         vegetables = [v for v in vegetables if q.lower() in v.name.lower()]
-        inventory = [i for i in inventory if q.lower() in i.vegetable_name.lower()]
     
-    # Mark source type and add necessary attributes for template compatibility
+    # Add necessary attributes for template compatibility
     for v in vegetables:
         v.source = 'vegetable'
         v.vegetable_name = v.name
@@ -891,14 +917,7 @@ def customer_marketplace(request):
         v.supplier_last_name = v.farmer.last_name
         v.supplier_id = v.farmer.id
     
-    for i in inventory:
-        i.source = 'inventory'
-        i.supplier_first_name = i.supplier.first_name
-        i.supplier_last_name = i.supplier.last_name
-        i.supplier_id = i.supplier.id
-    
-    # Combine both lists
-    combined_products = vegetables + inventory
+    combined_products = vegetables
     
     # Create a custom paginator for combined results
     paginator = Paginator(combined_products, 25)
@@ -920,10 +939,27 @@ def customer_orders(request):
     # Get all orders for the customer
     orders = CustomerOrder.objects.filter(customer=request.user).select_related('supplier_inventory').order_by('-ordered_at')
     
+    from django.utils import timezone
+    from datetime import timedelta
+
     # Filter by status if provided
-    status_filter = request.GET.get('status', '')
-    if status_filter:
+    status_filter = request.GET.get('status', 'all')
+    if status_filter and status_filter != 'all':
         orders = orders.filter(status=status_filter)
+        
+    # Filter by date if provided
+    date_filter = request.GET.get('date', 'all')
+    now = timezone.now()
+    if date_filter == 'today':
+        orders = orders.filter(ordered_at__date=now.date())
+    elif date_filter == '1_week':
+        orders = orders.filter(ordered_at__gte=now - timedelta(days=7))
+    elif date_filter == '3_weeks':
+        orders = orders.filter(ordered_at__gte=now - timedelta(days=21))
+    elif date_filter == '1_month':
+        orders = orders.filter(ordered_at__gte=now - timedelta(days=30))
+    elif date_filter == '3_months':
+        orders = orders.filter(ordered_at__gte=now - timedelta(days=90))
     
     # Calculate statistics
     total_orders = CustomerOrder.objects.filter(customer=request.user).count()
@@ -948,6 +984,7 @@ def customer_orders(request):
         'delivered_orders': delivered_orders,
         'total_spent': total_spent,
         'status_filter': status_filter,
+        'date_filter': date_filter,
         'paginator': paginator,
         'cart': cart,
     }
@@ -1100,12 +1137,31 @@ def checkout_page(request):
     delivery_fee = 150
     total_price = items_total + delivery_fee
     
+    # eSewa Integration variables
+    esewa_merchant_code = "EPAYTEST"
+    esewa_secret_key = "8gBm/:&EnhH.1/q"
+    transaction_uuid = str(uuid.uuid4())
+    
+    # Sign message
+    message = f"total_amount={int(total_price)},transaction_uuid={transaction_uuid},product_code={esewa_merchant_code}"
+    hash_obj = hmac.new(
+        esewa_secret_key.encode('utf-8'),
+        message.encode('utf-8'),
+        hashlib.sha256
+    )
+    esewa_signature = base64.b64encode(hash_obj.digest()).decode('utf-8')
+    domain = request.build_absolute_uri('/')[:-1]
+    
     context = {
         'cart_items': cart_items,
         'items_total': items_total,
         'delivery_fee': delivery_fee,
         'total_price': total_price,
         'selected_items_param': selected_items_param,
+        'esewa_merchant_code': esewa_merchant_code,
+        'transaction_uuid': transaction_uuid,
+        'esewa_signature': esewa_signature,
+        'domain': domain,
     }
     
     return render(request, 'dashboard/checkout.html', context)
@@ -1178,6 +1234,7 @@ def farmer_orders(request):
     
     # Combine both types of orders
     all_orders = list(orders) + list(customer_orders)
+    all_orders.sort(key=lambda o: getattr(o, 'purchased_at', getattr(o, 'ordered_at', None)), reverse=True)
     
     # Get status filter from query params
     status_filter = request.GET.get('status', '')
@@ -1185,13 +1242,24 @@ def farmer_orders(request):
         all_orders = [o for o in all_orders if o.status == status_filter]
     
     # Calculate summary stats
-    total_orders = SupplierPurchase.objects.filter(vegetable__farmer=request.user).count()
-    total_revenue = SupplierPurchase.objects.filter(vegetable__farmer=request.user).aggregate(total=Sum('total_price'))['total'] or 0
-    pending_orders_count = SupplierPurchase.objects.filter(vegetable__farmer=request.user, status='pending').count()
-    confirmed_orders_count = SupplierPurchase.objects.filter(vegetable__farmer=request.user, status='confirmed').count()
+    sp_orders = SupplierPurchase.objects.filter(vegetable__farmer=request.user).count()
+    co_orders = CustomerOrder.objects.filter(supplier_inventory__supplier=request.user).count()
+    total_orders = sp_orders + co_orders
+    
+    sp_revenue = SupplierPurchase.objects.filter(vegetable__farmer=request.user).aggregate(total=Sum('total_price'))['total'] or 0
+    co_revenue = CustomerOrder.objects.filter(supplier_inventory__supplier=request.user).aggregate(total=Sum('total_price'))['total'] or 0
+    total_revenue = sp_revenue + co_revenue
+    
+    sp_pending = SupplierPurchase.objects.filter(vegetable__farmer=request.user, status='pending').count()
+    co_pending = CustomerOrder.objects.filter(supplier_inventory__supplier=request.user, status='pending').count()
+    pending_orders_count = sp_pending + co_pending
+    
+    sp_conf = SupplierPurchase.objects.filter(vegetable__farmer=request.user, status='confirmed').count()
+    co_conf = CustomerOrder.objects.filter(supplier_inventory__supplier=request.user, status='confirmed').count()
+    confirmed_orders_count = sp_conf + co_conf
     
     context = {
-        'orders': orders,
+        'orders': all_orders,
         'total_orders': total_orders,
         'total_revenue': total_revenue,
         'pending_orders': pending_orders_count,

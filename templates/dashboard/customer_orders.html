@@ -247,25 +247,41 @@
             </div>
 
             <!-- Filter Section -->
-            <div class="bg-white rounded-2xl border border-slate-200 p-6 mb-8">
-                <div class="flex items-center gap-3 mb-4">
-                    <i class="fas fa-filter text-slate-400 text-lg"></i>
-                    <h3 class="font-heading font-bold text-slate-800">Filter Orders</h3>
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-filter text-brand-500 text-xl"></i>
+                    <h3 class="font-heading font-bold text-slate-800 text-lg">Filter Orders</h3>
                 </div>
-                <div class="flex flex-wrap gap-3">
-                    <a href="{% url 'customer_orders' %}" class="filter-btn px-5 py-2.5 text-sm font-bold rounded-lg transition {% if not status_filter %}bg-brand-600 text-white shadow-lg shadow-brand-600/30{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}">
-                        <i class="fas fa-list mr-2"></i>All Orders ({{ total_orders }})
-                    </a>
-                    <a href="?status=pending" class="filter-btn px-5 py-2.5 text-sm font-bold rounded-lg transition {% if status_filter == 'pending' %}bg-yellow-600 text-white shadow-lg shadow-yellow-600/30{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}">
-                        <i class="fas fa-hourglass-half mr-2"></i>Pending ({{ pending_orders }})
-                    </a>
-                    <a href="?status=confirmed" class="filter-btn px-5 py-2.5 text-sm font-bold rounded-lg transition {% if status_filter == 'confirmed' %}bg-blue-600 text-white shadow-lg shadow-blue-600/30{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}">
-                        <i class="fas fa-check-circle mr-2"></i>Confirmed ({{ confirmed_orders }})
-                    </a>
-                    <a href="?status=delivered" class="filter-btn px-5 py-2.5 text-sm font-bold rounded-lg transition {% if status_filter == 'delivered' %}bg-green-600 text-white shadow-lg shadow-green-600/30{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}">
-                        <i class="fas fa-truck mr-2"></i>Delivered ({{ delivered_orders }})
-                    </a>
-                </div>
+                
+                <form method="GET" action="{% url 'customer_orders' %}" class="flex flex-col sm:flex-row gap-4 w-full md:w-auto" id="filterForm">
+                    <!-- Status Filter -->
+                    <div class="relative w-full sm:w-48 text-left">
+                        <select name="status" onchange="document.getElementById('filterForm').submit();" class="appearance-none w-full bg-slate-50 border border-slate-200 text-slate-700 font-bold py-3 pl-4 pr-10 rounded-xl leading-tight focus:outline-none focus:bg-white focus:border-brand-500 transition-all cursor-pointer">
+                            <option value="all" {% if status_filter == 'all' or not status_filter %}selected{% endif %}>Status: All Orders</option>
+                            <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                            <option value="confirmed" {% if status_filter == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                            <option value="delivered" {% if status_filter == 'delivered' %}selected{% endif %}>Delivered</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                            <i class="fas fa-chevron-down text-sm"></i>
+                        </div>
+                    </div>
+
+                    <!-- Date Filter -->
+                    <div class="relative w-full sm:w-48 text-left">
+                        <select name="date" onchange="document.getElementById('filterForm').submit();" class="appearance-none w-full bg-slate-50 border border-slate-200 text-slate-700 font-bold py-3 pl-4 pr-10 rounded-xl leading-tight focus:outline-none focus:bg-white focus:border-brand-500 transition-all cursor-pointer">
+                            <option value="all" {% if date_filter == 'all' or not date_filter %}selected{% endif %}>Date: All Time</option>
+                            <option value="today" {% if date_filter == 'today' %}selected{% endif %}>Today</option>
+                            <option value="1_week" {% if date_filter == '1_week' %}selected{% endif %}>Last 7 Days</option>
+                            <option value="3_weeks" {% if date_filter == '3_weeks' %}selected{% endif %}>Last 3 Weeks</option>
+                            <option value="1_month" {% if date_filter == '1_month' %}selected{% endif %}>Last 1 Month</option>
+                            <option value="3_months" {% if date_filter == '3_months' %}selected{% endif %}>Last 3 Months</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                            <i class="fas fa-chevron-down text-sm"></i>
+                        </div>
+                    </div>
+                </form>
             </div>
 
             <!-- Orders List -->
@@ -331,10 +347,10 @@
             {% if orders.has_other_pages %}
             <div class="flex items-center justify-center gap-2 py-8">
                 {% if orders.has_previous %}
-                <a href="?page=1{% if status_filter %}&status={{ status_filter }}{% endif %}" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition font-bold">
+                <a href="?page=1{% if status_filter %}&status={{ status_filter }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition font-bold">
                     <i class="fas fa-angles-left"></i>
                 </a>
-                <a href="?page={{ orders.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition font-bold">
+                <a href="?page={{ orders.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition font-bold">
                     <i class="fas fa-angle-left"></i>
                 </a>
                 {% endif %}
@@ -344,16 +360,16 @@
                         {% if orders.number == num %}
                         <button class="w-10 h-10 flex items-center justify-center bg-brand-600 text-white rounded-lg font-bold shadow-lg shadow-brand-600/30">{{ num }}</button>
                         {% elif num > orders.number|add:'-3' and num < orders.number|add:'3' %}
-                        <a href="?page={{ num }}{% if status_filter %}&status={{ status_filter }}{% endif %}" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition font-bold">{{ num }}</a>
+                        <a href="?page={{ num }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition font-bold">{{ num }}</a>
                         {% endif %}
                     {% endfor %}
                 </div>
 
                 {% if orders.has_next %}
-                <a href="?page={{ orders.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition font-bold">
+                <a href="?page={{ orders.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition font-bold">
                     <i class="fas fa-angle-right"></i>
                 </a>
-                <a href="?page={{ orders.paginator.num_pages }}{% if status_filter %}&status={{ status_filter }}{% endif %}" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition font-bold">
+                <a href="?page={{ orders.paginator.num_pages }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition font-bold">
                     <i class="fas fa-angles-right"></i>
                 </a>
                 {% endif %}

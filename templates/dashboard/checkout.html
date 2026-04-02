@@ -351,6 +351,21 @@
         {% endif %}
     </form>
 
+    <!-- Hidden eSewa Form -->
+    <form id="esewa-checkout-form" action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST" style="display: none;">
+        <input type="hidden" name="amount" value="{{ items_total|floatformat:0 }}">
+        <input type="hidden" name="tax_amount" value="0">
+        <input type="hidden" name="total_amount" value="{{ total_price|floatformat:0 }}">
+        <input type="hidden" name="transaction_uuid" value="{{ transaction_uuid }}">
+        <input type="hidden" name="product_code" value="{{ esewa_merchant_code }}">
+        <input type="hidden" name="product_service_charge" value="0">
+        <input type="hidden" name="product_delivery_charge" value="{{ delivery_fee|floatformat:0 }}">
+        <input type="hidden" name="success_url" value="{{ domain }}{% if selected_items_param %}{% url 'buy_selected_items' %}?selected_items={{ selected_items_param }}{% else %}{% url 'checkout_cart' %}{% endif %}">
+        <input type="hidden" name="failure_url" value="{{ domain }}{% url 'checkout_page' %}">
+        <input type="hidden" name="signed_field_names" value="total_amount,transaction_uuid,product_code">
+        <input type="hidden" name="signature" value="{{ esewa_signature }}">
+    </form>
+
     <script>
         const khaltiPublicKey = "test_public_key_dc74e0fd57cb46cd93832aee0a390234";
 
@@ -443,8 +458,7 @@
                 return;
             }
 
-            // eSewa integration coming soon
-            alert('eSewa payment integration is coming soon! For now, please use Khalti.');
+            document.getElementById('esewa-checkout-form').submit();
         }
 
         // Close modal when clicking outside

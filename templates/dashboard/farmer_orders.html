@@ -170,25 +170,44 @@
                     <div class="flex items-start justify-between mb-4">
                         <div class="flex items-start gap-4 flex-1">
                             <div class="w-16 h-16 rounded-lg bg-green-50 flex items-center justify-center text-2xl flex-shrink-0">
-                                {% if order.vegetable.image %}
-                                    <img src="{{ order.vegetable.image.url }}" alt="{{ order.vegetable.name }}" class="w-full h-full object-cover rounded-lg">
+                                {% if order.supplier_inventory %}
+                                    {% if order.supplier_inventory.image %}
+                                        <img src="{{ order.supplier_inventory.image.url }}" alt="{{ order.supplier_inventory.vegetable_name }}" class="w-full h-full object-cover rounded-lg">
+                                    {% else %}
+                                        🌿
+                                    {% endif %}
                                 {% else %}
-                                    🌿
+                                    {% if order.vegetable.image %}
+                                        <img src="{{ order.vegetable.image.url }}" alt="{{ order.vegetable.name }}" class="w-full h-full object-cover rounded-lg">
+                                    {% else %}
+                                        🌿
+                                    {% endif %}
                                 {% endif %}
                             </div>
                             <div class="flex-1 min-w-0">
-                                <h3 class="font-bold text-gray-800 text-lg">{{ order.vegetable.name }}</h3>
+                                <h3 class="font-bold text-gray-800 text-lg">
+                                    {% if order.supplier_inventory %}{{ order.supplier_inventory.vegetable_name }}{% else %}{{ order.vegetable.name }}{% endif %}
+                                </h3>
                                 <p class="text-sm text-gray-600 mt-1">
-                                    <span class="font-semibold">{{ order.quantity }}</span> {{ order.vegetable.unit }} 
-                                    × <span class="font-semibold">₹{{ order.vegetable.price_per_unit }}</span>/{{ order.vegetable.unit }}
+                                    <span class="font-semibold">{{ order.quantity }}</span> {% if order.supplier_inventory %}{{ order.supplier_inventory.unit }}{% else %}{{ order.vegetable.unit }}{% endif %} 
+                                    × <span class="font-semibold">₹{% if order.supplier_inventory %}{{ order.supplier_inventory.price_per_unit }}{% else %}{{ order.vegetable.price_per_unit }}{% endif %}</span>
                                 </p>
                                 <p class="text-xs text-gray-400 mt-2">
                                     <i class="fas fa-user text-green-600 mr-2"></i>
-                                    <strong>Buyer:</strong> {{ order.supplier.first_name }} {{ order.supplier.last_name }} ({{ order.supplier.username }})
+                                    <strong>Buyer:</strong> 
+                                    {% if order.supplier_inventory %}
+                                        {{ order.customer.first_name }} {{ order.customer.last_name }} ({{ order.customer.username }})
+                                    {% else %}
+                                        {{ order.supplier.first_name }} {{ order.supplier.last_name }} ({{ order.supplier.username }})
+                                    {% endif %}
                                 </p>
                                 <p class="text-xs text-gray-400 mt-1">
                                     <i class="fas fa-calendar text-green-600 mr-2"></i>
-                                    {{ order.purchased_at|date:"d M Y, H:i" }}
+                                    {% if order.supplier_inventory %}
+                                        {{ order.ordered_at|date:"d M Y, H:i" }}
+                                    {% else %}
+                                        {{ order.purchased_at|date:"d M Y, H:i" }}
+                                    {% endif %}
                                 </p>
                                 <p class="text-xs text-gray-400 mt-1">
                                     <i class="fas fa-info-circle text-green-600 mr-2"></i>
@@ -214,12 +233,42 @@
                     </div>
                     <div class="border-t pt-4 flex items-center justify-between">
                         <div class="flex gap-2">
-                            <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition">
-                                <i class="fas fa-eye mr-2"></i>View Details
+                            <button onclick="document.getElementById('details-{{ order.id }}').classList.toggle('hidden')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition">
+                                <i class="fas fa-eye mr-2"></i>View / Hide Details
                             </button>
                         </div>
                         <div class="text-xs text-gray-500">
                             Order ID: #{{ order.id }}
+                        </div>
+                    </div>
+
+                    <!-- Hidden Collapsible Detailed View -->
+                    <div id="details-{{ order.id }}" class="hidden mt-4 pt-4 border-t border-dashed text-sm text-gray-600">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
+                            <div>
+                                <h4 class="font-bold text-gray-800 mb-3 border-b pb-2"><i class="fas fa-address-card text-brand-600 mr-2"></i>Buyer Information</h4>
+                                {% if order.supplier_inventory %}
+                                    <p class="mb-1"><i class="fas fa-user text-gray-400 w-5"></i> <strong>Name:</strong> {{ order.customer.first_name }} {{ order.customer.last_name }}</p>
+                                    <p class="mb-1"><i class="fas fa-envelope text-gray-400 w-5"></i> <strong>Email:</strong> {{ order.customer.email }}</p>
+                                    <p class="mb-1"><i class="fas fa-phone text-gray-400 w-5"></i> <strong>Phone:</strong> {{ order.customer.userprofile.phone_number|default:"Not Provided" }}</p>
+                                    <p class="mb-1"><i class="fas fa-map-marker-alt text-gray-400 w-5"></i> <strong>Address:</strong> {{ order.customer.userprofile.address|default:"Not Provided" }}</p>
+                                {% else %}
+                                    <p class="mb-1"><i class="fas fa-user text-gray-400 w-5"></i> <strong>Name:</strong> {{ order.supplier.first_name }} {{ order.supplier.last_name }}</p>
+                                    <p class="mb-1"><i class="fas fa-envelope text-gray-400 w-5"></i> <strong>Email:</strong> {{ order.supplier.email }}</p>
+                                    <p class="mb-1"><i class="fas fa-phone text-gray-400 w-5"></i> <strong>Phone:</strong> {{ order.supplier.userprofile.phone_number|default:"Not Provided" }}</p>
+                                    <p class="mb-1"><i class="fas fa-map-marker-alt text-gray-400 w-5"></i> <strong>Address:</strong> {{ order.supplier.userprofile.address|default:"Not Provided" }}</p>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800 mb-3 border-b pb-2"><i class="fas fa-receipt text-brand-600 mr-2"></i>Fulfillment</h4>
+                                <p class="mb-1"><i class="fas fa-box text-gray-400 w-5"></i> <strong>Total Qty:</strong> {{ order.quantity }} {% if order.supplier_inventory %}{{ order.supplier_inventory.unit }}{% else %}{{ order.vegetable.unit }}{% endif %}</p>
+                                <p class="mb-1"><i class="fas fa-money-bill-wave text-gray-400 w-5"></i> <strong>Total Paid:</strong> ₹{{ order.total_price }}</p>
+                                <div class="mt-4 flex gap-2">
+                                    <button class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg text-xs font-bold transition">
+                                        <i class="fas fa-print mr-1"></i> Print Invoice
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
