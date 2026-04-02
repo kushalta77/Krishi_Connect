@@ -1140,10 +1140,15 @@ def checkout_page(request):
     # eSewa Integration variables
     esewa_merchant_code = "EPAYTEST"
     esewa_secret_key = "8gBm/:&EnhH.1/q"
+
+    # Always generate a fresh UUID so eSewa never sees a duplicate
     transaction_uuid = str(uuid.uuid4())
-    
+    request.session['esewa_transaction_uuid'] = transaction_uuid
+    request.session['esewa_total_price'] = total_price
+
     # Sign message
-    message = f"total_amount={int(total_price)},transaction_uuid={transaction_uuid},product_code={esewa_merchant_code}"
+    total_price_int = round(total_price)
+    message = f"total_amount={total_price_int},transaction_uuid={transaction_uuid},product_code={esewa_merchant_code}"
     hash_obj = hmac.new(
         esewa_secret_key.encode('utf-8'),
         message.encode('utf-8'),
@@ -1156,7 +1161,7 @@ def checkout_page(request):
         'cart_items': cart_items,
         'items_total': items_total,
         'delivery_fee': delivery_fee,
-        'total_price': total_price,
+        'total_price': total_price_int,
         'selected_items_param': selected_items_param,
         'esewa_merchant_code': esewa_merchant_code,
         'transaction_uuid': transaction_uuid,

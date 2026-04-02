@@ -390,8 +390,8 @@
             closePaymentModal();
 
             // First check if address is set
-            const address = "{{ user.userprofile.address }}".trim();
-            const phone = "{{ user.userprofile.phone_number }}".trim();
+            const address = "{{ user.userprofile.address|escapejs }}".trim();
+            const phone = "{{ user.userprofile.phone_number|escapejs }}".trim();
             
             if (!address || !phone) {
                 alert('Please update your shipping address and phone number before proceeding to payment.');
@@ -448,8 +448,8 @@
             closePaymentModal();
 
             // Check if address is set
-            const address = "{{ user.userprofile.address }}".trim();
-            const phone = "{{ user.userprofile.phone_number }}".trim();
+            const address = "{{ user.userprofile.address|escapejs }}".trim();
+            const phone = "{{ user.userprofile.phone_number|escapejs }}".trim();
             
             if (!address || !phone) {
                 alert('Please update your shipping address and phone number before proceeding to payment.');
@@ -481,6 +481,18 @@
             setTimeout(() => {
                 document.getElementById('overlay').classList.add('hidden');
             }, 300);
+        }
+
+        function toggleEditForm() {
+            const form = document.getElementById('editForm');
+            const display = document.getElementById('addressDisplay');
+            if (form.classList.contains('hidden')) {
+                form.classList.remove('hidden');
+                display.classList.add('hidden');
+            } else {
+                form.classList.add('hidden');
+                display.classList.remove('hidden');
+            }
         }
     </script>
 
