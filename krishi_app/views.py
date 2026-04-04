@@ -7,6 +7,7 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
 from django.urls import reverse
+from django.http import HttpResponseRedirect
 from decimal import Decimal
 import re
 import requests
@@ -293,6 +294,8 @@ def customer_profile(request):
             request.user.email = request.POST.get('email', '').strip()
             profile.phone_number = request.POST.get('phone_number', '').strip()
             profile.address = request.POST.get('address', '').strip()
+            profile.address2 = request.POST.get('address2', '').strip()
+            profile.address3 = request.POST.get('address3', '').strip()
             request.user.save()
             profile.save()
             messages.success(request, 'Profile updated successfully.')
@@ -1178,24 +1181,34 @@ def update_checkout_address(request):
     if request.method == 'POST':
         phone_number = request.POST.get('phone_number', '').strip()
         address = request.POST.get('address', '').strip()
+        address2 = request.POST.get('address2', '').strip()
+        address3 = request.POST.get('address3', '').strip()
+        items_param = request.POST.get('items', '')  # Preserve items parameter
+        
+        # Build redirect URL with items parameter if present
+        redirect_url = reverse('checkout_page')
+        if items_param:
+            redirect_url += f'?items={items_param}'
         
         if not phone_number or not address:
             messages.error(request, 'Phone number and address are required')
-            return redirect('checkout_page')
+            return HttpResponseRedirect(redirect_url)
         
         # Validate phone number is 10 digits
         if not phone_number.isdigit() or len(phone_number) != 10:
             messages.error(request, 'Phone number must be exactly 10 digits')
-            return redirect('checkout_page')
+            return HttpResponseRedirect(redirect_url)
         
-        # Update user profile
+        # Update user profile with all addresses
         user_profile = request.user.userprofile
         user_profile.phone_number = phone_number
         user_profile.address = address
+        user_profile.address2 = address2 if address2 else None
+        user_profile.address3 = address3 if address3 else None
         user_profile.save()
         
         messages.success(request, 'Address updated successfully')
-        return redirect('checkout_page')
+        return HttpResponseRedirect(redirect_url)
     
     return redirect('checkout_page')
 

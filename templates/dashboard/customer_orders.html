@@ -36,9 +36,7 @@
         }
     </script>
     <style>
-        body {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        }
+        body { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); }
         .sidebar { background: linear-gradient(160deg, #14532d 0%, #166534 100%); border-right: 1px solid rgba(255,255,255,0.1); }
         .nav-item { position: relative; overflow: hidden; transition: all 0.3s ease; }
         .nav-item::before { content: ''; position: absolute; left: 0; top: 0; width: 3px; height: 100%; background-color: #4ade80; transform: scaleY(0); transition: transform 0.3s ease; }
@@ -46,62 +44,24 @@
         .nav-item:hover, .nav-item.active { background: rgba(255, 255, 255, 0.1); color: #fff; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .order-card {
-            background: white;
-            border-radius: 1.25rem;
-            border: 1px solid #e2e8f0;
-            padding: 1.75rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        .order-card::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 4px;
-            height: 100%;
-            background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
-        }
-        .order-card:hover {
-            box-shadow: 0 20px 40px rgba(34, 197, 94, 0.15);
-            transform: translateY(-4px);
-            border-color: #bbf7d0;
-        }
-        .stat-card {
-            background: white;
-            border-radius: 1rem;
-            padding: 1.5rem;
-            border: 1px solid #e2e8f0;
-            transition: all 0.3s ease;
-        }
-        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); }
+        .table-row { background: white; border-bottom: 1px solid #e2e8f0; transition: all 0.3s ease; }
+        .table-row:hover { background: #f9fafb; }
         .status-badge {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 0.75rem;
+            padding: 0.5rem 0.875rem;
+            border-radius: 0.5rem;
             font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            font-weight: 600;
         }
         .status-pending { background: linear-gradient(135deg, #fef3c7 0%, #fce7b6 100%); color: #b45309; }
         .status-confirmed { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #1e40af; }
         .status-delivered { background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); color: #15803d; }
-        .product-image {
-            width: 5rem;
-            height: 5rem;
-            border-radius: 1rem;
-            object-fit: cover;
-            border: 2px solid #e2e8f0;
-        }
-        .filter-btn {
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
+        .modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 50; }
+        .modal.hidden { display: none; }
+        .modal-backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); }
+        .modal-content { position: relative; background: white; border-radius: 1rem; max-width: 500px; width: 90%; max-height: 85vh; overflow-y-auto; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15); }
     </style>
 </head>
 <body class="min-h-screen text-slate-800 font-sans">
@@ -200,8 +160,6 @@
         <!-- Page Content -->
         <main class="flex-1 overflow-y-auto px-8 py-8">
 
-
-
             <!-- Statistics Section -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-10">
                 <div class="stat-card">
@@ -279,63 +237,46 @@
                 </form>
             </div>
 
-            <!-- Orders List -->
+            <!-- Orders Table -->
             {% if orders %}
-            <div class="space-y-5 mb-8">
-                {% for order in orders %}
-                <div class="order-card">
-                    <div class="flex gap-6">
-                        <!-- Product Image -->
-                        <div class="flex-shrink-0">
-                            <div class="w-20 h-20 bg-gradient-to-br from-brand-100 to-emerald-100 rounded-xl flex items-center justify-center border-2 border-brand-100">
-                                <i class="fas fa-leaf text-3xl text-brand-500"></i>
-                            </div>
-                        </div>
-
-                        <!-- Order Details -->
-                        <div class="flex-1 min-w-0">
-                            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
-                                <div>
-                                    <h3 class="text-xl font-heading font-bold text-slate-900">{{ order.supplier_inventory.vegetable_name }}</h3>
-                                    <div class="flex items-center gap-2 mt-2 text-slate-500">
-                                        <i class="fas fa-calendar-alt text-brand-500"></i>
-                                        <span class="text-sm">{{ order.ordered_at|date:"d M Y, H:i" }}</span>
-                                    </div>
-                                </div>
-                                <span class="status-badge status-{{ order.status }}">
-                                    {% if order.status == 'pending' %}
-                                    <i class="fas fa-hourglass-half"></i> Pending
-                                    {% elif order.status == 'confirmed' %}
-                                    <i class="fas fa-check-circle"></i> Confirmed
-                                    {% else %}
-                                    <i class="fas fa-truck"></i> Delivered
-                                    {% endif %}
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
+                            <th class="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Order ID</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Date</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Product</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-slate-700 uppercase tracking-wider">Total</th>
+                            <th class="px-6 py-4 text-center text-xs font-bold text-slate-700 uppercase tracking-wider">Payment Status</th>
+                            <th class="px-6 py-4 text-center text-xs font-bold text-slate-700 uppercase tracking-wider">Fulfillment</th>
+                            <th class="px-6 py-4 text-center text-xs font-bold text-slate-700 uppercase tracking-wider">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr class="table-row">
+                            <td class="px-6 py-4 text-sm font-bold text-slate-800">#{{ order.id }}</td>
+                            <td class="px-6 py-4 text-sm text-slate-600">
+                                {% if order.ordered_at %}{{ order.ordered_at|date:"M d, Y" }}{% elif order.purchased_at %}{{ order.purchased_at|date:"M d, Y" }}{% else %}N/A{% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-slate-600">{{ order.product.name|default:"Product" }}</td>
+                            <td class="px-6 py-4 text-sm font-bold text-right text-green-600">₹{{ order.total_price }}</td>
+                            <td class="px-6 py-4 text-sm text-center"><span class="status-badge status-delivered"><i class="fas fa-check-circle"></i> Paid via eSewa</span></td>
+                            <td class="px-6 py-4 text-sm text-center">
+                                <span class="status-badge status-{% if order.status == 'pending' %}pending{% elif order.status == 'confirmed' %}confirmed{% else %}delivered{% endif %}">
+                                    <i class="fas {% if order.status == 'pending' %}fa-clock{% elif order.status == 'confirmed' %}fa-sync{% else %}fa-check-double{% endif %}"></i>
+                                    {% if order.status == 'pending' %}Pending{% elif order.status == 'confirmed' %}Processing{% else %}Delivered{% endif %}
                                 </span>
-                            </div>
-
-                            <!-- Order Info Grid -->
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-100">
-                                <div class="bg-gradient-to-br from-slate-50 to-slate-100 p-3 rounded-lg">
-                                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Quantity</p>
-                                    <p class="text-lg font-heading font-bold text-slate-800">{{ order.quantity }} kg</p>
-                                </div>
-                                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-3 rounded-lg">
-                                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Unit Price</p>
-                                    <p class="text-lg font-heading font-bold text-blue-600">₹{{ order.supplier_inventory.price_per_unit }}</p>
-                                </div>
-                                <div class="bg-gradient-to-br from-brand-50 to-brand-100 p-3 rounded-lg">
-                                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Total</p>
-                                    <p class="text-lg font-heading font-bold text-brand-600">₹{{ order.total_price|floatformat:0 }}</p>
-                                </div>
-                                <div class="bg-gradient-to-br from-slate-50 to-slate-100 p-3 rounded-lg">
-                                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Order ID</p>
-                                    <p class="text-lg font-heading font-bold text-slate-800">#{{ order.id }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-center">
+                                <button onclick="openModal('{{ order.id }}')" class="text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-2 mx-auto">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
 
             <!-- Pagination -->
@@ -384,13 +325,173 @@
                 </a>
             </div>
             {% endif %}
-
         </main>
-    </div>
 
+        <!-- Floating Cart Icon (Right Side Middle) -->
+        <a href="{% url 'cart' %}" class="fixed right-8 top-1/2 -translate-y-1/2 z-40 group">
+            <div class="w-16 h-16 bg-slate-900 hover:bg-slate-800 text-white rounded-full shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110 border-2 border-white">
+                <i class="fas fa-shopping-cart text-2xl text-white"></i>
+                {% if cart.items.count > 0 %}
+                <span class="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center shadow-lg border-2 border-white group-hover:scale-110 transition-transform">
+                    {{ cart.items.count }}
+                </span>
+                {% endif %}
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- Detail Modal -->
+<div id="detailModal" class="modal hidden">
+    <div class="modal-backdrop" onclick="closeModal()"></div>
+    <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-6 border-b border-slate-200">
+            <h2 class="text-4xl font-bold text-slate-800 flex items-center gap-3">
+                <i class="fas fa-box text-brand-600"></i> Order Details
+            </h2>
+            <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 text-2xl">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div id="modalBody" class="p-4 space-y-4">
+            <!-- Order Header Info -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div>
+                    <p class="text-slate-600 text-xs font-bold uppercase mb-1">Order ID</p>
+                    <p id="modal-order-id" class="text-lg font-bold text-slate-800">#1001</p>
+                </div>
+                <div>
+                    <p class="text-slate-600 text-xs font-bold uppercase mb-1">Order Date</p>
+                    <p id="modal-order-date" class="text-lg font-bold text-slate-800">2025-02-18</p>
+                </div>
+                <div>
+                    <p class="text-slate-600 text-xs font-bold uppercase mb-1">Payment Status</p>
+                    <p class="text-xs font-bold mt-1"><span class="status-badge status-delivered"><i class="fas fa-check-circle"></i> Paid via eSewa</span></p>
+                </div>
+                <div>
+                    <p class="text-slate-600 text-xs font-bold uppercase mb-1">Total Amount</p>
+                    <p id="modal-order-total" class="text-lg font-bold text-green-600">₹788.00</p>
+                </div>
+            </div>
+
+            <hr class="border-slate-200">
+
+            <!-- Fulfillment -->
+            <div>
+                <h4 class="text-lg font-bold text-slate-800 mb-2"><i class="fas fa-dolly text-brand-600 mr-2"></i>Fulfillment</h4>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <p class="text-slate-600 text-xs font-semibold mb-1">Status</p>
+                        <span id="modal-fulfillment-status" class="status-badge status-delivered"><i class="fas fa-check-double"></i> Delivered</span>
+                    </div>
+                    <div>
+                        <p class="text-slate-600 text-xs font-semibold mb-1">Est. Delivery</p>
+                        <p id="modal-est-delivery" class="text-sm font-bold text-slate-800">Feb 22, 2025</p>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-slate-200">
+
+            <!-- Items Purchased -->
+            <div>
+                <h4 class="text-lg font-bold text-slate-800 mb-2"><i class="fas fa-shopping-cart text-brand-600 mr-2"></i>Items Purchased</h4>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-slate-200">
+                                <th class="text-left font-bold text-slate-700 pb-1 text-xs">Item</th>
+                                <th class="text-center font-bold text-slate-700 pb-1 text-xs">Qty</th>
+                                <th class="text-right font-bold text-slate-700 pb-1 text-xs">Price</th>
+                                <th class="text-right font-bold text-slate-700 pb-1 text-xs">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modal-items-list">
+                            <tr class="border-b border-slate-100">
+                                <td class="py-2 text-slate-800">Product</td>
+                                <td class="text-center text-slate-800">1</td>
+                                <td class="text-right text-slate-800">₹400</td>
+                                <td class="text-right font-bold text-slate-800">₹400</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-2 p-2 bg-yellow-50 rounded-lg border border-yellow-200">
+                    <p class="text-right text-sm font-bold text-slate-800">Total: <span id="modal-item-total" class="text-brand-600">₹788.00</span></p>
+                </div>
+            </div>
+
+            <hr class="border-slate-200">
+
+            <!-- Shipping Address -->
+            <div>
+                <h4 class="text-lg font-bold text-slate-800 mb-2"><i class="fas fa-map-marker-alt text-brand-600 mr-2"></i>Shipping Address</h4>
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-3">
+                    <p class="font-semibold text-slate-800" id="modal-address-name"></p>
+                    <p class="text-sm text-slate-600 mt-1" id="modal-address-line1"></p>
+                    <p class="text-sm text-slate-600" id="modal-address-phone"><i class="fas fa-phone text-brand-600 mr-2"></i></p>
+                </div>
+            </div>
+
+            <hr class="border-slate-200">
+
+            <!-- Contact Help -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-center gap-2">
+                <i class="fas fa-info-circle text-blue-600 text-lg"></i>
+                <div class="text-xs text-blue-800">
+                    <p class="font-semibold mb-0">Need help?</p>
+                    <p>Contact support@krishiconnect.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
+    const orders = {
+        {% for order in orders %}
+        '{{ order.id }}': {
+            id: '{{ order.id }}',
+            date: '{% if order.ordered_at %}{{ order.ordered_at|date:"M d, Y" }}{% elif order.purchased_at %}{{ order.purchased_at|date:"M d, Y" }}{% else %}N/A{% endif %}',
+            total: '{{ order.total_price }}',
+            status: '{{ order.status }}',
+            addressName: '{{ user.first_name }} {{ user.last_name }}',
+            addressLine1: '{{ user.userprofile.address|default:"Address not provided" }}',
+            addressPhone: '{{ user.userprofile.phone_number|default:"N/A" }}'
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    };
+
+    function openModal(orderId) {
+        const order = orders[orderId];
+        if (!order) return;
+
+        document.getElementById('modal-order-id').textContent = '#' + order.id;
+        document.getElementById('modal-order-date').textContent = order.date;
+        document.getElementById('modal-order-total').textContent = '₹' + order.total;
+        document.getElementById('modal-item-total').textContent = '₹' + order.total;
+        
+        // Set shipping address from user data (not sample text)
+        document.getElementById('modal-address-name').textContent = order.addressName || '{{ user.first_name }} {{ user.last_name }}';
+        document.getElementById('modal-address-line1').textContent = (order.addressLine1 || '{{ user.userprofile.address|default:"" }}') + ' | ' + (order.addressPhone || '{{ user.userprofile.phone_number|default:"" }}');
+
+        document.getElementById('detailModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('detailModal').classList.add('hidden');
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('detailModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+
     function openSidebar() {
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');

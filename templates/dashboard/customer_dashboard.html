@@ -471,10 +471,10 @@
                                     </form>
                                     
                                     <!-- Add to Cart Alternative -->
-                                    <form method="post" action="{% url 'add_to_cart' veg.pk %}">
+                                    <form method="post" action="{% url 'add_to_cart' veg.pk %}" class="cart-form">
                                         {% csrf_token %}
                                         <input type="hidden" name="quantity" value="1">
-                                        <button type="submit" class="w-full bg-emerald-50 hover:bg-emerald-500 hover:text-white border border-emerald-200 hover:border-emerald-500 text-emerald-700 font-bold py-2.5 rounded-xl transition-all text-sm flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
+                                        <button type="button" onclick="showAddToCartModal(this.form)" class="w-full bg-emerald-50 hover:bg-emerald-500 hover:text-white border border-emerald-200 hover:border-emerald-500 text-emerald-700 font-bold py-2.5 rounded-xl transition-all text-sm flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
                                             <i class="fas fa-cart-plus"></i> Add to Cart
                                         </button>
                                     </form>
@@ -544,10 +544,27 @@
             </div>
         </main>
 
-        <!-- Floating Cart Icon (Right Side Middle) -->
+<!-- Add to Cart Success Modal -->
+    <div id="cartSuccessModal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-100">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3 flex-1">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-check text-2xl text-green-500"></i>
+                    </div>
+                    <span class="font-semibold text-lg text-slate-800">Added to cart successfully!</span>
+                </div>
+                <button onclick="closeAddToCartModal()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Cart Icon (Right Side Middle) -->
         <a href="{% url 'cart' %}" class="fixed right-8 top-1/2 -translate-y-1/2 z-40 group">
-            <div class="w-16 h-16 bg-brand-500 hover:bg-brand-600 text-white rounded-full shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110 border-2 border-white">
-                <i class="fas fa-shopping-cart text-2xl"></i>
+            <div class="w-16 h-16 bg-slate-900 hover:bg-slate-800 text-white rounded-full shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110 border-2 border-white">
+                <i class="fas fa-shopping-cart text-2xl text-white"></i>
                 {% if cart.items.count > 0 %}
                 <span class="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center shadow-lg border-2 border-white group-hover:scale-110 transition-transform">
                     {{ cart.items.count }}
@@ -571,6 +588,25 @@
         document.getElementById('overlay').classList.remove('opacity-100');
         setTimeout(() => {
             document.getElementById('overlay').classList.add('hidden');
+        }, 300);
+    }
+
+    function showAddToCartModal(form) {
+        const modal = document.getElementById('cartSuccessModal');
+        modal.classList.remove('hidden');
+        modal.querySelector('.transform').classList.add('scale-100');
+        
+        setTimeout(() => {
+            closeAddToCartModal();
+            if (form) form.submit();
+        }, 3000);
+    }
+    
+    function closeAddToCartModal() {
+        const modal = document.getElementById('cartSuccessModal');
+        modal.querySelector('.transform').classList.remove('scale-100');
+        setTimeout(() => {
+            modal.classList.add('hidden');
         }, 300);
     }
 
@@ -643,5 +679,43 @@
         checkoutSingle.show({amount: amountInPaisa});
     }
 </script>
+<!-- Cart Modal -->
+<div id="cart-modal" class="fixed inset-0 z-[9999] flex items-center justify-center hidden">
+    <div class="absolute inset-0 bg-black/40" onclick="hideCartModal()"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl px-10 py-8 w-[380px] mx-4">
+        <button onclick="hideCartModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors">
+            <i class="fas fa-times text-lg"></i>
+        </button>
+        <div class="flex items-center gap-3">
+            <i class="fas fa-check-circle text-green-500 text-2xl"></i>
+            <p class="text-green-600 font-bold text-lg">Added to cart successfully!</p>
+        </div>
+    </div>
+</div>
+
+<script>
+let cartTimer;
+function showCartModal() {
+    document.getElementById('cart-modal').classList.remove('hidden');
+    clearTimeout(cartTimer);
+    cartTimer = setTimeout(hideCartModal, 3000);
+}
+function hideCartModal() {
+    document.getElementById('cart-modal').classList.add('hidden');
+}
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('form.cart-form').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            }).finally(showCartModal);
+        });
+    });
+});
+</script>
+
 </body>
 </html>

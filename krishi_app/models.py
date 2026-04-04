@@ -6,6 +6,8 @@ class UserProfile(models.Model):
     role = models.CharField(max_length=20, choices=[('farmer', 'Farmer'), ('expert', 'Expert'), ('supplier', 'Supplier'), ('customer', 'Customer')])
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     address = models.TextField(max_length=255, blank=True, null=True)
+    address2 = models.TextField(max_length=255, blank=True, null=True)
+    address3 = models.TextField(max_length=255, blank=True, null=True)
     profile_image = models.ImageField(upload_to='profiles/', blank=True, null=True)
     
     def __str__(self):

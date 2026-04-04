@@ -236,7 +236,7 @@
                                     </form>
                                     
                                     <!-- Add to Cart Route -->
-                                    <form method="post" action="{% url 'add_to_cart' veg.pk %}" class="w-full">
+                                    <form method="post" action="{% url 'add_to_cart' veg.pk %}" class="w-full cart-form">
                                         {% csrf_token %}
                                         <input type="hidden" name="quantity" value="1">
                                         <button type="submit" class="w-full bg-emerald-50 hover:bg-emerald-500 hover:text-white border border-emerald-200 hover:border-emerald-500 text-emerald-700 font-bold py-2.5 rounded-xl transition-all shadow-sm text-sm flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
@@ -276,8 +276,7 @@
     </div>
 </div>
 
-<script>
-let activeCat = 'all';
+{% endblock %}
 
 function filterCat(cat) {
     activeCat = cat;
@@ -326,6 +325,46 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('search-input').value.trim()) {
         applyFilters();
     }
+
+    // Cart modal
+    document.querySelectorAll('form.cart-form').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            }).finally(showCartModal);
+        });
+    });
 });
+
+let cartTimer;
+function showCartModal() {
+    document.getElementById('cart-modal').classList.remove('hidden');
+    clearTimeout(cartTimer);
+    cartTimer = setTimeout(hideCartModal, 3000);
+}
+function hideCartModal() {
+    document.getElementById('cart-modal').classList.add('hidden');
+}
 </script>
+
+<!-- Add to Cart Success Modal -->
+<div id="cart-modal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-100">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3 flex-1">
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                    <i class="fas fa-check text-2xl text-green-500"></i>
+                </div>
+                <span class="font-semibold text-lg text-slate-800">Added to cart successfully!</span>
+            </div>
+            <button onclick="hideCartModal()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
