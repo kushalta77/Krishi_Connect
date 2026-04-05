@@ -30,7 +30,7 @@
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         border: 1px solid rgba(255, 255, 255, 0.6);
-        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05);
+        box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
     }
 
     .product-card {
@@ -52,7 +52,7 @@
         position: relative;
         overflow: hidden;
     }
-    
+
     .cat-btn.active {
         background: linear-gradient(135deg, var(--brand-500) 0%, var(--brand-600) 100%);
         color: white;
@@ -67,20 +67,40 @@
     }
 
     /* Status Badges */
-    .badge-fresh { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-    .badge-good { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
-    .badge-aging { background: #ffedd5; color: #9a3412; border: 1px solid #fed7aa; }
-    .badge-old { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+    .badge-fresh {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+    }
+
+    .badge-good {
+        background: #fef9c3;
+        color: #854d0e;
+        border: 1px solid #fef08a;
+    }
+
+    .badge-aging {
+        background: #ffedd5;
+        color: #9a3412;
+        border: 1px solid #fed7aa;
+    }
+
+    .badge-old {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+    }
 
     /* Search Input Wrapper */
     .search-wrapper {
         background: white;
         border-radius: 1rem;
         padding: 4px;
-        box-shadow: 0 8px 25px -5px rgba(0,0,0,0.05);
+        box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.05);
         border: 1px solid #e2e8f0;
         transition: all 0.3s ease;
     }
+
     .search-wrapper:focus-within {
         border-color: var(--brand-500);
         box-shadow: 0 8px 30px -5px rgba(16, 185, 129, 0.15);
@@ -96,9 +116,11 @@
                 <div class="w-64 h-64 bg-emerald-400/20 rounded-full blur-3xl"></div>
             </div>
             <h1 class="text-5xl md:text-6xl font-black text-slate-800 mb-4 heading-display relative z-10">
-                Fresh <span class="bg-gradient-to-r from-emerald-500 to-teal-500 text-transparent bg-clip-text">Marketplace</span>
+                Fresh <span
+                    class="bg-gradient-to-r from-emerald-500 to-teal-500 text-transparent bg-clip-text">Marketplace</span>
             </h1>
-            <p class="text-slate-500 text-lg md:text-xl font-medium relative z-10">Discover 100% organic produce directly from local farmers.</p>
+            <p class="text-slate-500 text-lg md:text-xl font-medium relative z-10">Discover 100% organic produce
+                directly from local farmers.</p>
         </div>
 
         <div class="flex flex-col lg:flex-row gap-8">
@@ -109,7 +131,8 @@
                     <h3 class="font-heading font-black text-slate-800 text-xl mb-6 flex items-center gap-2">
                         <i class="fas fa-layer-group text-emerald-500"></i> Categories
                     </h3>
-                    <select onchange="filterCat(this.value)" id="category-dropdown" class="w-full border border-slate-200 hover:border-emerald-400 rounded-2xl px-4 py-3 text-sm font-bold text-slate-600 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 cursor-pointer transition-all">
+                    <select onchange="filterCat(this.value)" id="category-dropdown"
+                        class="w-full border border-slate-200 hover:border-emerald-400 rounded-2xl px-4 py-3 text-sm font-bold text-slate-600 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 cursor-pointer transition-all">
                         <option value="all">🌿 All Produce</option>
                         <option value="vegetable">🥕 Vegetables</option>
                         <option value="fruit">🍎 Fruits</option>
@@ -122,7 +145,8 @@
                         <div class="text-emerald-800 text-sm font-bold flex items-center gap-2 mb-2">
                             <i class="fas fa-truck-fast"></i> Fast Delivery
                         </div>
-                        <p class="text-xs text-emerald-600/80 font-medium">Order before 2 PM for next day delivery straight from farm.</p>
+                        <p class="text-xs text-emerald-600/80 font-medium">Order before 2 PM for next day delivery
+                            straight from farm.</p>
                     </div>
                 </div>
             </aside>
@@ -135,13 +159,14 @@
                     <!-- Search Input -->
                     <div class="w-full md:w-96 search-wrapper relative flex items-center">
                         <i class="fas fa-search text-emerald-500 ml-4 text-lg"></i>
-                        <input type="text" id="search-input" oninput="applyFilters()" placeholder="Search vegetables, fruits, farmers..."
-                            value="{{ search_query }}"
+                        <input type="text" id="search-input" oninput="applyFilters()"
+                            placeholder="Search vegetables, fruits, farmers..." value="{{ search_query }}"
                             class="w-full pl-3 pr-4 py-3 bg-transparent text-sm font-medium text-slate-700 focus:outline-none placeholder-slate-400">
                     </div>
-                    
+
                     <div class="text-slate-500 font-medium text-sm flex-shrink-0">
-                        <span id="product-count" class="font-bold text-slate-800">{{ vegetables|length }}</span> items found
+                        <span id="product-count" class="font-bold text-slate-800">{{ vegetables|length }}</span> items
+                        found
                     </div>
                 </div>
 
@@ -149,43 +174,51 @@
                 <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {% for veg in vegetables %}
                     <!-- Product Card -->
-                    <div class="product-card group relative"
-                        data-category="{{ veg.category }}"
+                    <div class="product-card group relative" data-category="{{ veg.category }}"
                         data-name="{{ veg.name|lower }}"
                         data-farmer="{{ veg.farmer.first_name|lower }} {{ veg.farmer.last_name|lower }}">
-                        
+
                         <!-- Image Container -->
-                        <div class="relative h-40 w-4/5 mx-auto overflow-hidden cursor-pointer rounded-xl" onclick="window.location='{% url 'product_detail' veg.pk %}'">
+                        <div class="relative h-40 w-4/5 mx-auto overflow-hidden cursor-pointer rounded-xl"
+                            onclick="window.location='{% url 'product_detail' veg.pk %}'">
                             {% if veg.image %}
-                            <img src="{{ veg.image.url }}" alt="{{ veg.name }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <img src="{{ veg.image.url }}" alt="{{ veg.name }}"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                             {% else %}
                             <div class="w-full h-full bg-slate-100 flex items-center justify-center">
                                 <i class="fas fa-leaf text-5xl text-emerald-200"></i>
                             </div>
                             {% endif %}
-                            
+
                             <!-- Category Badge Top Right -->
-                            <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest text-emerald-800 shadow-sm border border-white/50 z-10">
+                            <div
+                                class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest text-emerald-800 shadow-sm border border-white/50 z-10">
                                 {{ veg.category }}
                             </div>
 
                             <!-- Farmer's Special Badge Top Left -->
                             {% if veg.is_farmers_special %}
-                            <div class="absolute top-3 left-3 bg-amber-500 text-white px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center gap-1 z-10">
+                            <div
+                                class="absolute top-3 left-3 bg-amber-500 text-white px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center gap-1 z-10">
                                 <i class="fas fa-star text-[9px]"></i> Special
                             </div>
                             {% endif %}
-                            
+
                             <!-- Hover Overlay -->
-                            <div class="absolute inset-0 bg-slate-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div
+                                class="absolute inset-0 bg-slate-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            </div>
                         </div>
-                        
+
                         <!-- Content -->
                         <div class="p-4 flex flex-col gap-2 bg-white relative z-20">
                             <div>
-                                <h3 class="font-heading font-bold text-xl text-slate-800 truncate mb-1 cursor-pointer hover:text-emerald-600 transition-colors" title="{{ veg.name }}" onclick="window.location='{% url 'product_detail' veg.pk %}'">{{ veg.name }}</h3>
+                                <h3 class="font-heading font-bold text-xl text-slate-800 truncate mb-1 cursor-pointer hover:text-emerald-600 transition-colors"
+                                    title="{{ veg.name }}"
+                                    onclick="window.location='{% url 'product_detail' veg.pk %}'">{{ veg.name }}</h3>
                                 <p class="text-slate-500 text-xs font-medium flex items-center gap-1">
-                                    <i class="fas fa-house-chimney text-emerald-500/60"></i> Farmer: {{ veg.farmer.first_name }} {{ veg.farmer.last_name }}
+                                    <i class="fas fa-house-chimney text-emerald-500/60"></i> Farmer: {{
+                                    veg.farmer.first_name }} {{ veg.farmer.last_name }}
                                 </p>
                             </div>
 
@@ -195,31 +228,45 @@
                                     <div>
                                         {% if veg.discount_price %}
                                         <div class="flex items-baseline gap-2">
-                                            <span class="text-2xl text-emerald-600 leading-none">₹{{ veg.discount_price }}</span>
-                                            <span class="text-xs text-slate-400 line-through">₹{{ veg.price_per_unit }}</span>
+                                            <span class="text-2xl text-emerald-600 leading-none">₹{{ veg.discount_price
+                                                }}</span>
+                                            <span class="text-xs text-slate-400 line-through">₹{{ veg.price_per_unit
+                                                }}</span>
                                         </div>
                                         <span class="text-xs text-slate-500 font-medium">per {{ veg.unit }}</span>
                                         {% else %}
                                         <div class="flex items-baseline gap-1">
-                                            <span class="text-2xl text-emerald-600 leading-none">₹{{ veg.price_per_unit }}</span>
+                                            <span class="text-2xl text-emerald-600 leading-none">₹{{ veg.price_per_unit
+                                                }}</span>
                                             <span class="text-xs text-slate-500 font-medium">/ {{ veg.unit }}</span>
                                         </div>
                                         {% endif %}
                                     </div>
                                     <div class="text-right">
-                                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Stock</p>
-                                        <p class="text-sm text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md inline-block">{{ veg.quantity }} {{ veg.unit }}</p>
+                                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                                            Stock</p>
+                                        <p
+                                            class="text-sm text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md inline-block">
+                                            {{ veg.quantity }} {{ veg.unit }}</p>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Freshness Status -->
                                 <div class="mb-4">
                                     {% with status=veg.freshness_status %}
-                                        {% if status == 'fresh' %}<span class="badge-fresh text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">🟢 Fresh Today</span>
-                                        {% elif status == 'good' %}<span class="badge-good text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">🟡 Standard Good</span>
-                                        {% elif status == 'aging' %}<span class="badge-aging text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">🟠 Final Days</span>
-                                        {% elif status == 'expired' %}<span class="badge-old text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">🔴 Clearance</span>
-                                        {% endif %}
+                                    {% if status == 'fresh' %}<span
+                                        class="badge-fresh text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">🟢
+                                        Fresh Today</span>
+                                    {% elif status == 'good' %}<span
+                                        class="badge-good text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">🟡
+                                        Standard Good</span>
+                                    {% elif status == 'aging' %}<span
+                                        class="badge-aging text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">🟠
+                                        Final Days</span>
+                                    {% elif status == 'expired' %}<span
+                                        class="badge-old text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm">🔴
+                                        Clearance</span>
+                                    {% endif %}
                                     {% endwith %}
                                 </div>
 
@@ -230,16 +277,19 @@
                                     <form method="post" action="{% url 'buy_now_action' veg.pk %}" class="w-full">
                                         {% csrf_token %}
                                         <input type="hidden" name="quantity" value="1">
-                                        <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl transition-all shadow-md text-sm flex items-center justify-center focus:ring-2 focus:ring-slate-400 focus:outline-none">
+                                        <button type="submit"
+                                            class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl transition-all shadow-md text-sm flex items-center justify-center focus:ring-2 focus:ring-slate-400 focus:outline-none">
                                             Buy Now
                                         </button>
                                     </form>
-                                    
+
                                     <!-- Add to Cart Route -->
-                                    <form method="post" action="{% url 'add_to_cart' veg.pk %}" class="w-full cart-form">
+                                    <form method="post" action="{% url 'add_to_cart' veg.pk %}"
+                                        class="w-full cart-form">
                                         {% csrf_token %}
                                         <input type="hidden" name="quantity" value="1">
-                                        <button type="submit" class="w-full bg-emerald-50 hover:bg-emerald-500 hover:text-white border border-emerald-200 hover:border-emerald-500 text-emerald-700 font-bold py-2.5 rounded-xl transition-all shadow-sm text-sm flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
+                                        <button type="submit"
+                                            class="w-full bg-emerald-50 hover:bg-emerald-500 hover:text-white border border-emerald-200 hover:border-emerald-500 text-emerald-700 font-bold py-2.5 rounded-xl transition-all shadow-sm text-sm flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
                                             <i class="fas fa-cart-shopping"></i> Add Cart
                                         </button>
                                     </form>
@@ -249,24 +299,31 @@
                         </div>
                     </div>
                     {% empty %}
-                    <div class="col-span-full flex flex-col items-center justify-center py-24 glass-sidebar rounded-3xl" id="empty-initial">
-                        <div class="w-24 h-24 bg-emerald-50 rounded-[2rem] flex items-center justify-center mb-6 shadow-inner border border-emerald-100 transform -rotate-6">
+                    <div class="col-span-full flex flex-col items-center justify-center py-24 glass-sidebar rounded-3xl"
+                        id="empty-initial">
+                        <div
+                            class="w-24 h-24 bg-emerald-50 rounded-[2rem] flex items-center justify-center mb-6 shadow-inner border border-emerald-100 transform -rotate-6">
                             <i class="fas fa-basket-shopping text-emerald-300 text-4xl"></i>
                         </div>
                         <h3 class="font-heading font-black text-2xl text-slate-800 mb-2">Marketplace is Empty</h3>
-                        <p class="text-slate-500 text-center max-w-sm">Farmers haven't listed any products yet. Check back soon for fresh organic produce!</p>
+                        <p class="text-slate-500 text-center max-w-sm">Farmers haven't listed any products yet. Check
+                            back soon for fresh organic produce!</p>
                     </div>
                     {% endfor %}
                 </div>
 
                 <!-- No Search Results (Hidden initially) -->
-                <div id="no-results" class="hidden flex-col items-center justify-center py-24 glass-sidebar rounded-3xl border border-dashed border-slate-300">
-                    <div class="w-20 h-20 bg-slate-100 rounded-[2rem] flex items-center justify-center mb-6 text-slate-400 text-3xl shadow-inner">
+                <div id="no-results"
+                    class="hidden flex-col items-center justify-center py-24 glass-sidebar rounded-3xl border border-dashed border-slate-300">
+                    <div
+                        class="w-20 h-20 bg-slate-100 rounded-[2rem] flex items-center justify-center mb-6 text-slate-400 text-3xl shadow-inner">
                         <i class="fas fa-search"></i>
                     </div>
                     <h3 class="font-heading font-black text-2xl text-slate-800 mb-2">No Matches Found</h3>
-                    <p class="text-slate-500 text-center text-sm">We couldn't find any products matching your search or category filter. Try adjusting your filters!</p>
-                    <button onclick="filterCat('all'); document.getElementById('search-input').value='';" class="mt-6 font-bold text-emerald-600 bg-emerald-50 px-6 py-2.5 rounded-xl hover:bg-emerald-100 transition-colors">
+                    <p class="text-slate-500 text-center text-sm">We couldn't find any products matching your search or
+                        category filter. Try adjusting your filters!</p>
+                    <button onclick="filterCat('all'); document.getElementById('search-input').value='';"
+                        class="mt-6 font-bold text-emerald-600 bg-emerald-50 px-6 py-2.5 rounded-xl hover:bg-emerald-100 transition-colors">
                         Clear All Filters
                     </button>
                 </div>
@@ -277,81 +334,82 @@
 </div>
 
 <script>
-function filterCat(cat) {
-    activeCat = cat;
-    document.getElementById('category-dropdown').value = cat;
-    applyFilters();
-}
-
-function applyFilters() {
-    const query = document.getElementById('search-input').value.toLowerCase().trim();
-    const cards = document.querySelectorAll('.product-card');
-    let visible = 0;
-    
-    cards.forEach(card => {
-        const matchCat = activeCat === 'all' || card.dataset.category === activeCat;
-        const matchSearch = !query || card.dataset.name.includes(query) || card.dataset.farmer.includes(query);
-        const show = matchCat && matchSearch;
-        
-        if(show) {
-            card.style.display = 'block';
-            visible++;
-        } else {
-            card.style.display = 'none';
-        }
-    });
-    
-    // Update counter
-    const counter = document.getElementById('product-count');
-    if(counter) counter.innerText = visible;
-    
-    // Toggle no results specific to filters
-    const noResultsDiv = document.getElementById('no-results');
-    const initialEmptyDiv = document.getElementById('empty-initial');
-    
-    if (visible === 0) {
-        // if user is actively searching/filtering, show 'no-search-results' message
-        if (cards.length > 0) {
-            noResultsDiv.style.display = 'flex';
-        }
-    } else {
-        noResultsDiv.style.display = 'none';
-    }
-}
-
-// Auto-apply on page load
-document.addEventListener('DOMContentLoaded', function() {
-    if (document.getElementById('search-input').value.trim()) {
+    function filterCat(cat) {
+        activeCat = cat;
+        document.getElementById('category-dropdown').value = cat;
         applyFilters();
     }
 
-    // Cart modal
-    document.querySelectorAll('form.cart-form').forEach(function(form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            fetch(form.action, {
-                method: 'POST',
-                body: new FormData(form),
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            }).finally(showCartModal);
+    function applyFilters() {
+        const query = document.getElementById('search-input').value.toLowerCase().trim();
+        const cards = document.querySelectorAll('.product-card');
+        let visible = 0;
+
+        cards.forEach(card => {
+            const matchCat = activeCat === 'all' || card.dataset.category === activeCat;
+            const matchSearch = !query || card.dataset.name.includes(query) || card.dataset.farmer.includes(query);
+            const show = matchCat && matchSearch;
+
+            if (show) {
+                card.style.display = 'block';
+                visible++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // Update counter
+        const counter = document.getElementById('product-count');
+        if (counter) counter.innerText = visible;
+
+        // Toggle no results specific to filters
+        const noResultsDiv = document.getElementById('no-results');
+        const initialEmptyDiv = document.getElementById('empty-initial');
+
+        if (visible === 0) {
+            // if user is actively searching/filtering, show 'no-search-results' message
+            if (cards.length > 0) {
+                noResultsDiv.style.display = 'flex';
+            }
+        } else {
+            noResultsDiv.style.display = 'none';
+        }
+    }
+
+    // Auto-apply on page load
+    document.addEventListener('DOMContentLoaded', function () {
+        if (document.getElementById('search-input').value.trim()) {
+            applyFilters();
+        }
+
+        // Cart modal
+        document.querySelectorAll('form.cart-form').forEach(function (form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                }).finally(showCartModal);
+            });
         });
     });
-});
 
-let cartTimer;
-function showCartModal() {
-    document.getElementById('cart-modal').classList.remove('hidden');
-    clearTimeout(cartTimer);
-    cartTimer = setTimeout(hideCartModal, 3000);
-}
-function hideCartModal() {
-    document.getElementById('cart-modal').classList.add('hidden');
-}
+    let cartTimer;
+    function showCartModal() {
+        document.getElementById('cart-modal').classList.remove('hidden');
+        clearTimeout(cartTimer);
+        cartTimer = setTimeout(hideCartModal, 3000);
+    }
+    function hideCartModal() {
+        document.getElementById('cart-modal').classList.add('hidden');
+    }
 </script>
 
 <!-- Add to Cart Success Modal -->
 <div id="cart-modal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center">
-    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-100">
+    <div
+        class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-100">
         <div class="flex items-center justify-between mb-6">
             <div class="flex items-center gap-3 flex-1">
                 <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">

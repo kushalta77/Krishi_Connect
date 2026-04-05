@@ -225,6 +225,7 @@ def customer_dashboard(request):
     user_profile = request.user.userprofile
     orders = CustomerOrder.objects.filter(customer=request.user)
     total_spent = orders.aggregate(total=Sum('total_price'))['total'] or 0
+    in_transit = orders.filter(status='confirmed').count()
     recommended = Vegetable.objects.filter(available=True).order_by('-created_at')[:3]
     cart, _ = Cart.objects.get_or_create(customer=request.user)
     context = {
@@ -232,6 +233,7 @@ def customer_dashboard(request):
         'user_profile': user_profile,
         'orders': orders,
         'total_spent': total_spent,
+        'in_transit': in_transit,
         'recommended': recommended,
         'cart': cart,
     }

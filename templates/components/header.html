@@ -9,7 +9,8 @@
                     </div>
                     <div>
                         <span class="text-2xl font-bold text-white">Krishi Connect</span>
-                        <p class="text-green-100 text-xs" data-en="Smart Agriculture Portal" data-ne="स्मार्ट कृषि पोर्टल">Smart Agriculture Portal</p>
+                        <p class="text-green-100 text-xs" data-en="Smart Agriculture Portal"
+                            data-ne="स्मार्ट कृषि पोर्टल">Smart Agriculture Portal</p>
                     </div>
                 </a>
             </div>
@@ -19,7 +20,7 @@
                 <a href="/" class="nav-link" data-en="Home" data-ne="घर">
                     <span>Home</span>
                 </a>
-                {% if user.is_authenticated and user.role in 'farmer' and 'reset_password' not in request.resolver_match.url_name and 'forgot_password' not in request.resolver_match.url_name %}
+                {% if user.is_authenticated and user.userprofile.role == 'farmer' and 'reset_password' not in request.resolver_match.url_name and 'forgot_password' not in request.resolver_match.url_name %}
                 <a href="/crops/" class="nav-link" data-en="Crops" data-ne="बाली">
                     <span>Crops</span>
                 </a>
@@ -45,7 +46,7 @@
                 <a href="{% url 'public_marketplace' %}" class="nav-link" data-en="Marketplace" data-ne="बजार">
                     <span>Marketplace</span>
                 </a>
-                
+
                 <a href="/blog/" class="nav-link" data-en="Blog" data-ne="ब्लग">
                     <span>Blog</span>
                 </a>
@@ -57,25 +58,31 @@
             <!-- Right Section -->
             <div class="flex items-center">
             </div>
-            
+
             <!-- Auth & Language - Absolute Right -->
             <div class="absolute right-4 flex items-center space-x-4">
                 <!-- User Section -->
                 <div class="hidden md:flex items-center space-x-3">
                     {% if user.is_authenticated and 'reset_password' not in request.resolver_match.url_name and 'forgot_password' not in request.resolver_match.url_name %}
-                    <a href="{% if user.userprofile.role == 'farmer' %}{% url 'dashboard' %}{% else %}{% url 'customer_dashboard' %}{% endif %}" class="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer group">
+                    <a href="{% if user.userprofile.role == 'farmer' %}{% url 'dashboard' %}{% else %}{% url 'customer_dashboard' %}{% endif %}"
+                        class="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer group">
                         <div class="text-right">
                             <p class="text-white text-sm font-medium" data-en="Welcome" data-ne="स्वागतम्">Welcome</p>
                             <p class="text-green-100 text-xs group-hover:text-white transition-colors capitalize">{{ user.userprofile.role }}</p>
                         </div>
-                        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                        <div
+                            class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center group-hover:bg-white/30 transition-colors">
                             <i class="fas fa-user text-white text-sm"></i>
                         </div>
                     </a>
                     {% else %}
                     <div class="flex items-center space-x-2">
-                        <a href="{% url 'login' %}" class="text-white hover:text-green-200 px-4 py-2 rounded-lg transition-colors" data-en="Login" data-ne="लगइन">Login</a>
-                        <a href="{% url 'register' %}" class="bg-white text-green-600 hover:bg-green-50 px-4 py-2 rounded-lg font-medium transition-colors" data-en="Register" data-ne="दर्ता">Register</a>
+                        <a href="{% url 'login' %}"
+                            class="text-white hover:text-green-200 px-4 py-2 rounded-lg transition-colors"
+                            data-en="Login" data-ne="लगइन">Login</a>
+                        <a href="{% url 'register' %}"
+                            class="bg-white text-green-600 hover:bg-green-50 px-4 py-2 rounded-lg font-medium transition-colors"
+                            data-en="Register" data-ne="दर्ता">Register</a>
                     </div>
                     {% endif %}
                 </div>
@@ -90,68 +97,72 @@
 </header>
 
 <style>
-.nav-link {
-    @apply text-white/80 hover:text-white px-4 py-2 transition-all duration-300 relative flex items-center space-x-3;
-    font-size: 1.125rem;
-    font-weight: 400;
-}
-.nav-link svg {
-    width: 1.25rem;
-    height: 1.25rem;
-}
-.nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 2px;
-    background-color: #22c55e;
-    transition: all 0.3s ease;
-    transform: translateX(-50%);
-}
-.nav-link:hover::after {
-    width: 100%;
-}
-.nav-link:hover {
-    color: white;
-    transform: translateY(-2px);
-}
+    .nav-link {
+        @apply text-white/80 hover:text-white px-4 py-2 transition-all duration-300 relative flex items-center space-x-3;
+        font-size: 1.125rem;
+        font-weight: 400;
+    }
+
+    .nav-link svg {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background-color: #22c55e;
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+    }
+
+    .nav-link:hover::after {
+        width: 100%;
+    }
+
+    .nav-link:hover {
+        color: white;
+        transform: translateY(-2px);
+    }
 </style>
 
 <script>
-// Language Toggle Functionality
-let currentLang = 'en';
+    // Language Toggle Functionality
+    let currentLang = 'en';
 
-document.getElementById('langToggle').addEventListener('click', function() {
-    currentLang = currentLang === 'en' ? 'ne' : 'en';
-    
-    // Update toggle button text
-    document.getElementById('langText').textContent = currentLang === 'en' ? 'NP' : 'ENG';
-    
-    // Update all elements with translation data
-    document.querySelectorAll('[data-en][data-ne]').forEach(element => {
-        const text = element.getAttribute('data-' + currentLang);
-        if (text) {
-            // Handle buttons with spans inside
-            const span = element.querySelector('span');
-            if (span && element.tagName === 'A') {
-                span.textContent = text;
-            } else {
-                element.textContent = text;
+    document.getElementById('langToggle').addEventListener('click', function () {
+        currentLang = currentLang === 'en' ? 'ne' : 'en';
+
+        // Update toggle button text
+        document.getElementById('langText').textContent = currentLang === 'en' ? 'NP' : 'ENG';
+
+        // Update all elements with translation data
+        document.querySelectorAll('[data-en][data-ne]').forEach(element => {
+            const text = element.getAttribute('data-' + currentLang);
+            if (text) {
+                // Handle buttons with spans inside
+                const span = element.querySelector('span');
+                if (span && element.tagName === 'A') {
+                    span.textContent = text;
+                } else {
+                    element.textContent = text;
+                }
             }
-        }
-    });
-    
-    // Store language preference
-    localStorage.setItem('language', currentLang);
-    
-    // Trigger custom event for other components
-    window.dispatchEvent(new CustomEvent('languageChanged', { detail: { language: currentLang } }));
-});
+        });
 
-// Load saved language preference
-document.addEventListener('DOMContentLoaded', function() {
-    localStorage.setItem('language', 'en');
-});
+        // Store language preference
+        localStorage.setItem('language', currentLang);
+
+        // Trigger custom event for other components
+        window.dispatchEvent(new CustomEvent('languageChanged', { detail: { language: currentLang } }));
+    });
+
+    // Load saved language preference
+    document.addEventListener('DOMContentLoaded', function () {
+        localStorage.setItem('language', 'en');
+    });
 </script>

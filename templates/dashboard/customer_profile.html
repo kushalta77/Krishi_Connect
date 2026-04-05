@@ -1,12 +1,15 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile | Krishi Connect</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -15,303 +18,390 @@
                 extend: {
                     fontFamily: { sans: ['Poppins', 'sans-serif'] },
                     colors: {
-                        brand: { 50:'#f0fdf4',100:'#dcfce7',200:'#bbf7d0',300:'#86efac',400:'#4ade80',500:'#22c55e',600:'#16a34a',700:'#15803d',800:'#166534',900:'#14532d' }
+                        brand: { 50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#86efac', 400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 800: '#166534', 900: '#14532d' }
                     }
                 }
             }
         }
     </script>
     <style>
-        body { background-color: #f8fafc; background-image: radial-gradient(#22c55e15 1px, transparent 1px); background-size: 32px 32px; }
-        .sidebar { background: linear-gradient(160deg, #14532d 0%, #166534 100%); }
-        .nav-item { position: relative; overflow: hidden; transition: all 0.3s ease; }
-        .nav-item::before { content: ''; position: absolute; left: 0; top: 0; width: 3px; height: 100%; background-color: #4ade80; transform: scaleY(0); transition: transform 0.3s ease; transform-origin: left; }
-        .nav-item:hover::before, .nav-item.active::before { transform: scaleY(1); }
-        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: #fff; }
-        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-    </style>
-</head>
-<body class="min-h-screen font-sans">
-<div class="flex h-screen overflow-hidden">
-
-    <!-- Sidebar -->
-    <aside class="w-72 h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0">
-        <div class="px-8 py-8">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20 shadow-lg">
-                    <i class="fas fa-leaf text-2xl text-brand-400"></i>
-                </div>
-                <div>
-                    <h2 class="font-bold text-2xl text-white tracking-tight">Krishi<span class="text-brand-400">Connect</span></h2>
-                    <p class="text-brand-200/80 text-[10px] tracking-wider uppercase font-semibold mt-1">Customer Portal</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- User card -->
-        <div class="mx-6 mb-8 mt-2 p-1 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 shadow-lg relative overflow-hidden group">
-            <div class="absolute inset-0 bg-brand-600/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
-            <div class="relative p-4 flex items-center gap-4">
-                <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-xl font-bold text-brand-700 shadow-md">
-                    {{ user.first_name|first|upper }}
-                </div>
-                <div class="min-w-0 flex-1">
-                    <p class="font-semibold text-white text-md truncate">{{ user.first_name }} {{ user.last_name }}</p>
-                    <span class="inline-flex items-center gap-1.5 text-[10px] bg-brand-400/20 text-brand-200 px-2 py-0.5 rounded-full mt-1 font-bold uppercase tracking-wider">
-                        <i class="fas fa-circle text-brand-400" style="font-size:6px"></i> Active Customer
-                    </span>
-                    <a href="{% url 'customer_profile' %}" class="mt-2 flex items-center gap-1 text-[10px] text-brand-300 hover:text-white transition-colors">
-                        <i class="fas fa-user-cog" style="font-size:9px"></i> View Profile
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto pb-6">
-            <p class="text-brand-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mb-2">Main Menu</p>
-            <a href="{% url 'dashboard' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-th-large w-5 text-center text-lg"></i><span>Dashboard</span>
-            </a>
-            <a href="{% url 'public_marketplace' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-store w-5 text-center text-lg"></i><span>Marketplace</span>
-            </a>
-            <a href="{% url 'cart' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-shopping-basket w-5 text-center text-lg"></i><span>My Cart</span>
-            </a>
-            <p class="text-brand-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Tools</p>
-            <a href="{% url 'weather' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-cloud-sun w-5 text-center text-lg"></i><span>Weather Updates</span>
-            </a>
-        </nav>
-
-        <div class="p-6 border-t border-white/10 mt-auto bg-black/10">
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="w-full flex items-center justify-center gap-3 py-3.5 bg-red-500/10 hover:bg-red-500 border border-red-500/20 hover:border-red-500 rounded-xl text-red-400 hover:text-white font-medium transition-all duration-300">
-                    <i class="fas fa-power-off"></i><span>Logout</span>
-                </button>
-            </form>
-        </div>
-    </aside>
-
-    <!-- Main Content -->
-    <div class="flex-1 flex flex-col overflow-hidden">
-
-        <!-- Top Bar -->
-        <header class="bg-white/80 backdrop-blur border-b border-gray-100 px-8 py-5 flex items-center justify-between shadow-sm flex-shrink-0">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-800">My Profile</h1>
-                <p class="text-gray-400 text-sm mt-0.5">Manage your account information and security</p>
-            </div>
-            <a href="{% url 'dashboard' %}" class="flex items-center gap-2 text-sm text-brand-600 hover:text-brand-700 font-semibold bg-brand-50 hover:bg-brand-100 px-4 py-2 rounded-xl transition-all">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-            </a>
-        </header>
-
-        <main class="flex-1 overflow-y-auto p-8">
-
-            {% for message in messages %}
-            <div class="flex items-center gap-3 p-4 rounded-xl border text-sm mb-6 {% if message.tags == 'success' %}bg-green-50 border-green-200 text-green-700{% else %}bg-red-50 border-red-200 text-red-700{% endif %}">
-                <i class="fas {% if message.tags == 'success' %}fa-check-circle text-green-500{% else %}fa-exclamation-circle text-red-500{% endif %}"></i>
-                {{ message }}
-            </div>
-            {% endfor %}
-
-            <div class="max-w-3xl mx-auto space-y-6">
-
-                <!-- Profile Card -->
-                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="h-24 bg-gradient-to-r from-brand-700 to-brand-500 relative">
-                        <div class="absolute -bottom-8 left-8">
-                            <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-2xl font-bold text-brand-700 shadow-lg border-4 border-white">
-                                {{ user.first_name|first|upper }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pt-12 pb-6 px-8">
-                        <h2 class="text-xl font-bold text-gray-800">{{ user.first_name }} {{ user.last_name }}</h2>
-                        <p class="text-gray-400 text-sm">@{{ user.username }}</p>
-                        <span class="inline-flex items-center gap-1.5 text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full mt-2 font-semibold">
-                            <i class="fas fa-shopping-basket text-[10px]"></i> Customer
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Edit Profile Info -->
-                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
-                    <h3 class="font-bold text-gray-800 text-lg mb-6 flex items-center gap-2">
-                        <i class="fas fa-user-edit text-brand-500"></i> Personal Information
-                    </h3>
-                    <form method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="update_info">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-600 mb-1.5">First Name</label>
-                                <input type="text" name="first_name" value="{{ user.first_name }}"
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-gray-50 focus:bg-white transition-all">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-600 mb-1.5">Last Name</label>
-                                <input type="text" name="last_name" value="{{ user.last_name }}"
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-gray-50 focus:bg-white transition-all">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-600 mb-1.5">Email Address</label>
-                                <input type="email" name="email" value="{{ user.email }}"
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-gray-50 focus:bg-white transition-all">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-600 mb-1.5">Phone Number</label>
-                                <input type="text" name="phone_number" value="{{ profile.phone_number|default:'' }}"
-                                    placeholder="+977 98XXXXXXXX"
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-gray-50 focus:bg-white transition-all">
-                            </div>
-                        </div>
-                        <div id="addresses" class="mt-4">
-                            <label class="block text-sm font-semibold text-gray-600 mb-4 flex items-center gap-2">
-                                <i class="fas fa-map-marker-alt text-brand-500"></i> Addresses
-                            </label>
-
-                            <!-- Default Address Field -->
-                            <div class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:border-brand-300 transition-all mb-4">
-                                <div class="flex items-center justify-between mb-3">
-                                    <label class="text-sm font-semibold text-gray-700">Default Address</label>
-                                    <div class="flex items-center gap-2">
-                                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-semibold">PRIMARY</span>
-                                        <button type="button" onclick="clearAddress('address')" class="text-red-500 hover:text-red-700 transition-colors" title="Clear this address">
-                                            <i class="fas fa-trash-alt text-sm"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <textarea name="address" rows="3" placeholder="Enter your primary delivery address"
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white focus:bg-white transition-all resize-none">{{ profile.address|default:'' }}</textarea>
-                                <p class="text-xs text-gray-500 mt-2">This is your primary address and will be used as default for deliveries</p>
-                            </div>
-
-                            <!-- Address 1 Field -->
-                            <div class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:border-brand-300 transition-all mb-4">
-                                <div class="flex items-center justify-between mb-3">
-                                    <label class="text-sm font-semibold text-gray-700">Address 1</label>
-                                    <div class="flex items-center gap-2">
-                                        <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full font-semibold">ADDITIONAL</span>
-                                        <button type="button" onclick="clearAddress('address2')" class="text-red-500 hover:text-red-700 transition-colors" title="Clear this address">
-                                            <i class="fas fa-trash-alt text-sm"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <textarea name="address2" rows="3" placeholder="Enter additional delivery address"
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white focus:bg-white transition-all resize-none">{{ profile.address2|default:'' }}</textarea>
-                                <p class="text-xs text-gray-500 mt-2">Additional address for deliveries</p>
-                            </div>
-
-                            <!-- Address 2 Field -->
-                            <div class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:border-brand-300 transition-all">
-                                <div class="flex items-center justify-between mb-3">
-                                    <label class="text-sm font-semibold text-gray-700">Address 2</label>
-                                    <div class="flex items-center gap-2">
-                                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-semibold">ADDITIONAL</span>
-                                        <button type="button" onclick="clearAddress('address3')" class="text-red-500 hover:text-red-700 transition-colors" title="Clear this address">
-                                            <i class="fas fa-trash-alt text-sm"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <textarea name="address3" rows="3" placeholder="Enter another delivery address"
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white focus:bg-white transition-all resize-none">{{ profile.address3|default:'' }}</textarea>
-                                <p class="text-xs text-gray-500 mt-2">Another additional address for deliveries</p>
-                            </div>
-                        </div>
-                        <div class="mt-4">
-                            <label class="block text-sm font-semibold text-gray-600 mb-1.5">Username</label>
-                            <input type="text" value="{{ user.username }}" disabled
-                                class="w-full px-4 py-3 rounded-xl border border-gray-100 text-sm bg-gray-100 text-gray-400 cursor-not-allowed">
-                            <p class="text-xs text-gray-400 mt-1">Username cannot be changed.</p>
-                        </div>
-                        <div class="mt-6 flex justify-end">
-                            <button type="submit" class="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all shadow-sm">
-                                <i class="fas fa-save"></i> Save Changes
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Change Password -->
-                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
-                    <h3 class="font-bold text-gray-800 text-lg mb-6 flex items-center gap-2">
-                        <i class="fas fa-lock text-brand-500"></i> Change Password
-                    </h3>
-                    <form method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="change_password">
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-600 mb-1.5">Current Password</label>
-                                <input type="password" name="current_password" placeholder="Enter current password"
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-gray-50 focus:bg-white transition-all">
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-600 mb-1.5">New Password</label>
-                                    <input type="password" name="new_password" placeholder="Min. 8 characters"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-gray-50 focus:bg-white transition-all">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-600 mb-1.5">Confirm New Password</label>
-                                    <input type="password" name="confirm_password" placeholder="Repeat new password"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-gray-50 focus:bg-white transition-all">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-6 flex justify-end">
-                            <button type="submit" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all shadow-sm">
-                                <i class="fas fa-key"></i> Update Password
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-            </div>
-        </main>
-    </div>
-</div>
-
-<script>
-function clearAddress(fieldName) {
-    if (confirm('Are you sure you want to clear this address?')) {
-        // Create a form to submit the clear address action
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '{% url "customer_profile" %}';
-
-        // Add CSRF token
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
-        if (csrfToken) {
-            const csrfInput = document.createElement('input');
-            csrfInput.type = 'hidden';
-            csrfInput.name = 'csrfmiddlewaretoken';
-            csrfInput.value = csrfToken.value;
-            form.appendChild(csrfInput);
+        body {
+            background-color: #f8fafc;
+            background-image: radial-gradient(#22c55e15 1px, transparent 1px);
+            background-size: 32px 32px;
         }
 
-        // Add action
-        const actionInput = document.createElement('input');
-        actionInput.type = 'hidden';
-        actionInput.name = 'action';
-        actionInput.value = 'clear_address';
-        form.appendChild(actionInput);
+        .sidebar {
+            background: linear-gradient(160deg, #14532d 0%, #166534 100%);
+        }
 
-        // Add address field
-        const fieldInput = document.createElement('input');
-        fieldInput.type = 'hidden';
-        fieldInput.name = 'address_field';
-        fieldInput.value = fieldName;
-        form.appendChild(fieldInput);
+        .nav-item {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
 
-        // Submit the form
-        document.body.appendChild(form);
-        form.submit();
-    }
-}
-</script>
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background-color: #4ade80;
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+            transform-origin: left;
+        }
+
+        .nav-item:hover::before,
+        .nav-item.active::before {
+            transform: scaleY(1);
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen font-sans">
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside class="w-72 h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0">
+            <div class="px-8 py-8">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20 shadow-lg">
+                        <i class="fas fa-leaf text-2xl text-brand-400"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-2xl text-white tracking-tight">Krishi<span
+                                class="text-brand-400">Connect</span></h2>
+                        <p class="text-brand-200/80 text-[10px] tracking-wider uppercase font-semibold mt-1">Customer
+                            Portal</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User card -->
+            <div
+                class="mx-6 mb-8 mt-2 p-1 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 shadow-lg relative overflow-hidden group">
+                <div
+                    class="absolute inset-0 bg-brand-600/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                </div>
+                <div class="relative p-4 flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-xl font-bold text-brand-700 shadow-md">
+                        {{ user.first_name|first|upper }}
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <p class="font-semibold text-white text-md truncate">{{ user.first_name }} {{ user.last_name }}
+                        </p>
+                        <span
+                            class="inline-flex items-center gap-1.5 text-[10px] bg-brand-400/20 text-brand-200 px-2 py-0.5 rounded-full mt-1 font-bold uppercase tracking-wider">
+                            <i class="fas fa-circle text-brand-400" style="font-size:6px"></i> Active Customer
+                        </span>
+                        <a href="{% url 'customer_profile' %}"
+                            class="mt-2 flex items-center gap-1 text-[10px] text-brand-300 hover:text-white transition-colors">
+                            <i class="fas fa-user-cog" style="font-size:9px"></i> View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto pb-6">
+                <p class="text-brand-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mb-2">Main Menu</p>
+                <a href="{% url 'dashboard' %}"
+                    class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                    <i class="fas fa-th-large w-5 text-center text-lg"></i><span>Dashboard</span>
+                </a>
+                <a href="{% url 'public_marketplace' %}"
+                    class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                    <i class="fas fa-store w-5 text-center text-lg"></i><span>Marketplace</span>
+                </a>
+                <a href="{% url 'cart' %}"
+                    class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                    <i class="fas fa-shopping-basket w-5 text-center text-lg"></i><span>My Cart</span>
+                </a>
+                <p class="text-brand-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Tools</p>
+                <a href="{% url 'weather' %}"
+                    class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                    <i class="fas fa-cloud-sun w-5 text-center text-lg"></i><span>Weather Updates</span>
+                </a>
+            </nav>
+
+            <div class="p-6 border-t border-white/10 mt-auto bg-black/10">
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit"
+                        class="w-full flex items-center justify-center gap-3 py-3.5 bg-red-500/10 hover:bg-red-500 border border-red-500/20 hover:border-red-500 rounded-xl text-red-400 hover:text-white font-medium transition-all duration-300">
+                        <i class="fas fa-power-off"></i><span>Logout</span>
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+
+            <!-- Top Bar -->
+            <header
+                class="bg-white/80 backdrop-blur border-b border-gray-100 px-8 py-5 flex items-center justify-between shadow-sm flex-shrink-0">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">My Profile</h1>
+                    <p class="text-gray-400 text-sm mt-0.5">Manage your account information and security</p>
+                </div>
+                <a href="{% url 'dashboard' %}"
+                    class="flex items-center gap-2 text-sm text-brand-600 hover:text-brand-700 font-semibold bg-brand-50 hover:bg-brand-100 px-4 py-2 rounded-xl transition-all">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </header>
+
+            <main class="flex-1 overflow-y-auto p-8">
+
+                {% for message in messages %}
+                <div
+                    class="flex items-center gap-3 p-4 rounded-xl border text-sm mb-6 {% if message.tags == 'success' %}bg-green-50 border-green-200 text-green-700{% else %}bg-red-50 border-red-200 text-red-700{% endif %}">
+                    <i
+                        class="fas {% if message.tags == 'success' %}fa-check-circle text-green-500{% else %}fa-exclamation-circle text-red-500{% endif %}"></i>
+                    {{ message }}
+                </div>
+                {% endfor %}
+
+                <div class="max-w-3xl mx-auto space-y-6">
+
+                    <!-- Profile Card -->
+                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="h-24 bg-gradient-to-r from-brand-700 to-brand-500 relative">
+                            <div class="absolute -bottom-8 left-8">
+                                <div
+                                    class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-2xl font-bold text-brand-700 shadow-lg border-4 border-white">
+                                    {{ user.first_name|first|upper }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-12 pb-6 px-8">
+                            <h2 class="text-xl font-bold text-gray-800">{{ user.first_name }} {{ user.last_name }}</h2>
+                            <p class="text-gray-400 text-sm">@{{ user.username }}</p>
+                            <span
+                                class="inline-flex items-center gap-1.5 text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full mt-2 font-semibold">
+                                <i class="fas fa-shopping-basket text-[10px]"></i> Customer
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Edit Profile Info -->
+                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+                        <h3 class="font-bold text-gray-800 text-lg mb-6 flex items-center gap-2">
+                            <i class="fas fa-user-edit text-brand-500"></i> Personal Information
+                        </h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="update_info">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-600 mb-1.5">First Name</label>
+                                    <input type="text" name="first_name" value="{{ user.first_name }}"
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-gray-50 focus:bg-white transition-all">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-600 mb-1.5">Last Name</label>
+                                    <input type="text" name="last_name" value="{{ user.last_name }}"
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-gray-50 focus:bg-white transition-all">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-600 mb-1.5">Email
+                                        Address</label>
+                                    <input type="email" name="email" value="{{ user.email }}"
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-gray-50 focus:bg-white transition-all">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-600 mb-1.5">Phone Number</label>
+                                    <input type="text" name="phone_number" value="{{ profile.phone_number|default:'' }}"
+                                        placeholder="+977 98XXXXXXXX"
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-gray-50 focus:bg-white transition-all">
+                                </div>
+                            </div>
+                            <div id="addresses" class="mt-4">
+                                <label class="block text-sm font-semibold text-gray-600 mb-4 flex items-center gap-2">
+                                    <i class="fas fa-map-marker-alt text-brand-500"></i> Addresses
+                                </label>
+
+                                <!-- Default Address Field -->
+                                <div
+                                    class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:border-brand-300 transition-all mb-4">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <label class="text-sm font-semibold text-gray-700">Default Address</label>
+                                        <div class="flex items-center gap-2">
+                                            <span
+                                                class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-semibold">PRIMARY</span>
+                                            <button type="button" onclick="clearAddress('address')"
+                                                class="text-red-500 hover:text-red-700 transition-colors"
+                                                title="Clear this address">
+                                                <i class="fas fa-trash-alt text-sm"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <textarea name="address" rows="3" placeholder="Enter your primary delivery address"
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white focus:bg-white transition-all resize-none">{{ profile.address|default:'' }}</textarea>
+                                    <p class="text-xs text-gray-500 mt-2">This is your primary address and will be used
+                                        as default for deliveries</p>
+                                </div>
+
+                                <!-- Address 1 Field -->
+                                <div
+                                    class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:border-brand-300 transition-all mb-4">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <label class="text-sm font-semibold text-gray-700">Address 1</label>
+                                        <div class="flex items-center gap-2">
+                                            <span
+                                                class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full font-semibold">ADDITIONAL</span>
+                                            <button type="button" onclick="clearAddress('address2')"
+                                                class="text-red-500 hover:text-red-700 transition-colors"
+                                                title="Clear this address">
+                                                <i class="fas fa-trash-alt text-sm"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <textarea name="address2" rows="3" placeholder="Enter additional delivery address"
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white focus:bg-white transition-all resize-none">{{ profile.address2|default:'' }}</textarea>
+                                    <p class="text-xs text-gray-500 mt-2">Additional address for deliveries</p>
+                                </div>
+
+                                <!-- Address 2 Field -->
+                                <div
+                                    class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:border-brand-300 transition-all">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <label class="text-sm font-semibold text-gray-700">Address 2</label>
+                                        <div class="flex items-center gap-2">
+                                            <span
+                                                class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-semibold">ADDITIONAL</span>
+                                            <button type="button" onclick="clearAddress('address3')"
+                                                class="text-red-500 hover:text-red-700 transition-colors"
+                                                title="Clear this address">
+                                                <i class="fas fa-trash-alt text-sm"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <textarea name="address3" rows="3" placeholder="Enter another delivery address"
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white focus:bg-white transition-all resize-none">{{ profile.address3|default:'' }}</textarea>
+                                    <p class="text-xs text-gray-500 mt-2">Another additional address for deliveries</p>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <label class="block text-sm font-semibold text-gray-600 mb-1.5">Username</label>
+                                <input type="text" value="{{ user.username }}" disabled
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-100 text-sm bg-gray-100 text-gray-400 cursor-not-allowed">
+                                <p class="text-xs text-gray-400 mt-1">Username cannot be changed.</p>
+                            </div>
+                            <div class="mt-6 flex justify-end">
+                                <button type="submit"
+                                    class="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all shadow-sm">
+                                    <i class="fas fa-save"></i> Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Change Password -->
+                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+                        <h3 class="font-bold text-gray-800 text-lg mb-6 flex items-center gap-2">
+                            <i class="fas fa-lock text-brand-500"></i> Change Password
+                        </h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="change_password">
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-600 mb-1.5">Current
+                                        Password</label>
+                                    <input type="password" name="current_password" placeholder="Enter current password"
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-gray-50 focus:bg-white transition-all">
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-600 mb-1.5">New
+                                            Password</label>
+                                        <input type="password" name="new_password" placeholder="Min. 8 characters"
+                                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-gray-50 focus:bg-white transition-all">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-600 mb-1.5">Confirm New
+                                            Password</label>
+                                        <input type="password" name="confirm_password" placeholder="Repeat new password"
+                                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-gray-50 focus:bg-white transition-all">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 flex justify-end">
+                                <button type="submit"
+                                    class="flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all shadow-sm">
+                                    <i class="fas fa-key"></i> Update Password
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        function clearAddress(fieldName) {
+            if (confirm('Are you sure you want to clear this address?')) {
+                // Create a form to submit the clear address action
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{% url "customer_profile" %}';
+
+                // Add CSRF token
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+                if (csrfToken) {
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = 'csrfmiddlewaretoken';
+                    csrfInput.value = csrfToken.value;
+                    form.appendChild(csrfInput);
+                }
+
+                // Add action
+                const actionInput = document.createElement('input');
+                actionInput.type = 'hidden';
+                actionInput.name = 'action';
+                actionInput.value = 'clear_address';
+                form.appendChild(actionInput);
+
+                // Add address field
+                const fieldInput = document.createElement('input');
+                fieldInput.type = 'hidden';
+                fieldInput.name = 'address_field';
+                fieldInput.value = fieldName;
+                form.appendChild(fieldInput);
+
+                // Submit the form
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
 </body>
+
 </html>

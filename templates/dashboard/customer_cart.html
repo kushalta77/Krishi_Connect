@@ -1,14 +1,18 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart | Krishi Connect</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
     <script>
         tailwind.config = {
@@ -46,25 +50,30 @@
             background-image: radial-gradient(#22c55e15 1px, transparent 1px);
             background-size: 32px 32px;
         }
+
         .glass-panel {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02);
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
         }
+
         .sidebar {
             background: linear-gradient(160deg, #14532d 0%, #166534 100%);
-            border-right: 1px solid rgba(255,255,255,0.1);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
         }
+
         .hover-scale {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .nav-item {
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
         }
+
         .nav-item::before {
             content: '';
             position: absolute;
@@ -77,13 +86,18 @@
             transition: transform 0.3s ease;
             transform-origin: left;
         }
-        .nav-item:hover::before, .nav-item.active::before {
+
+        .nav-item:hover::before,
+        .nav-item.active::before {
             transform: scaleY(1);
         }
-        .nav-item:hover, .nav-item.active {
+
+        .nav-item:hover,
+        .nav-item.active {
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
         }
+
         .khalti-btn {
             background: #5C2D91;
             box-shadow: 0 8px 20px rgba(92, 45, 145, 0.25);
@@ -91,449 +105,511 @@
             color: white;
             transition: all 0.3s ease;
         }
+
         .khalti-btn:hover {
             background: #4a2475;
             box-shadow: 0 12px 25px rgba(92, 45, 145, 0.35);
         }
     </style>
 </head>
+
 <body class="min-h-screen text-slate-800 font-sans selection:bg-brand-200">
 
-<!-- Payment Method Selection Modal -->
-<div id="paymentModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-[999] p-4">
-    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-in fade-in zoom-in duration-300">
-        <div class="flex items-center justify-between mb-6">
-            <h3 class="text-2xl font-heading font-bold text-slate-800">Choose Payment Method</h3>
-            <button onclick="closePaymentModal()" class="text-slate-400 hover:text-slate-600 text-2xl">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-
-        <!-- Khalti Wallet Option -->
-        <button onclick="proceedToKhalti()" class="w-full mb-4 p-6 border-2 border-slate-200 hover:border-fuchsia-500 rounded-2xl transition-all hover:bg-fuchsia-50/30 group">
-            <div class="flex items-center gap-4">
-                <div class="w-16 h-16 bg-fuchsia-100 rounded-2xl flex items-center justify-center group-hover:bg-fuchsia-200 transition-colors">
-                    <i class="fas fa-wallet text-2xl text-fuchsia-600"></i>
-                </div>
-                <div class="flex-1 text-left">
-                    <p class="font-heading font-bold text-slate-800 text-lg">Khalti Wallet</p>
-                    <p class="text-slate-500 text-sm">Fast & Secure Payment</p>
-                </div>
-                <i class="fas fa-chevron-right text-slate-300 group-hover:text-fuchsia-500 transition-colors"></i>
-            </div>
-        </button>
-
-        <!-- eSewa Wallet Option -->
-        <button onclick="proceedToESewa()" class="w-full p-6 border-2 border-slate-200 hover:border-green-500 rounded-2xl transition-all hover:bg-green-50/30 group">
-            <div class="flex items-center gap-4">
-                <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center group-hover:bg-green-200 transition-colors">
-                    <i class="fas fa-credit-card text-2xl text-green-600"></i>
-                </div>
-                <div class="flex-1 text-left">
-                    <p class="font-heading font-bold text-slate-800 text-lg">eSewa Wallet</p>
-                    <p class="text-slate-500 text-sm">Easy Online Payment</p>
-                </div>
-                <i class="fas fa-chevron-right text-slate-300 group-hover:text-green-500 transition-colors"></i>
-            </div>
-        </button>
-
-        <!-- Cancel Button -->
-        <button onclick="closePaymentModal()" class="w-full mt-6 px-6 py-3 border-2 border-slate-200 text-slate-700 font-semibold rounded-xl hover:bg-slate-50 transition-colors">
-            Cancel
-        </button>
-    </div>
-</div>
-
-<!-- Hidden Khalti Form -->
-<form id="khalti-checkout-form" method="post" action="{% url 'buy_selected_items' %}" style="display:none;">
-    {% csrf_token %}
-    <input type="hidden" name="selected_items" id="selectedItemsInput">
-</form>
-
-<div id="overlay" onclick="closeSidebar()" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-all duration-300 opacity-0"></div>
-
-<div class="flex h-screen overflow-hidden">
-
-    <!-- Premium Sidebar -->
-    <aside id="sidebar" class="fixed md:static z-50 w-[280px] h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0 transition-transform duration-500 ease-out">
-        
-        <!-- Brand Logo -->
-        <div class="px-8 py-8 relative">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center border border-white/20 shadow-lg">
-                    <i class="fas fa-leaf text-2xl text-brand-400"></i>
-                </div>
-                <div>
-                    <h2 class="font-heading font-bold text-2xl text-white tracking-tight">Krishi<span class="text-brand-400">Connect</span></h2>
-                    <p class="text-brand-200/80 text-xs tracking-wider uppercase font-semibold mt-1">Farm to Home</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- User Profile Card -->
-        <div class="mx-6 mb-8 mt-2 p-1 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 shadow-lg relative overflow-hidden group">
-            <div class="absolute inset-0 bg-brand-600/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
-            <div class="relative p-4 flex items-center gap-4">
-                <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-xl font-heading font-bold text-brand-700 shadow-md">
-                    {{ user.first_name|first|upper }}
-                </div>
-                <div class="min-w-0 flex-1">
-                    <p class="font-heading font-semibold text-white text-md truncate">{{ user.first_name }} {{ user.last_name }}</p>
-                    <span class="inline-flex items-center gap-1.5 text-[10px] bg-brand-400/20 text-brand-200 px-2 py-0.5 rounded-full mt-1 font-bold uppercase tracking-wider">
-                        <i class="fas fa-circle text-brand-400" style="font-size:6px"></i> Active Customer
-                    </span>
-                    <a href="{% url 'customer_profile' %}" class="mt-2 flex items-center gap-1 text-[10px] text-brand-300 hover:text-white transition-colors">
-                        <i class="fas fa-user-cog" style="font-size:9px"></i> View Profile
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Navigation Links -->
-        <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto pb-6">
-            <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mb-2">Menu</p>
-
-            <a href="{% url 'customer_dashboard' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-slate-300 hover:text-white">
-                <i class="fas fa-chart-line w-5 text-center text-lg"></i> 
-                <span>Dashboard</span>
-            </a>
-            <a href="{% url 'customer_marketplace' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium hover:text-white">
-                <i class="fas fa-store w-5 text-center text-lg"></i> 
-                <span>Marketplace</span>
-            </a>
-            <a href="{% url 'customer_orders' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-box-open w-5 text-center text-lg"></i> 
-                <span>My Orders</span>
-            </a>
-
-            <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Others</p>
-            <a href="{% url 'weather' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-cloud-sun w-5 text-center text-lg"></i> 
-                <span>Weather Updates</span>
-            </a>
-        </nav>
-
-        <!-- Logout Area -->
-        <div class="p-6 border-t border-white/10 mt-auto bg-black/10">
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="w-full flex items-center justify-center gap-3 py-3.5 bg-red-500/10 hover:bg-red-500 border border-red-500/20 hover:border-red-500 rounded-xl text-red-400 hover:text-white font-medium transition-all duration-300 shadow-lg">
-                    <i class="fas fa-power-off"></i> 
-                    <span>Logout</span>
+    <!-- Payment Method Selection Modal -->
+    <div id="paymentModal"
+        class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-[999] p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-in fade-in zoom-in duration-300">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-heading font-bold text-slate-800">Choose Payment Method</h3>
+                <button onclick="closePaymentModal()" class="text-slate-400 hover:text-slate-600 text-2xl">
+                    <i class="fas fa-times"></i>
                 </button>
-            </form>
-        </div>
-    </aside>
-
-    <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col overflow-hidden relative">
-
-        <!-- Header (for mobile) -->
-        <div class="bg-white border-b border-slate-200 py-4 shadow-sm flex md:hidden items-center justify-between px-4">
-            <button onclick="openSidebar()" class="text-slate-600 hover:text-slate-900">
-                <i class="fas fa-bars text-2xl"></i>
-            </button>
-            <h1 class="font-heading font-bold text-xl text-slate-900">My Cart</h1>
-            <div class="w-6"></div>
-        </div>
-
-        <!-- Scrollable Content -->
-        <main class="flex-1 overflow-y-auto px-4 pb-12 pt-4">
-            <div class="max-w-4xl mx-auto">
-
-                <!-- Shopping Cart Summary -->
-                <div class="glass-panel rounded-3xl overflow-hidden fade-in-up">
-                    <div class="px-8 py-6 border-b border-slate-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white/50">
-                        <div>
-                            <h3 class="font-heading font-bold text-2xl text-slate-800 flex items-center gap-2">
-                                <i class="fas fa-shopping-cart text-brand-500"></i> My Smart Cart
-                            </h3>
-                            <p class="text-slate-500 text-sm mt-1">Review your items before checkout.</p>
-                        </div>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        {% for message in messages %}
-                        <div class="mx-8 mt-4 flex items-center gap-3 p-4 rounded-xl border text-sm {% if message.tags == 'success' %}bg-green-50 border-green-200 text-green-700{% else %}bg-red-50 border-red-200 text-red-700{% endif %}">
-                            <i class="fas {% if message.tags == 'success' %}fa-check-circle text-green-500{% else %}fa-exclamation-circle text-red-500{% endif %}"></i>
-                            {{ message }}
-                        </div>
-                        {% endfor %}
-                        <table class="w-full min-w-max">
-                            <thead>
-                                <tr class="bg-slate-50/50 text-slate-500 text-xs uppercase tracking-widest font-bold">
-                                    <th class="px-4 py-5 text-center w-12">
-                                        <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)" class="w-4 h-4 cursor-pointer rounded accent-brand-600">
-                                    </th>
-                                    <th class="px-8 py-5 text-left">Product Detail</th>
-                                    <th class="px-6 py-5 text-left">Price</th>
-                                    <th class="px-6 py-5 text-left">Quantity/Qty</th>
-                                    <th class="px-6 py-5 text-left">Subtotal</th>
-                                    <th class="px-6 py-5 text-right">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100">
-                                {% for item in cart.items.all %}
-                                <tr class="hover:bg-slate-50/50 transition-colors group" data-item-id="{{ item.pk }}" data-item-price="{{ item.subtotal }}">
-                                    <td class="px-4 py-5 text-center">
-                                        <input type="checkbox" class="item-checkbox w-4 h-4 cursor-pointer rounded accent-brand-600" onchange="updateSelectedTotal()">
-                                    </td>
-                                    <td class="px-8 py-5">
-                                        <div class="flex items-center gap-4">
-                                            {% if item.vegetable.image %}
-                                            <div class="w-14 h-14 rounded-2xl overflow-hidden shadow-sm border border-slate-100">
-                                                <img src="{{ item.vegetable.image.url }}" alt="{{ item.vegetable.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                                            </div>
-                                            {% else %}
-                                            <div class="w-14 h-14 bg-gradient-to-br from-brand-100 to-emerald-100 rounded-2xl flex items-center justify-center border border-brand-200 text-brand-500 shadow-inner">
-                                                <i class="fas fa-carrot text-xl"></i>
-                                            </div>
-                                            {% endif %}
-                                            <div>
-                                                <p class="font-heading font-bold text-slate-800 text-base">{{ item.vegetable.name }}</p>
-                                                <span class="inline-block px-2 py-0.5 mt-1 bg-slate-100 text-slate-600 text-[10px] font-bold uppercase rounded-md tracking-wider">{{ item.vegetable.category }}</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-5">
-                                        <p class="font-semibold text-slate-700">₹{{ item.vegetable.price_per_unit }}</p>
-                                        <p class="text-xs text-slate-400">per {{ item.vegetable.unit }}</p>
-                                    </td>
-                                    <td class="px-6 py-5">
-                                        <div class="inline-flex items-center gap-2 bg-slate-100 px-2 py-1.5 rounded-lg border border-slate-200">
-                                            <form method="post" action="{% url 'decrease_cart_quantity' item.pk %}" class="inline">
-                                                {% csrf_token %}
-                                                <button type="submit" class="w-7 h-7 flex items-center justify-center rounded-md bg-slate-200 text-slate-600 hover:bg-brand-500 hover:text-white transition-colors font-bold text-sm">
-                                                    <i class="fas fa-minus"></i>
-                                                </button>
-                                            </form>
-                                            <div class="min-w-[40px] text-center">
-                                                <span class="font-bold text-slate-700 text-sm">{{ item.quantity }}</span>
-                                                <span class="ml-1 text-xs text-slate-500">{{ item.vegetable.unit }}</span>
-                                            </div>
-                                            <form method="post" action="{% url 'increase_cart_quantity' item.pk %}" class="inline">
-                                                {% csrf_token %}
-                                                <button type="submit" class="w-7 h-7 flex items-center justify-center rounded-md bg-slate-200 text-slate-600 hover:bg-brand-500 hover:text-white transition-colors font-bold text-sm">
-                                                    <i class="fas fa-plus"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-5">
-                                        <p class="font-heading font-bold text-brand-600 text-lg">₹{{ item.subtotal|floatformat:0 }}</p>
-                                    </td>
-                                    <td class="px-6 py-5 text-right">
-                                        <form method="post" action="{% url 'remove_from_cart' item.pk %}" class="inline">
-                                            {% csrf_token %}
-                                            <button type="submit" class="w-9 h-9 flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-colors">
-                                                <i class="fas fa-trash-alt text-sm"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="5" class="py-16">
-                                        <div class="max-w-sm mx-auto text-center">
-                                            <div class="w-24 h-24 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                                                <i class="fas fa-shopping-basket text-4xl text-brand-300"></i>
-                                            </div>
-                                            <h4 class="text-xl font-heading font-bold text-slate-800 mb-2">Your cart is empty</h4>
-                                            <p class="text-slate-500 text-sm mb-6">Looks like you haven't added any fresh farm products yet.</p>
-                                            <a href="{% url 'customer_marketplace' %}" class="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-md">
-                                                Discover Fresh Produce
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Bottom Summary Section -->
-                    {% if cart.items.all %}
-                    <div class="px-8 py-8 border-t border-slate-100 bg-gradient-to-r from-slate-50 to-slate-100/50">
-                        <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
-                            <div>
-                                <p class="text-slate-600 text-sm font-medium mb-1">Order Summary</p>
-                                <p class="text-slate-500 text-xs">Selected items: <span class="font-bold text-slate-800" id="selectedCount">0</span> of <span class="font-bold">{{ cart.items.all|length }}</span></p>
-                            </div>
-                            
-                            <div class="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto">
-                                <div class="text-center sm:text-right flex-1 sm:flex-initial border-r-0 sm:border-r border-slate-300 pr-0 sm:pr-6">
-                                    <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2">Selected Total</p>
-                                    <p class="text-4xl font-heading font-bold text-slate-800">₹<span id="selectedTotal">0</span></p>
-                                </div>
-                                
-                                <!-- Buy Selected Button -->
-                                <button onclick="proceedToPayment()" class="w-full sm:w-auto px-8 py-3.5 bg-brand-600 hover:bg-brand-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-sm hover:scale-105" id="buySelectedBtn" disabled>
-                                    <span>Buy Selected</span>
-                                    <i class="fas fa-arrow-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-
             </div>
-        </main>
+
+            <!-- Khalti Wallet Option -->
+            <button onclick="proceedToKhalti()"
+                class="w-full mb-4 p-6 border-2 border-slate-200 hover:border-fuchsia-500 rounded-2xl transition-all hover:bg-fuchsia-50/30 group">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-16 h-16 bg-fuchsia-100 rounded-2xl flex items-center justify-center group-hover:bg-fuchsia-200 transition-colors">
+                        <i class="fas fa-wallet text-2xl text-fuchsia-600"></i>
+                    </div>
+                    <div class="flex-1 text-left">
+                        <p class="font-heading font-bold text-slate-800 text-lg">Khalti Wallet</p>
+                        <p class="text-slate-500 text-sm">Fast & Secure Payment</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-slate-300 group-hover:text-fuchsia-500 transition-colors"></i>
+                </div>
+            </button>
+
+            <!-- eSewa Wallet Option -->
+            <button onclick="proceedToESewa()"
+                class="w-full p-6 border-2 border-slate-200 hover:border-green-500 rounded-2xl transition-all hover:bg-green-50/30 group">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center group-hover:bg-green-200 transition-colors">
+                        <i class="fas fa-credit-card text-2xl text-green-600"></i>
+                    </div>
+                    <div class="flex-1 text-left">
+                        <p class="font-heading font-bold text-slate-800 text-lg">eSewa Wallet</p>
+                        <p class="text-slate-500 text-sm">Easy Online Payment</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-slate-300 group-hover:text-green-500 transition-colors"></i>
+                </div>
+            </button>
+
+            <!-- Cancel Button -->
+            <button onclick="closePaymentModal()"
+                class="w-full mt-6 px-6 py-3 border-2 border-slate-200 text-slate-700 font-semibold rounded-xl hover:bg-slate-50 transition-colors">
+                Cancel
+            </button>
+        </div>
     </div>
-</div>
 
-<script>
-    const khaltiPublicKey = "test_public_key_dc74e0fd57cb46cd93832aee0a390234";
+    <!-- Hidden Khalti Form -->
+    <form id="khalti-checkout-form" method="post" action="{% url 'buy_selected_items' %}" style="display:none;">
+        {% csrf_token %}
+        <input type="hidden" name="selected_items" id="selectedItemsInput">
+    </form>
 
-    // Get all selected items
-    function getSelectedItems() {
-        const checkboxes = document.querySelectorAll('.item-checkbox:checked');
-        const items = [];
-        checkboxes.forEach(checkbox => {
-            const row = checkbox.closest('tr');
-            items.push({
-                id: row.dataset.itemId,
-                price: parseFloat(row.dataset.itemPrice)
+    <div id="overlay" onclick="closeSidebar()"
+        class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-all duration-300 opacity-0">
+    </div>
+
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Premium Sidebar -->
+        <aside id="sidebar"
+            class="fixed md:static z-50 w-[280px] h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0 transition-transform duration-500 ease-out">
+
+            <!-- Brand Logo -->
+            <div class="px-8 py-8 relative">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center border border-white/20 shadow-lg">
+                        <i class="fas fa-leaf text-2xl text-brand-400"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-heading font-bold text-2xl text-white tracking-tight">Krishi<span
+                                class="text-brand-400">Connect</span></h2>
+                        <p class="text-brand-200/80 text-xs tracking-wider uppercase font-semibold mt-1">Farm to Home
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Profile Card -->
+            <div
+                class="mx-6 mb-8 mt-2 p-1 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 shadow-lg relative overflow-hidden group">
+                <div
+                    class="absolute inset-0 bg-brand-600/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                </div>
+                <div class="relative p-4 flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-xl font-heading font-bold text-brand-700 shadow-md">
+                        {{ user.first_name|first|upper }}
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <p class="font-heading font-semibold text-white text-md truncate">{{ user.first_name }} {{
+                            user.last_name }}</p>
+                        <span
+                            class="inline-flex items-center gap-1.5 text-[10px] bg-brand-400/20 text-brand-200 px-2 py-0.5 rounded-full mt-1 font-bold uppercase tracking-wider">
+                            <i class="fas fa-circle text-brand-400" style="font-size:6px"></i> Active Customer
+                        </span>
+                        <a href="{% url 'customer_profile' %}"
+                            class="mt-2 flex items-center gap-1 text-[10px] text-brand-300 hover:text-white transition-colors">
+                            <i class="fas fa-user-cog" style="font-size:9px"></i> View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto pb-6">
+                <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mb-2">Menu</p>
+
+                <a href="{% url 'customer_dashboard' %}"
+                    class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-slate-300 hover:text-white">
+                    <i class="fas fa-chart-line w-5 text-center text-lg"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'customer_marketplace' %}"
+                    class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium hover:text-white">
+                    <i class="fas fa-store w-5 text-center text-lg"></i>
+                    <span>Marketplace</span>
+                </a>
+                <a href="{% url 'customer_orders' %}"
+                    class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                    <i class="fas fa-box-open w-5 text-center text-lg"></i>
+                    <span>My Orders</span>
+                </a>
+
+                <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Others
+                </p>
+                <a href="{% url 'weather' %}"
+                    class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                    <i class="fas fa-cloud-sun w-5 text-center text-lg"></i>
+                    <span>Weather Updates</span>
+                </a>
+            </nav>
+
+            <!-- Logout Area -->
+            <div class="p-6 border-t border-white/10 mt-auto bg-black/10">
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit"
+                        class="w-full flex items-center justify-center gap-3 py-3.5 bg-red-500/10 hover:bg-red-500 border border-red-500/20 hover:border-red-500 rounded-xl text-red-400 hover:text-white font-medium transition-all duration-300 shadow-lg">
+                        <i class="fas fa-power-off"></i>
+                        <span>Logout</span>
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden relative">
+
+            <!-- Header (for mobile) -->
+            <div
+                class="bg-white border-b border-slate-200 py-4 shadow-sm flex md:hidden items-center justify-between px-4">
+                <button onclick="openSidebar()" class="text-slate-600 hover:text-slate-900">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+                <h1 class="font-heading font-bold text-xl text-slate-900">My Cart</h1>
+                <div class="w-6"></div>
+            </div>
+
+            <!-- Scrollable Content -->
+            <main class="flex-1 overflow-y-auto px-4 pb-12 pt-4">
+                <div class="max-w-4xl mx-auto">
+
+                    <!-- Shopping Cart Summary -->
+                    <div class="glass-panel rounded-3xl overflow-hidden fade-in-up">
+                        <div
+                            class="px-8 py-6 border-b border-slate-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white/50">
+                            <div>
+                                <h3 class="font-heading font-bold text-2xl text-slate-800 flex items-center gap-2">
+                                    <i class="fas fa-shopping-cart text-brand-500"></i> My Smart Cart
+                                </h3>
+                                <p class="text-slate-500 text-sm mt-1">Review your items before checkout.</p>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            {% for message in messages %}
+                            <div
+                                class="mx-8 mt-4 flex items-center gap-3 p-4 rounded-xl border text-sm {% if message.tags == 'success' %}bg-green-50 border-green-200 text-green-700{% else %}bg-red-50 border-red-200 text-red-700{% endif %}">
+                                <i
+                                    class="fas {% if message.tags == 'success' %}fa-check-circle text-green-500{% else %}fa-exclamation-circle text-red-500{% endif %}"></i>
+                                {{ message }}
+                            </div>
+                            {% endfor %}
+                            <table class="w-full min-w-max">
+                                <thead>
+                                    <tr
+                                        class="bg-slate-50/50 text-slate-500 text-xs uppercase tracking-widest font-bold">
+                                        <th class="px-4 py-5 text-center w-12">
+                                            <input type="checkbox" id="selectAllCheckbox"
+                                                onchange="toggleSelectAll(this)"
+                                                class="w-4 h-4 cursor-pointer rounded accent-brand-600">
+                                        </th>
+                                        <th class="px-8 py-5 text-left">Product Detail</th>
+                                        <th class="px-6 py-5 text-left">Price</th>
+                                        <th class="px-6 py-5 text-left">Quantity/Qty</th>
+                                        <th class="px-6 py-5 text-left">Subtotal</th>
+                                        <th class="px-6 py-5 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    {% for item in cart.items.all %}
+                                    <tr class="hover:bg-slate-50/50 transition-colors group"
+                                        data-item-id="{{ item.pk }}" data-item-price="{{ item.subtotal }}">
+                                        <td class="px-4 py-5 text-center">
+                                            <input type="checkbox"
+                                                class="item-checkbox w-4 h-4 cursor-pointer rounded accent-brand-600"
+                                                onchange="updateSelectedTotal()">
+                                        </td>
+                                        <td class="px-8 py-5">
+                                            <div class="flex items-center gap-4">
+                                                {% if item.vegetable.image %}
+                                                <div
+                                                    class="w-14 h-14 rounded-2xl overflow-hidden shadow-sm border border-slate-100">
+                                                    <img src="{{ item.vegetable.image.url }}"
+                                                        alt="{{ item.vegetable.name }}"
+                                                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                                </div>
+                                                {% else %}
+                                                <div
+                                                    class="w-14 h-14 bg-gradient-to-br from-brand-100 to-emerald-100 rounded-2xl flex items-center justify-center border border-brand-200 text-brand-500 shadow-inner">
+                                                    <i class="fas fa-carrot text-xl"></i>
+                                                </div>
+                                                {% endif %}
+                                                <div>
+                                                    <p class="font-heading font-bold text-slate-800 text-base">{{ item.vegetable.name }}</p>
+                                                    <span
+                                                        class="inline-block px-2 py-0.5 mt-1 bg-slate-100 text-slate-600 text-[10px] font-bold uppercase rounded-md tracking-wider">{{ item.vegetable.category }}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-5">
+                                            <p class="font-semibold text-slate-700">₹{{ item.vegetable.price_per_unit }}
+                                            </p>
+                                            <p class="text-xs text-slate-400">per {{ item.vegetable.unit }}</p>
+                                        </td>
+                                        <td class="px-6 py-5">
+                                            <div
+                                                class="inline-flex items-center gap-2 bg-slate-100 px-2 py-1.5 rounded-lg border border-slate-200">
+                                                <form method="post" action="{% url 'decrease_cart_quantity' item.pk %}"
+                                                    class="inline">
+                                                    {% csrf_token %}
+                                                    <button type="submit"
+                                                        class="w-7 h-7 flex items-center justify-center rounded-md bg-slate-200 text-slate-600 hover:bg-brand-500 hover:text-white transition-colors font-bold text-sm">
+                                                        <i class="fas fa-minus"></i>
+                                                    </button>
+                                                </form>
+                                                <div class="min-w-[40px] text-center">
+                                                    <span class="font-bold text-slate-700 text-sm">{{ item.quantity }}</span>
+                                                    <span class="ml-1 text-xs text-slate-500">{{ item.vegetable.unit }}</span>
+                                                </div>
+                                                <form method="post" action="{% url 'increase_cart_quantity' item.pk %}"
+                                                    class="inline">
+                                                    {% csrf_token %}
+                                                    <button type="submit"
+                                                        class="w-7 h-7 flex items-center justify-center rounded-md bg-slate-200 text-slate-600 hover:bg-brand-500 hover:text-white transition-colors font-bold text-sm">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-5">
+                                            <p class="font-heading font-bold text-brand-600 text-lg">₹{{ item.subtotal|floatformat:0 }}</p>
+                                        </td>
+                                        <td class="px-6 py-5 text-right">
+                                            <form method="post" action="{% url 'remove_from_cart' item.pk %}"
+                                                class="inline">
+                                                {% csrf_token %}
+                                                <button type="submit"
+                                                    class="w-9 h-9 flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-colors">
+                                                    <i class="fas fa-trash-alt text-sm"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="py-16">
+                                            <div class="max-w-sm mx-auto text-center">
+                                                <div
+                                                    class="w-24 h-24 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                                    <i class="fas fa-shopping-basket text-4xl text-brand-300"></i>
+                                                </div>
+                                                <h4 class="text-xl font-heading font-bold text-slate-800 mb-2">Your cart
+                                                    is empty</h4>
+                                                <p class="text-slate-500 text-sm mb-6">Looks like you haven't added any
+                                                    fresh farm products yet.</p>
+                                                <a href="{% url 'customer_marketplace' %}"
+                                                    class="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-md">
+                                                    Discover Fresh Produce
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Bottom Summary Section -->
+                        {% if cart.items.all %}
+                        <div class="px-8 py-8 border-t border-slate-100 bg-gradient-to-r from-slate-50 to-slate-100/50">
+                            <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+                                <div>
+                                    <p class="text-slate-600 text-sm font-medium mb-1">Order Summary</p>
+                                    <p class="text-slate-500 text-xs">Selected items: <span
+                                            class="font-bold text-slate-800" id="selectedCount">0</span> of <span
+                                            class="font-bold">{{ cart.items.all|length }}</span></p>
+                                </div>
+
+                                <div class="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto">
+                                    <div
+                                        class="text-center sm:text-right flex-1 sm:flex-initial border-r-0 sm:border-r border-slate-300 pr-0 sm:pr-6">
+                                        <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2">
+                                            Selected Total</p>
+                                        <p class="text-4xl font-heading font-bold text-slate-800">₹<span
+                                                id="selectedTotal">0</span></p>
+                                    </div>
+
+                                    <!-- Buy Selected Button -->
+                                    <button onclick="proceedToPayment()"
+                                        class="w-full sm:w-auto px-8 py-3.5 bg-brand-600 hover:bg-brand-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-sm hover:scale-105"
+                                        id="buySelectedBtn" disabled>
+                                        <span>Buy Selected</span>
+                                        <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const khaltiPublicKey = "test_public_key_dc74e0fd57cb46cd93832aee0a390234";
+
+        // Get all selected items
+        function getSelectedItems() {
+            const checkboxes = document.querySelectorAll('.item-checkbox:checked');
+            const items = [];
+            checkboxes.forEach(checkbox => {
+                const row = checkbox.closest('tr');
+                items.push({
+                    id: row.dataset.itemId,
+                    price: parseFloat(row.dataset.itemPrice)
+                });
+            });
+            return items;
+        }
+
+        // Update selected total dynamically
+        function updateSelectedTotal() {
+            const selectedItems = getSelectedItems();
+            let total = 0;
+            selectedItems.forEach(item => {
+                total += item.price;
+            });
+
+            document.getElementById('selectedCount').textContent = selectedItems.length;
+            document.getElementById('selectedTotal').textContent = Math.round(total);
+
+            // Enable/disable buy button
+            const buyBtn = document.getElementById('buySelectedBtn');
+            if (selectedItems.length > 0) {
+                buyBtn.disabled = false;
+            } else {
+                buyBtn.disabled = true;
+            }
+        }
+
+        // Toggle select all
+        function toggleSelectAll(selectAllCheckbox) {
+            const checkboxes = document.querySelectorAll('.item-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+            updateSelectedTotal();
+        }
+
+        // Show payment modal
+        function proceedToPayment() {
+            const selectedItems = getSelectedItems();
+            if (selectedItems.length === 0) {
+                alert('Please select at least one item');
+                return;
+            }
+            // Store selected items and redirect to checkout
+            const itemIds = selectedItems.map(item => item.id).join(',');
+            window.location.href = `{% url 'checkout_page' %}?items=${itemIds}`;
+        }
+
+        // Close payment modal
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+        }
+
+        // Close modal on outside click
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('paymentModal').addEventListener('click', function (e) {
+                if (e.target === this) {
+                    closePaymentModal();
+                }
+            });
+            // Close on ESC key
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    closePaymentModal();
+                }
             });
         });
-        return items;
-    }
 
-    // Update selected total dynamically
-    function updateSelectedTotal() {
-        const selectedItems = getSelectedItems();
-        let total = 0;
-        selectedItems.forEach(item => {
-            total += item.price;
-        });
-        
-        document.getElementById('selectedCount').textContent = selectedItems.length;
-        document.getElementById('selectedTotal').textContent = Math.round(total);
-        
-        // Enable/disable buy button
-        const buyBtn = document.getElementById('buySelectedBtn');
-        if (selectedItems.length > 0) {
-            buyBtn.disabled = false;
-        } else {
-            buyBtn.disabled = true;
-        }
-    }
-
-    // Toggle select all
-    function toggleSelectAll(selectAllCheckbox) {
-        const checkboxes = document.querySelectorAll('.item-checkbox');
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = selectAllCheckbox.checked;
-        });
-        updateSelectedTotal();
-    }
-
-    // Show payment modal
-    function proceedToPayment() {
-        const selectedItems = getSelectedItems();
-        if (selectedItems.length === 0) {
-            alert('Please select at least one item');
-            return;
-        }
-        // Store selected items and redirect to checkout
-        const itemIds = selectedItems.map(item => item.id).join(',');
-        window.location.href = `{% url 'checkout_page' %}?items=${itemIds}`;
-    }
-
-    // Close payment modal
-    function closePaymentModal() {
-        document.getElementById('paymentModal').classList.add('hidden');
-    }
-
-    // Close modal on outside click
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('paymentModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closePaymentModal();
+        // Proceed to Khalti payment
+        function proceedToKhalti() {
+            const selectedItems = getSelectedItems();
+            if (selectedItems.length === 0) {
+                alert('Please select at least one item');
+                return;
             }
-        });
-        // Close on ESC key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closePaymentModal();
+
+            let totalAmount = 0;
+            selectedItems.forEach(item => {
+                totalAmount += item.price;
+            });
+
+            let amountInPaisa = Math.round(totalAmount * 100);
+
+            const config = {
+                publicKey: khaltiPublicKey,
+                productIdentity: "cart-selection",
+                productName: "Krishi Connect Order",
+                productUrl: window.location.href,
+                paymentPreference: ["KHALTI", "EBANKING", "MOBILE_BANKING", "CONNECT_IPS", "SCT"],
+                amount: amountInPaisa,
+                currency: "NPR",
+                table: "cart_selection",
+                transactionPin: false,
+                maximumRefundDays: 4,
+                mobile: "",
+                literacy: "en",
+                eventHandler: {
+                    onSuccess(payload) {
+                        // Store selected items
+                        const itemIds = selectedItems.map(item => item.id).join(',');
+                        document.getElementById('selectedItemsInput').value = itemIds;
+                        document.getElementById('khalti-checkout-form').submit();
+                    },
+                    onError(error) {
+                        console.error('Error:', error);
+                        closePaymentModal();
+                    },
+                    onClose() {
+                        console.log('checkout window closed');
+                        closePaymentModal();
+                    },
+                },
+            };
+
+            const checkout = new KhaltiCheckout(config);
+            checkout.show({ amount: amountInPaisa });
+        }
+
+        // Proceed to eSewa payment
+        function proceedToESewa() {
+            const selectedItems = getSelectedItems();
+            if (selectedItems.length === 0) {
+                alert('Please select at least one item');
+                return;
             }
-        });
-    });
-
-    // Proceed to Khalti payment
-    function proceedToKhalti() {
-        const selectedItems = getSelectedItems();
-        if (selectedItems.length === 0) {
-            alert('Please select at least one item');
-            return;
+            alert('eSewa integration coming soon! For now, please use Khalti.');
+            closePaymentModal();
         }
 
-        let totalAmount = 0;
-        selectedItems.forEach(item => {
-            totalAmount += item.price;
-        });
-
-        let amountInPaisa = Math.round(totalAmount * 100);
-
-        const config = {
-            publicKey: khaltiPublicKey,
-            productIdentity: "cart-selection",
-            productName: "Krishi Connect Order",
-            productUrl: window.location.href,
-            paymentPreference: ["KHALTI", "EBANKING", "MOBILE_BANKING", "CONNECT_IPS", "SCT"],
-            amount: amountInPaisa,
-            currency: "NPR",
-            table: "cart_selection",
-            transactionPin: false,
-            maximumRefundDays: 4,
-            mobile: "",
-            literacy: "en",
-            eventHandler: {
-                onSuccess(payload) {
-                    // Store selected items
-                    const itemIds = selectedItems.map(item => item.id).join(',');
-                    document.getElementById('selectedItemsInput').value = itemIds;
-                    document.getElementById('khalti-checkout-form').submit();
-                },
-                onError(error) {
-                    console.error('Error:', error);
-                    closePaymentModal();
-                },
-                onClose() {
-                    console.log('checkout window closed');
-                    closePaymentModal();
-                },
-            },
-        };
-
-        const checkout = new KhaltiCheckout(config);
-        checkout.show({amount: amountInPaisa});
-    }
-
-    // Proceed to eSewa payment
-    function proceedToESewa() {
-        const selectedItems = getSelectedItems();
-        if (selectedItems.length === 0) {
-            alert('Please select at least one item');
-            return;
+        function openSidebar() {
+            document.getElementById('sidebar').classList.remove('-translate-x-full');
+            document.getElementById('overlay').classList.remove('hidden', 'opacity-0');
+            document.getElementById('overlay').classList.add('opacity-100');
         }
-        alert('eSewa integration coming soon! For now, please use Khalti.');
-        closePaymentModal();
-    }
 
-    function openSidebar() {
-        document.getElementById('sidebar').classList.remove('-translate-x-full');
-        document.getElementById('overlay').classList.remove('hidden', 'opacity-0');
-        document.getElementById('overlay').classList.add('opacity-100');
-    }
-    
-    function closeSidebar() {
-        document.getElementById('sidebar').classList.add('-translate-x-full');
-        document.getElementById('overlay').classList.remove('opacity-100');
-        setTimeout(() => {
-            document.getElementById('overlay').classList.add('hidden');
-        }, 300);
-    }
-</script>
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            document.getElementById('overlay').classList.remove('opacity-100');
+            setTimeout(() => {
+                document.getElementById('overlay').classList.add('hidden');
+            }, 300);
+        }
+    </script>
 </body>
+
 </html>

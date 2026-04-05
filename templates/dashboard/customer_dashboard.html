@@ -1,15 +1,19 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Dashboard | Krishi Connect</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <!-- Google Fonts for Premium Typography -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- Khalti Checkout JS -->
     <script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
     <script>
@@ -48,29 +52,35 @@
             background-image: radial-gradient(#22c55e15 1px, transparent 1px);
             background-size: 32px 32px;
         }
+
         .glass-panel {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02);
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
         }
+
         .sidebar {
             background: linear-gradient(160deg, #14532d 0%, #166534 100%);
-            border-right: 1px solid rgba(255,255,255,0.1);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
         }
+
         .hover-scale {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .hover-scale:hover {
             transform: translateY(-5px) scale(1.02);
             box-shadow: 0 20px 40px -10px rgba(34, 197, 94, 0.2);
         }
+
         .nav-item {
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
         }
+
         .nav-item::before {
             content: '';
             position: absolute;
@@ -83,13 +93,18 @@
             transition: transform 0.3s ease;
             transform-origin: left;
         }
-        .nav-item:hover::before, .nav-item.active::before {
+
+        .nav-item:hover::before,
+        .nav-item.active::before {
             transform: scaleY(1);
         }
-        .nav-item:hover, .nav-item.active {
+
+        .nav-item:hover,
+        .nav-item.active {
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
         }
+
         .khalti-btn {
             background: #5C2D91;
             box-shadow: 0 8px 20px rgba(92, 45, 145, 0.25);
@@ -99,6 +114,7 @@
             position: relative;
             overflow: hidden;
         }
+
         .khalti-btn::after {
             content: '';
             position: absolute;
@@ -106,38 +122,45 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: 0.5s;
         }
+
         .khalti-btn:hover::after {
             left: 100%;
         }
+
         .khalti-btn:hover {
             background: #4a2475;
             transform: translateY(-2px);
             box-shadow: 0 12px 25px rgba(92, 45, 145, 0.35);
         }
+
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
+
         ::-webkit-scrollbar-track {
             background: transparent;
         }
+
         ::-webkit-scrollbar-thumb {
             background: #cbd5e1;
             border-radius: 10px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
-        
+
         .fade-in-up {
             animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             opacity: 0;
             transform: translateY(20px);
         }
+
         @keyframes fadeInUp {
             to {
                 opacity: 1;
@@ -146,576 +169,661 @@
         }
     </style>
 </head>
+
 <body class="min-h-screen text-slate-800 font-sans selection:bg-brand-200">
 
-<!-- Mobile Overlay -->
-<div id="overlay" onclick="closeSidebar()" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-all duration-300 opacity-0"></div>
+    <!-- Mobile Overlay -->
+    <div id="overlay" onclick="closeSidebar()"
+        class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-all duration-300 opacity-0">
+    </div>
 
-<div class="flex h-screen overflow-hidden">
+    <div class="flex h-screen overflow-hidden">
 
-    <!-- Premium Sidebar -->
-    <aside id="sidebar" class="fixed md:static z-50 w-[280px] h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0 transition-transform duration-500 ease-out">
-        
-        <!-- Brand Logo -->
-        <div class="px-8 py-8 relative">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center border border-white/20 shadow-lg">
-                    <i class="fas fa-leaf text-2xl text-brand-400"></i>
-                </div>
-                <div>
-                    <h2 class="font-heading font-bold text-2xl text-white tracking-tight">Krishi<span class="text-brand-400">Connect</span></h2>
-                    <p class="text-brand-200/80 text-xs tracking-wider uppercase font-semibold mt-1">Farm to Home</p>
+        <!-- Premium Sidebar -->
+        <aside id="sidebar"
+            class="fixed md:static z-50 w-[280px] h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0 transition-transform duration-500 ease-out">
+
+            <!-- Brand Logo -->
+            <div class="px-8 py-8 relative">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center border border-white/20 shadow-lg">
+                        <i class="fas fa-leaf text-2xl text-brand-400"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-heading font-bold text-2xl text-white tracking-tight">Krishi<span
+                                class="text-brand-400">Connect</span></h2>
+                        <p class="text-brand-200/80 text-xs tracking-wider uppercase font-semibold mt-1">Farm to Home
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- User Profile Card -->
-        <div class="mx-6 mb-8 mt-2 p-1 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 shadow-lg relative overflow-hidden group">
-            <div class="absolute inset-0 bg-brand-600/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
-            <div class="relative p-4 flex items-center gap-4">
-                <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-xl font-heading font-bold text-brand-700 shadow-md">
-                    {{ user.first_name|first|upper }}
+            <!-- User Profile Card -->
+            <div
+                class="mx-6 mb-8 mt-2 p-1 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 shadow-lg relative overflow-hidden group">
+                <div
+                    class="absolute inset-0 bg-brand-600/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
                 </div>
-                <div class="min-w-0 flex-1">
-                    <p class="font-heading font-semibold text-white text-md truncate">{{ user.first_name }} {{ user.last_name }}</p>
-                    <span class="inline-flex items-center gap-1.5 text-[10px] bg-brand-400/20 text-brand-200 px-2 py-0.5 rounded-full mt-1 font-bold uppercase tracking-wider">
-                        <i class="fas fa-circle text-brand-400" style="font-size:6px"></i> Active Customer
-                    </span>
-                    <a href="{% url 'customer_profile' %}" class="mt-2 flex items-center gap-1 text-[10px] text-brand-300 hover:text-white transition-colors">
-                        <i class="fas fa-user-cog" style="font-size:9px"></i> View Profile
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Navigation Links -->
-        <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto pb-6">
-            <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mb-2">Menu</p>
-
-            <a href="{% url 'customer_dashboard' %}" class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-white shadow-[0_0_20px_rgba(74,222,128,0.1)]">
-                <i class="fas fa-chart-line w-5 text-center text-lg"></i> 
-                <span>Dashboard</span>
-            </a>
-            <a href="{% url 'customer_marketplace' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium hover:text-white">
-                <i class="fas fa-store w-5 text-center text-lg"></i> 
-                <span>Marketplace</span>
-            </a>
-            <a href="{% url 'customer_orders' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-box-open w-5 text-center text-lg"></i> 
-                <span>My Orders</span>
-            </a>
-
-            <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Others</p>
-            <a href="{% url 'weather' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-cloud-sun w-5 text-center text-lg"></i> 
-                <span>Weather Updates</span>
-            
-        </nav>
-
-        <!-- Logout Area -->
-        <div class="p-6 border-t border-white/10 mt-auto bg-black/10">
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="w-full flex items-center justify-center gap-3 py-3.5 bg-red-500/10 hover:bg-red-500 border border-red-500/20 hover:border-red-500 rounded-xl text-red-400 hover:text-white font-medium transition-all duration-300 shadow-lg">
-                    <i class="fas fa-power-off"></i> 
-                    <span>Logout </span>
-                </button>
-            </form>
-        </div>
-    </aside>
-
-    <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col overflow-hidden relative">
-
-        <!-- Top Header -->
-        <header class="glass-panel z-30 px-6 py-4 flex items-center justify-between shadow-sm flex-shrink-0 sticky top-0 mx-4 mt-4 mb-2 rounded-2xl">
-            <div class="flex items-center gap-4">
-                <button onclick="openSidebar()" class="md:hidden w-10 h-10 flex items-center justify-center bg-brand-50 text-brand-600 rounded-xl hover:bg-brand-100 transition-colors">
-                    <i class="fas fa-bars text-lg"></i>
-                </button>
-                <div>
-                    <h1 class="text-xl md:text-2xl font-heading font-bold text-slate-800 tracking-tight">
-                        Welcome back, <span class="bg-gradient-to-r from-brand-600 to-emerald-500 bg-clip-text text-transparent">{{ user.first_name }}</span>! 👋
-                    </h1>
-                    <p class="text-slate-500 text-sm font-medium mt-0.5">Let's find some fresh products today.</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-3">
-                <div class="relative hidden lg:block group">
-                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-500 transition-colors"></i>
-                    <form action="{% url 'public_marketplace' %}" method="get">
-                        <input type="text" name="q" placeholder="Search vegetables..." class="pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 hover:border-brand-300 focus:border-brand-500 rounded-xl text-sm text-slate-700 outline-none w-64 focus:ring-4 focus:ring-brand-500/10 transition-all shadow-inner">
-                    </form>
-                </div>
-                <a href="{% url 'customer_marketplace' %}" class="hidden sm:flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-                    <i class="fas fa-store text-brand-400"></i> Explore Shop
-                </a>
-            </div>
-        </header>
-
-        <!-- Scrollable Content -->
-        <main class="flex-1 overflow-y-auto px-4 pb-12 pt-4">
-            <div class="max-w-7xl mx-auto space-y-8">
-
-                <!-- Alert Messages -->
-                {% for message in messages %}
-                <div class="fade-in-up p-4 rounded-2xl glass-panel border shadow-sm {% if message.tags == 'success' %}border-brand-200 bg-brand-50/80 text-brand-800{% else %}border-red-200 bg-red-50/80 text-red-800{% endif %} flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 {% if message.tags == 'success' %}bg-brand-100 text-brand-600{% else %}bg-red-100 text-red-600{% endif %}">
-                        <i class="fas {% if message.tags == 'success' %}fa-check{% else %}fa-exclamation{% endif %}"></i>
+                <div class="relative p-4 flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-xl font-heading font-bold text-brand-700 shadow-md">
+                        {{ user.first_name|first|upper }}
                     </div>
-                    <p class="font-medium text-sm">{{ message }}</p>
-                </div>
-                {% endfor %}
-
-                <!-- Statistics Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                    <!-- Stat Card 1 -->
-                    <div class="glass-panel p-6 rounded-3xl hover-scale fade-in-up" style="animation-delay: 0.1s;">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl shadow-sm border border-blue-100">
-                                <i class="fas fa-box-open"></i>
-                            </div>
-                            <span class="bg-blue-50 text-blue-600 text-xs font-bold px-2 py-1 rounded-lg">All Time</span>
-                        </div>
-                        <h3 class="text-3xl font-heading font-bold text-slate-800">{{ orders|length }}</h3>
-                        <p class="text-slate-500 text-sm font-medium mt-1">Total Purchases</p>
-                    </div>
-
-                    <!-- Stat Card 2 -->
-                    <div class="glass-panel p-6 rounded-3xl hover-scale fade-in-up" style="animation-delay: 0.2s;">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-xl shadow-sm border border-amber-100">
-                                <i class="fas fa-truck-fast"></i>
-                            </div>
-                            <span class="bg-amber-50 text-amber-600 text-xs font-bold px-2 py-1 rounded-lg">Active</span>
-                        </div>
-                        <h3 class="text-3xl font-heading font-bold text-slate-800">{{ in_transit|default:orders|length }}</h3>
-                        <p class="text-slate-500 text-sm font-medium mt-1">Orders in Transit</p>
-                    </div>
-
-                    <!-- Stat Card 3 -->
-                    <div class="glass-panel p-6 rounded-3xl hover-scale fade-in-up" style="animation-delay: 0.3s;">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-xl shadow-sm border border-emerald-100">
-                                <i class="fas fa-wallet"></i>
-                            </div>
-                            <span class="bg-emerald-50 text-emerald-600 text-xs font-bold px-2 py-1 rounded-lg">Invested</span>
-                        </div>
-                        <h3 class="text-3xl font-heading font-bold text-slate-800">₹{{ total_spent|floatformat:0 }}</h3>
-                        <p class="text-slate-500 text-sm font-medium mt-1">Total Amount Spent</p>
-                    </div>
-
-                    <!-- Stat Card 4 -->
-                    <a href="#cart" class="glass-panel p-6 rounded-3xl hover-scale fade-in-up block group" style="animation-delay: 0.4s;">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center text-xl shadow-sm border border-purple-100 group-hover:bg-purple-600 group-hover:text-white transition-colors">
-                                <i class="fas fa-shopping-cart"></i>
-                            </div>
-                            <span class="bg-purple-50 text-purple-600 text-xs font-bold px-2 py-1 rounded-lg border border-purple-100">Pending</span>
-                        </div>
-                        <h3 class="text-3xl font-heading font-bold text-slate-800">{{ cart.items.count }}</h3>
-                        <p class="text-slate-500 text-sm font-medium mt-1">Items in Cart</p>
-                        <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-brand-600 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                            View Cart <i class="fas fa-arrow-right"></i>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Shopping Cart Summary -->
-                <div id="cart" class="glass-panel rounded-3xl overflow-hidden fade-in-up" style="animation-delay: 0.5s;">
-                    <div class="px-8 py-6 border-b border-slate-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white/50">
-                        <div>
-                            <h3 class="font-heading font-bold text-xl text-slate-800 flex items-center gap-2">
-                                <i class="fas fa-shopping-cart text-brand-500"></i> My Smart Cart
-                            </h3>
-                            <p class="text-slate-500 text-sm mt-1">Review your items before checkout.</p>
-                        </div>
-                        
-                        {% if cart.items.all %}
-                        {% else %}
-                        <a href="{% url 'public_marketplace' %}" class="bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-brand-500/30 text-sm flex items-center gap-2">
-                            <i class="fas fa-plus"></i> Add Items
+                    <div class="min-w-0 flex-1">
+                        <p class="font-heading font-semibold text-white text-md truncate">{{ user.first_name }} {{ user.last_name }}</p>
+                        <span
+                            class="inline-flex items-center gap-1.5 text-[10px] bg-brand-400/20 text-brand-200 px-2 py-0.5 rounded-full mt-1 font-bold uppercase tracking-wider">
+                            <i class="fas fa-circle text-brand-400" style="font-size:6px"></i> Active Customer
+                        </span>
+                        <a href="{% url 'customer_profile' %}"
+                            class="mt-2 flex items-center gap-1 text-[10px] text-brand-300 hover:text-white transition-colors">
+                            <i class="fas fa-user-cog" style="font-size:9px"></i> View Profile
                         </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto pb-6">
+                <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mb-2">Menu</p>
+
+                <a href="{% url 'customer_dashboard' %}"
+                    class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-white shadow-[0_0_20px_rgba(74,222,128,0.1)]">
+                    <i class="fas fa-chart-line w-5 text-center text-lg"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'customer_marketplace' %}"
+                    class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium hover:text-white">
+                    <i class="fas fa-store w-5 text-center text-lg"></i>
+                    <span>Marketplace</span>
+                </a>
+                <a href="{% url 'customer_orders' %}"
+                    class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                    <i class="fas fa-box-open w-5 text-center text-lg"></i>
+                    <span>My Orders</span>
+                </a>
+
+                <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Others
+                </p>
+                <a href="{% url 'weather' %}"
+                    class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                    <i class="fas fa-cloud-sun w-5 text-center text-lg"></i>
+                    <span>Weather Updates</span>
+
+            </nav>
+
+            <!-- Logout Area -->
+            <div class="p-6 border-t border-white/10 mt-auto bg-black/10">
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit"
+                        class="w-full flex items-center justify-center gap-3 py-3.5 bg-red-500/10 hover:bg-red-500 border border-red-500/20 hover:border-red-500 rounded-xl text-red-400 hover:text-white font-medium transition-all duration-300 shadow-lg">
+                        <i class="fas fa-power-off"></i>
+                        <span>Logout </span>
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden relative">
+
+            <!-- Top Header -->
+            <header
+                class="glass-panel z-30 px-6 py-4 flex items-center justify-between shadow-sm flex-shrink-0 sticky top-0 mx-4 mt-4 mb-2 rounded-2xl">
+                <div class="flex items-center gap-4">
+                    <button onclick="openSidebar()"
+                        class="md:hidden w-10 h-10 flex items-center justify-center bg-brand-50 text-brand-600 rounded-xl hover:bg-brand-100 transition-colors">
+                        <i class="fas fa-bars text-lg"></i>
+                    </button>
+                    <div>
+                        <h1 class="text-xl md:text-2xl font-heading font-bold text-slate-800 tracking-tight">
+                            Welcome back, <span
+                                class="bg-gradient-to-r from-brand-600 to-emerald-500 bg-clip-text text-transparent">{{ user.first_name }}</span>! 👋
+                        </h1>
+                        <p class="text-slate-500 text-sm font-medium mt-0.5">Let's find some fresh products today.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="relative hidden lg:block group">
+                        <i
+                            class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-500 transition-colors"></i>
+                        <form action="{% url 'public_marketplace' %}" method="get">
+                            <input type="text" name="q" placeholder="Search vegetables..."
+                                class="pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 hover:border-brand-300 focus:border-brand-500 rounded-xl text-sm text-slate-700 outline-none w-64 focus:ring-4 focus:ring-brand-500/10 transition-all shadow-inner">
+                        </form>
+                    </div>
+                    <a href="{% url 'customer_marketplace' %}"
+                        class="hidden sm:flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                        <i class="fas fa-store text-brand-400"></i> Explore Shop
+                    </a>
+                </div>
+            </header>
+
+            <!-- Scrollable Content -->
+            <main class="flex-1 overflow-y-auto px-4 pb-12 pt-4">
+                <div class="max-w-7xl mx-auto space-y-8">
+
+                    <!-- Alert Messages -->
+                    {% for message in messages %}
+                    <div
+                        class="fade-in-up p-4 rounded-2xl glass-panel border shadow-sm {% if message.tags == 'success' %}border-brand-200 bg-brand-50/80 text-brand-800{% else %}border-red-200 bg-red-50/80 text-red-800{% endif %} flex items-center gap-4">
+                        <div
+                            class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 {% if message.tags == 'success' %}bg-brand-100 text-brand-600{% else %}bg-red-100 text-red-600{% endif %}">
+                            <i
+                                class="fas {% if message.tags == 'success' %}fa-check{% else %}fa-exclamation{% endif %}"></i>
+                        </div>
+                        <p class="font-medium text-sm">{{ message }}</p>
+                    </div>
+                    {% endfor %}
+
+                    <!-- Statistics Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                        <!-- Stat Card 1 -->
+                        <div class="glass-panel p-6 rounded-3xl hover-scale fade-in-up" style="animation-delay: 0.1s;">
+                            <div class="flex justify-between items-start mb-4">
+                                <div
+                                    class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl shadow-sm border border-blue-100">
+                                    <i class="fas fa-box-open"></i>
+                                </div>
+                                <span class="bg-blue-50 text-blue-600 text-xs font-bold px-2 py-1 rounded-lg">All
+                                    Time</span>
+                            </div>
+                            <h3 class="text-3xl font-heading font-bold text-slate-800">{{ orders|length }}</h3>
+                            <p class="text-slate-500 text-sm font-medium mt-1">Total Purchases</p>
+                        </div>
+
+                        <!-- Stat Card 2 -->
+                        <div class="glass-panel p-6 rounded-3xl hover-scale fade-in-up" style="animation-delay: 0.2s;">
+                            <div class="flex justify-between items-start mb-4">
+                                <div
+                                    class="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-xl shadow-sm border border-amber-100">
+                                    <i class="fas fa-truck-fast"></i>
+                                </div>
+                                <span
+                                    class="bg-amber-50 text-amber-600 text-xs font-bold px-2 py-1 rounded-lg">Active</span>
+                            </div>
+                            <h3 class="text-3xl font-heading font-bold text-slate-800">{{ in_transit }}</h3>
+                            <p class="text-slate-500 text-sm font-medium mt-1">Orders in Transit</p>
+                        </div>
+
+                        <!-- Stat Card 3 -->
+                        <div class="glass-panel p-6 rounded-3xl hover-scale fade-in-up" style="animation-delay: 0.3s;">
+                            <div class="flex justify-between items-start mb-4">
+                                <div
+                                    class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-xl shadow-sm border border-emerald-100">
+                                    <i class="fas fa-wallet"></i>
+                                </div>
+                                <span
+                                    class="bg-emerald-50 text-emerald-600 text-xs font-bold px-2 py-1 rounded-lg">Invested</span>
+                            </div>
+                            <h3 class="text-3xl font-heading font-bold text-slate-800">₹{{ total_spent|floatformat:0 }}</h3>
+                            <p class="text-slate-500 text-sm font-medium mt-1">Total Amount Spent</p>
+                        </div>
+
+                        <!-- Stat Card 4 -->
+                        <a href="#cart" class="glass-panel p-6 rounded-3xl hover-scale fade-in-up block group"
+                            style="animation-delay: 0.4s;">
+                            <div class="flex justify-between items-start mb-4">
+                                <div
+                                    class="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center text-xl shadow-sm border border-purple-100 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <span
+                                    class="bg-purple-50 text-purple-600 text-xs font-bold px-2 py-1 rounded-lg border border-purple-100">Pending</span>
+                            </div>
+                            <h3 class="text-3xl font-heading font-bold text-slate-800">{{ cart.items.count }}</h3>
+                            <p class="text-slate-500 text-sm font-medium mt-1">Items in Cart</p>
+                            <div
+                                class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-brand-600 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                                View Cart <i class="fas fa-arrow-right"></i>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Shopping Cart Summary -->
+                    <div id="cart" class="glass-panel rounded-3xl overflow-hidden fade-in-up"
+                        style="animation-delay: 0.5s;">
+                        <div
+                            class="px-8 py-6 border-b border-slate-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white/50">
+                            <div>
+                                <h3 class="font-heading font-bold text-xl text-slate-800 flex items-center gap-2">
+                                    <i class="fas fa-shopping-cart text-brand-500"></i> My Smart Cart
+                                </h3>
+                                <p class="text-slate-500 text-sm mt-1">Review your items before checkout.</p>
+                            </div>
+
+                            {% if cart.items.all %}
+                            {% else %}
+                            <a href="{% url 'public_marketplace' %}"
+                                class="bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-brand-500/30 text-sm flex items-center gap-2">
+                                <i class="fas fa-plus"></i> Add Items
+                            </a>
+                            {% endif %}
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full min-w-max">
+                                <thead>
+                                    <tr
+                                        class="bg-slate-50/50 text-slate-500 text-xs uppercase tracking-widest font-bold">
+                                        <th class="px-8 py-5 text-left">Product Detail</th>
+                                        <th class="px-6 py-5 text-left">Price</th>
+                                        <th class="px-6 py-5 text-left">Quality/Qty</th>
+                                        <th class="px-6 py-5 text-left">Subtotal</th>
+                                        <th
+                                            class="px-6 py-5 text-right bg-slate-50/50 backdrop-blur-sm sticky justify-end">
+                                            Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    {% for item in cart.items.all %}
+                                    <tr class="hover:bg-slate-50/50 transition-colors group">
+                                        <td class="px-8 py-5">
+                                            <div class="flex items-center gap-4">
+                                                {% if item.vegetable.image %}
+                                                <div
+                                                    class="w-14 h-14 rounded-2xl overflow-hidden shadow-sm border border-slate-100">
+                                                    <img src="{{ item.vegetable.image.url }}"
+                                                        alt="{{ item.vegetable.name }}"
+                                                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                                </div>
+                                                {% else %}
+                                                <div
+                                                    class="w-14 h-14 bg-gradient-to-br from-brand-100 to-emerald-100 rounded-2xl flex items-center justify-center border border-brand-200 text-brand-500 shadow-inner">
+                                                    <i class="fas fa-carrot text-xl"></i>
+                                                </div>
+                                                {% endif %}
+                                                <div>
+                                                    <p class="font-heading font-bold text-slate-800 text-base">{{ item.vegetable.name }}</p>
+                                                    <span
+                                                        class="inline-block px-2 py-0.5 mt-1 bg-slate-100 text-slate-600 text-[10px] font-bold uppercase rounded-md tracking-wider">{{ item.vegetable.category }}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-5">
+                                            <p class="font-semibold text-slate-700">₹{{ item.vegetable.price_per_unit }}
+                                            </p>
+                                            <p class="text-xs text-slate-400">per {{ item.vegetable.unit }}</p>
+                                        </td>
+                                        <td class="px-6 py-5">
+                                            <div
+                                                class="inline-flex items-center justify-center bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
+                                                <span class="font-bold text-slate-700 text-sm">{{ item.quantity }}</span>
+                                                <span class="ml-1 text-xs text-slate-500">{{ item.vegetable.unit }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-5">
+                                            <p class="font-heading font-bold text-brand-600 text-lg">₹{{ item.subtotal|floatformat:0 }}</p>
+                                        </td>
+                                        <td class="px-6 py-5 text-right">
+                                            <div class="flex items-center justify-end gap-2">
+                                                <a href="{% url 'product_detail' item.vegetable.pk %}"
+                                                    class="w-9 h-9 flex items-center justify-center rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-colors"
+                                                    title="View details">
+                                                    <i class="fas fa-eye text-sm"></i>
+                                                </a>
+                                                <form method="post" action="{% url 'remove_from_cart' item.pk %}"
+                                                    class="inline">
+                                                    {% csrf_token %}
+                                                    <button type="submit"
+                                                        class="w-9 h-9 flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-colors"
+                                                        title="Remove">
+                                                        <i class="fas fa-trash-alt text-sm"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="py-16">
+                                            <div class="max-w-sm mx-auto text-center">
+                                                <div
+                                                    class="w-24 h-24 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                                    <i class="fas fa-shopping-basket text-4xl text-brand-300"></i>
+                                                </div>
+                                                <h4 class="text-xl font-heading font-bold text-slate-800 mb-2">Your cart
+                                                    is empty</h4>
+                                                <p class="text-slate-500 text-sm mb-6">Looks like you haven't added any
+                                                    fresh farm products yet.</p>
+                                                <a href="{% url 'public_marketplace' %}"
+                                                    class="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-md">
+                                                    Discover Fresh Produce
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Recommended Deals - Quick Khalti Buy -->
+                    <div class="glass-panel p-8 rounded-3xl fade-in-up" style="animation-delay: 0.6s;">
+                        <div class="flex items-center justify-between mb-8">
+                            <div>
+                                <h3 class="font-heading font-bold text-2xl text-slate-800 flex items-center gap-2">
+                                    <i class="fas fa-fire text-orange-500"></i> Hot Deals for You
+                                </h3>
+                                <p class="text-slate-500 text-sm mt-1">Directly from our trusted farmers to your
+                                    kitchen.</p>
+                            </div>
+                            <a href="{% url 'public_marketplace' %}"
+                                class="text-brand-600 hover:text-brand-700 font-bold text-sm bg-brand-50 hover:bg-brand-100 px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                                View all <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            {% for veg in recommended %}
+                            <div
+                                class="bg-white rounded-2xl p-3 border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                                <div class="relative h-48 rounded-xl overflow-hidden cursor-pointer"
+                                    onclick="window.location='{% url 'product_detail' veg.pk %}'">
+                                    {% if veg.image %}
+                                    <img src="{{ veg.image.url }}" alt="{{ veg.name }}"
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                    {% else %}
+                                    <div class="w-full h-full bg-slate-100 flex items-center justify-center">
+                                        <i class="fas fa-leaf text-slate-300 text-5xl"></i>
+                                    </div>
+                                    {% endif %}
+                                    <div
+                                        class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-md text-[10px] font-bold text-brand-700 tracking-wider shadow-sm uppercase">
+                                        {{ veg.category }}
+                                    </div>
+                                </div>
+
+                                <div class="p-3 pt-4">
+                                    <h4 class="font-heading font-bold text-lg text-slate-800 truncate"
+                                        title="{{ veg.name }}">{{ veg.name }}</h4>
+                                    <div class="flex items-end justify-between mt-1 mb-4">
+                                        <div>
+                                            <p class="text-xs text-slate-500">Price</p>
+                                            <p class="font-bold text-brand-600 text-lg leading-tight">₹{{ veg.price_per_unit }}<span
+                                                    class="text-xs text-slate-400 font-medium">/{{ veg.unit }}</span>
+                                            </p>
+                                        </div>
+                                        <span
+                                            class="text-xs font-semibold px-2 py-1 bg-amber-50 text-amber-600 rounded-md border border-amber-100">
+                                            <i class="fas fa-star text-[10px]"></i> 4.8
+                                        </span>
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <!-- Buy Now -->
+                                        <form method="post" action="{% url 'buy_now_action' veg.pk %}" class="w-full">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="quantity" value="1">
+                                            <button type="submit"
+                                                class="w-full bg-slate-900 hover:bg-slate-800 text-white py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 text-sm transition-all shadow-md focus:ring-2 focus:ring-slate-400 focus:outline-none">
+                                                Buy Now
+                                            </button>
+                                        </form>
+
+                                        <!-- Add to Cart Alternative -->
+                                        <form method="post" action="{% url 'add_to_cart' veg.pk %}" class="cart-form">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="quantity" value="1">
+                                            <button type="button" onclick="showAddToCartModal(this.form)"
+                                                class="w-full bg-emerald-50 hover:bg-emerald-500 hover:text-white border border-emerald-200 hover:border-emerald-500 text-emerald-700 font-bold py-2.5 rounded-xl transition-all text-sm flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
+                                                <i class="fas fa-cart-plus"></i> Add to Cart
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div
+                                class="col-span-full py-10 text-center glass-panel rounded-2xl border-dashed border-2 border-slate-200">
+                                <i class="fas fa-seedling text-brand-300 text-4xl mb-3"></i>
+                                <h4 class="font-heading font-bold text-slate-700">More fresh products coming soon!</h4>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders History -->
+                    <div id="orders" class="glass-panel p-8 rounded-3xl overflow-hidden fade-in-up"
+                        style="animation-delay: 0.7s;">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h3 class="font-heading font-bold text-2xl text-slate-800">Order History</h3>
+                                <p class="text-slate-500 text-sm mt-1">Track your recent and past deliveries.</p>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-auto rounded-xl border border-slate-100 bg-white/50">
+                            <table class="w-full text-left">
+                                <thead
+                                    class="bg-slate-50 border-b border-slate-100 text-xs uppercase font-bold text-slate-500 tracking-wider">
+                                    <tr>
+                                        <th class="px-6 py-4">Order ID</th>
+                                        <th class="px-6 py-4">Item</th>
+                                        <th class="px-6 py-4">Date Ordered</th>
+                                        <th class="px-6 py-4 text-right">Total Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 text-sm">
+                                    {% for order in orders reversed %}
+                                    {% if forloop.counter <= 5 %} <tr class="hover:bg-brand-50/30 transition-colors">
+                                        <td class="px-6 py-4 font-mono text-slate-500 font-medium">#ORD-{{ order.id }}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center gap-3">
+                                                <div
+                                                    class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                                    <i class="fas fa-box"></i>
+                                                </div>
+                                                <span class="font-bold text-slate-700">{{ order.supplier_inventory.vegetable_name }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-slate-600 font-medium">{{ order.ordered_at|date:"M d, Y" }}</td>
+                                        <td class="px-6 py-4 text-right font-heading font-bold text-brand-600">₹{{ order.total_price }}</td>
+                                        </tr>
+                                        {% endif %}
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="4" class="px-6 py-10 text-center text-slate-500 font-medium">No
+                                                orders found. Time to place your first order!</td>
+                                        </tr>
+                                        {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% if orders|length > 5 %}
+                        <div class="mt-4 text-center">
+                            <a href="{% url 'customer_orders' %}"
+                                class="text-sm font-bold text-brand-600 hover:text-brand-800">View All Orders</a>
+                        </div>
                         {% endif %}
                     </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="w-full min-w-max">
-                            <thead>
-                                <tr class="bg-slate-50/50 text-slate-500 text-xs uppercase tracking-widest font-bold">
-                                    <th class="px-8 py-5 text-left">Product Detail</th>
-                                    <th class="px-6 py-5 text-left">Price</th>
-                                    <th class="px-6 py-5 text-left">Quality/Qty</th>
-                                    <th class="px-6 py-5 text-left">Subtotal</th>
-                                    <th class="px-6 py-5 text-right bg-slate-50/50 backdrop-blur-sm sticky justify-end">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100">
-                                {% for item in cart.items.all %}
-                                <tr class="hover:bg-slate-50/50 transition-colors group">
-                                    <td class="px-8 py-5">
-                                        <div class="flex items-center gap-4">
-                                            {% if item.vegetable.image %}
-                                            <div class="w-14 h-14 rounded-2xl overflow-hidden shadow-sm border border-slate-100">
-                                                <img src="{{ item.vegetable.image.url }}" alt="{{ item.vegetable.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                                            </div>
-                                            {% else %}
-                                            <div class="w-14 h-14 bg-gradient-to-br from-brand-100 to-emerald-100 rounded-2xl flex items-center justify-center border border-brand-200 text-brand-500 shadow-inner">
-                                                <i class="fas fa-carrot text-xl"></i>
-                                            </div>
-                                            {% endif %}
-                                            <div>
-                                                <p class="font-heading font-bold text-slate-800 text-base">{{ item.vegetable.name }}</p>
-                                                <span class="inline-block px-2 py-0.5 mt-1 bg-slate-100 text-slate-600 text-[10px] font-bold uppercase rounded-md tracking-wider">{{ item.vegetable.category }}</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-5">
-                                        <p class="font-semibold text-slate-700">₹{{ item.vegetable.price_per_unit }}</p>
-                                        <p class="text-xs text-slate-400">per {{ item.vegetable.unit }}</p>
-                                    </td>
-                                    <td class="px-6 py-5">
-                                        <div class="inline-flex items-center justify-center bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
-                                            <span class="font-bold text-slate-700 text-sm">{{ item.quantity }}</span>
-                                            <span class="ml-1 text-xs text-slate-500">{{ item.vegetable.unit }}</span>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-5">
-                                        <p class="font-heading font-bold text-brand-600 text-lg">₹{{ item.subtotal|floatformat:0 }}</p>
-                                    </td>
-                                    <td class="px-6 py-5 text-right">
-                                        <div class="flex items-center justify-end gap-2">
-                                            <a href="{% url 'product_detail' item.vegetable.pk %}" class="w-9 h-9 flex items-center justify-center rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-colors" title="View details">
-                                                <i class="fas fa-eye text-sm"></i>
-                                            </a>
-                                            <form method="post" action="{% url 'remove_from_cart' item.pk %}" class="inline">
-                                                {% csrf_token %}
-                                                <button type="submit" class="w-9 h-9 flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-colors" title="Remove">
-                                                    <i class="fas fa-trash-alt text-sm"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="5" class="py-16">
-                                        <div class="max-w-sm mx-auto text-center">
-                                            <div class="w-24 h-24 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                                                <i class="fas fa-shopping-basket text-4xl text-brand-300"></i>
-                                            </div>
-                                            <h4 class="text-xl font-heading font-bold text-slate-800 mb-2">Your cart is empty</h4>
-                                            <p class="text-slate-500 text-sm mb-6">Looks like you haven't added any fresh farm products yet.</p>
-                                            <a href="{% url 'public_marketplace' %}" class="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-md">
-                                                Discover Fresh Produce
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
                 </div>
+            </main>
 
-                <!-- Recommended Deals - Quick Khalti Buy -->
-                <div class="glass-panel p-8 rounded-3xl fade-in-up" style="animation-delay: 0.6s;">
-                    <div class="flex items-center justify-between mb-8">
-                        <div>
-                            <h3 class="font-heading font-bold text-2xl text-slate-800 flex items-center gap-2">
-                                <i class="fas fa-fire text-orange-500"></i> Hot Deals for You
-                            </h3>
-                            <p class="text-slate-500 text-sm mt-1">Directly from our trusted farmers to your kitchen.</p>
-                        </div>
-                        <a href="{% url 'public_marketplace' %}" class="text-brand-600 hover:text-brand-700 font-bold text-sm bg-brand-50 hover:bg-brand-100 px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
-                            View all <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {% for veg in recommended %}
-                        <div class="bg-white rounded-2xl p-3 border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                            <div class="relative h-48 rounded-xl overflow-hidden cursor-pointer" onclick="window.location='{% url 'product_detail' veg.pk %}'">
-                                {% if veg.image %}
-                                <img src="{{ veg.image.url }}" alt="{{ veg.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                {% else %}
-                                <div class="w-full h-full bg-slate-100 flex items-center justify-center">
-                                    <i class="fas fa-leaf text-slate-300 text-5xl"></i>
-                                </div>
-                                {% endif %}
-                                <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-md text-[10px] font-bold text-brand-700 tracking-wider shadow-sm uppercase">
-                                    {{ veg.category }}
-                                </div>
-                            </div>
-                            
-                            <div class="p-3 pt-4">
-                                <h4 class="font-heading font-bold text-lg text-slate-800 truncate" title="{{ veg.name }}">{{ veg.name }}</h4>
-                                <div class="flex items-end justify-between mt-1 mb-4">
-                                    <div>
-                                        <p class="text-xs text-slate-500">Price</p>
-                                        <p class="font-bold text-brand-600 text-lg leading-tight">₹{{ veg.price_per_unit }}<span class="text-xs text-slate-400 font-medium">/{{ veg.unit }}</span></p>
-                                    </div>
-                                    <span class="text-xs font-semibold px-2 py-1 bg-amber-50 text-amber-600 rounded-md border border-amber-100">
-                                        <i class="fas fa-star text-[10px]"></i> 4.8
-                                    </span>
-                                </div>
-
-                                <div class="space-y-2">
-                                    <!-- Buy Now -->
-                                    <form method="post" action="{% url 'buy_now_action' veg.pk %}" class="w-full">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="quantity" value="1">
-                                        <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 text-sm transition-all shadow-md focus:ring-2 focus:ring-slate-400 focus:outline-none">
-                                            Buy Now
-                                        </button>
-                                    </form>
-                                    
-                                    <!-- Add to Cart Alternative -->
-                                    <form method="post" action="{% url 'add_to_cart' veg.pk %}" class="cart-form">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="quantity" value="1">
-                                        <button type="button" onclick="showAddToCartModal(this.form)" class="w-full bg-emerald-50 hover:bg-emerald-500 hover:text-white border border-emerald-200 hover:border-emerald-500 text-emerald-700 font-bold py-2.5 rounded-xl transition-all text-sm flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
-                                            <i class="fas fa-cart-plus"></i> Add to Cart
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        {% empty %}
-                        <div class="col-span-full py-10 text-center glass-panel rounded-2xl border-dashed border-2 border-slate-200">
-                            <i class="fas fa-seedling text-brand-300 text-4xl mb-3"></i>
-                            <h4 class="font-heading font-bold text-slate-700">More fresh products coming soon!</h4>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <!-- Recent Orders History -->
-                <div id="orders" class="glass-panel p-8 rounded-3xl overflow-hidden fade-in-up" style="animation-delay: 0.7s;">
+            <!-- Add to Cart Success Modal -->
+            <div id="cartSuccessModal"
+                class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center">
+                <div
+                    class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-100">
                     <div class="flex items-center justify-between mb-6">
-                        <div>
-                            <h3 class="font-heading font-bold text-2xl text-slate-800">Order History</h3>
-                            <p class="text-slate-500 text-sm mt-1">Track your recent and past deliveries.</p>
+                        <div class="flex items-center gap-3 flex-1">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check text-2xl text-green-500"></i>
+                            </div>
+                            <span class="font-semibold text-lg text-slate-800">Added to cart successfully!</span>
                         </div>
+                        <button onclick="closeAddToCartModal()"
+                            class="text-slate-400 hover:text-slate-600 text-2xl font-bold">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
-                    
-                    <div class="overflow-x-auto rounded-xl border border-slate-100 bg-white/50">
-                        <table class="w-full text-left">
-                            <thead class="bg-slate-50 border-b border-slate-100 text-xs uppercase font-bold text-slate-500 tracking-wider">
-                                <tr>
-                                    <th class="px-6 py-4">Order ID</th>
-                                    <th class="px-6 py-4">Item</th>
-                                    <th class="px-6 py-4">Date Ordered</th>
-                                    <th class="px-6 py-4 text-right">Total Price</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 text-sm">
-                                {% for order in orders reversed %}
-                                {% if forloop.counter <= 5 %}
-                                <tr class="hover:bg-brand-50/30 transition-colors">
-                                    <td class="px-6 py-4 font-mono text-slate-500 font-medium">#ORD-{{ order.id }}</td>
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                                                <i class="fas fa-box"></i>
-                                            </div>
-                                            <span class="font-bold text-slate-700">{{ order.supplier_inventory.vegetable_name }}</span>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 text-slate-600 font-medium">{{ order.ordered_at|date:"M d, Y" }}</td>
-                                    <td class="px-6 py-4 text-right font-heading font-bold text-brand-600">₹{{ order.total_price }}</td>
-                                </tr>
-                                {% endif %}
-                                {% empty %}
-                                <tr>
-                                    <td colspan="4" class="px-6 py-10 text-center text-slate-500 font-medium">No orders found. Time to place your first order!</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    {% if orders|length > 5 %}
-                    <div class="mt-4 text-center">
-                        <a href="{% url 'customer_orders' %}" class="text-sm font-bold text-brand-600 hover:text-brand-800">View All Orders</a>
-                    </div>
+                </div>
+            </div>
+
+            <!-- Floating Cart Icon (Right Side Middle) -->
+            <a href="{% url 'cart' %}" class="fixed right-8 top-1/2 -translate-y-1/2 z-40 group">
+                <div
+                    class="w-16 h-16 bg-slate-900 hover:bg-slate-800 text-white rounded-full shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110 border-2 border-white">
+                    <i class="fas fa-shopping-cart text-2xl text-white"></i>
+                    {% if cart.items.count > 0 %}
+                    <span
+                        class="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center shadow-lg border-2 border-white group-hover:scale-110 transition-transform">
+                        {{ cart.items.count }}
+                    </span>
                     {% endif %}
                 </div>
+            </a>
+        </div>
+    </div>
 
-            </div>
-        </main>
+    <script>
+        // Sidebar Mobile Toggle
+        function openSidebar() {
+            document.getElementById('sidebar').classList.remove('-translate-x-full');
+            document.getElementById('overlay').classList.remove('hidden', 'opacity-0');
+            document.getElementById('overlay').classList.add('opacity-100');
+        }
 
-<!-- Add to Cart Success Modal -->
-    <div id="cartSuccessModal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center">
-        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-100">
-            <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center gap-3 flex-1">
-                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                        <i class="fas fa-check text-2xl text-green-500"></i>
-                    </div>
-                    <span class="font-semibold text-lg text-slate-800">Added to cart successfully!</span>
-                </div>
-                <button onclick="closeAddToCartModal()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">
-                    <i class="fas fa-times"></i>
-                </button>
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            document.getElementById('overlay').classList.remove('opacity-100');
+            setTimeout(() => {
+                document.getElementById('overlay').classList.add('hidden');
+            }, 300);
+        }
+
+        function showAddToCartModal(form) {
+            const modal = document.getElementById('cartSuccessModal');
+            modal.classList.remove('hidden');
+            modal.querySelector('.transform').classList.add('scale-100');
+
+            setTimeout(() => {
+                closeAddToCartModal();
+                if (form) form.submit();
+            }, 3000);
+        }
+
+        function closeAddToCartModal() {
+            const modal = document.getElementById('cartSuccessModal');
+            modal.querySelector('.transform').classList.remove('scale-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Khalti Integration
+        const khaltiPublicKey = "test_public_key_dc74e0fd57cb46cd93832aee0a390234";
+
+        // Checkout entire cart
+        function checkoutKhaltiCart(totalAmountStr) {
+            let amountInRs = parseFloat(totalAmountStr);
+            if (isNaN(amountInRs) || amountInRs <= 0) return;
+
+            let amountInPaisa = amountInRs * 100;
+
+            var khaltiConfig = {
+                "publicKey": khaltiPublicKey,
+                "productIdentity": "CART_" + new Date().getTime(),
+                "productName": "Krishi Connect Cart Checkout",
+                "productUrl": window.location.origin,
+                "paymentPreference": ["KHALTI", "EBANKING", "MOBILE_BANKING", "CONNECT_IPS", "SCT"],
+                "eventHandler": {
+                    onSuccess(payload) {
+                        console.log("Khalti Success Payload:", payload);
+                        // Submit the actual form after successful payment
+                        document.getElementById('khalti-checkout-form').submit();
+                    },
+                    onError(error) {
+                        console.log("Khalti Error:", error);
+                        alert("Payment failed or cancelled!");
+                    },
+                    onClose() {
+                        console.log("Khalti widget closed");
+                    }
+                }
+            };
+
+            var checkoutCart = new KhaltiCheckout(khaltiConfig);
+            checkoutCart.show({ amount: amountInPaisa });
+        }
+
+        // Checkout single recommended product
+        function checkoutKhaltiSingle(pricePerUnitStr, productId) {
+            let amountInRs = parseFloat(pricePerUnitStr);
+            if (isNaN(amountInRs) || amountInRs <= 0) return;
+
+            let amountInPaisa = amountInRs * 100;
+
+            var khaltiConfig = {
+                "publicKey": khaltiPublicKey,
+                "productIdentity": "PROD_" + productId,
+                "productName": "Krishi Connect Product",
+                "productUrl": window.location.href,
+                "paymentPreference": ["KHALTI", "EBANKING", "MOBILE_BANKING", "CONNECT_IPS", "SCT"],
+                "eventHandler": {
+                    onSuccess(payload) {
+                        console.log("Khalti Success Payload:", payload);
+                        // Submit the specific form after success
+                        document.getElementById('khalti-form-' + productId).submit();
+                    },
+                    onError(error) {
+                        console.log("Khalti Error:", error);
+                        alert("Payment failed or cancelled!");
+                    },
+                    onClose() {
+                        console.log("Khalti widget closed");
+                    }
+                }
+            };
+
+            var checkoutSingle = new KhaltiCheckout(khaltiConfig);
+            checkoutSingle.show({ amount: amountInPaisa });
+        }
+    </script>
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="fixed inset-0 z-[9999] flex items-center justify-center hidden">
+        <div class="absolute inset-0 bg-black/40" onclick="hideCartModal()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl px-10 py-8 w-[380px] mx-4">
+            <button onclick="hideCartModal()"
+                class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+            <div class="flex items-center gap-3">
+                <i class="fas fa-check-circle text-green-500 text-2xl"></i>
+                <p class="text-green-600 font-bold text-lg">Added to cart successfully!</p>
             </div>
         </div>
     </div>
 
-    <!-- Floating Cart Icon (Right Side Middle) -->
-        <a href="{% url 'cart' %}" class="fixed right-8 top-1/2 -translate-y-1/2 z-40 group">
-            <div class="w-16 h-16 bg-slate-900 hover:bg-slate-800 text-white rounded-full shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110 border-2 border-white">
-                <i class="fas fa-shopping-cart text-2xl text-white"></i>
-                {% if cart.items.count > 0 %}
-                <span class="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center shadow-lg border-2 border-white group-hover:scale-110 transition-transform">
-                    {{ cart.items.count }}
-                </span>
-                {% endif %}
-            </div>
-        </a>
-    </div>
-</div>
-
-<script>
-    // Sidebar Mobile Toggle
-    function openSidebar() {
-        document.getElementById('sidebar').classList.remove('-translate-x-full');
-        document.getElementById('overlay').classList.remove('hidden', 'opacity-0');
-        document.getElementById('overlay').classList.add('opacity-100');
-    }
-    
-    function closeSidebar() {
-        document.getElementById('sidebar').classList.add('-translate-x-full');
-        document.getElementById('overlay').classList.remove('opacity-100');
-        setTimeout(() => {
-            document.getElementById('overlay').classList.add('hidden');
-        }, 300);
-    }
-
-    function showAddToCartModal(form) {
-        const modal = document.getElementById('cartSuccessModal');
-        modal.classList.remove('hidden');
-        modal.querySelector('.transform').classList.add('scale-100');
-        
-        setTimeout(() => {
-            closeAddToCartModal();
-            if (form) form.submit();
-        }, 3000);
-    }
-    
-    function closeAddToCartModal() {
-        const modal = document.getElementById('cartSuccessModal');
-        modal.querySelector('.transform').classList.remove('scale-100');
-        setTimeout(() => {
-            modal.classList.add('hidden');
-        }, 300);
-    }
-
-    // Khalti Integration
-    const khaltiPublicKey = "test_public_key_dc74e0fd57cb46cd93832aee0a390234";
-
-    // Checkout entire cart
-    function checkoutKhaltiCart(totalAmountStr) {
-        let amountInRs = parseFloat(totalAmountStr);
-        if (isNaN(amountInRs) || amountInRs <= 0) return;
-        
-        let amountInPaisa = amountInRs * 100;
-        
-        var khaltiConfig = {
-            "publicKey": khaltiPublicKey,
-            "productIdentity": "CART_" + new Date().getTime(),
-            "productName": "Krishi Connect Cart Checkout",
-            "productUrl": window.location.origin,
-            "paymentPreference": ["KHALTI", "EBANKING", "MOBILE_BANKING", "CONNECT_IPS", "SCT"],
-            "eventHandler": {
-                onSuccess(payload) {
-                    console.log("Khalti Success Payload:", payload);
-                    // Submit the actual form after successful payment
-                    document.getElementById('khalti-checkout-form').submit();
-                },
-                onError(error) {
-                    console.log("Khalti Error:", error);
-                    alert("Payment failed or cancelled!");
-                },
-                onClose() {
-                    console.log("Khalti widget closed");
-                }
-            }
-        };
-
-        var checkoutCart = new KhaltiCheckout(khaltiConfig);
-        checkoutCart.show({amount: amountInPaisa});
-    }
-
-    // Checkout single recommended product
-    function checkoutKhaltiSingle(pricePerUnitStr, productId) {
-        let amountInRs = parseFloat(pricePerUnitStr);
-        if (isNaN(amountInRs) || amountInRs <= 0) return;
-
-        let amountInPaisa = amountInRs * 100;
-
-        var khaltiConfig = {
-            "publicKey": khaltiPublicKey,
-            "productIdentity": "PROD_" + productId,
-            "productName": "Krishi Connect Product",
-            "productUrl": window.location.href,
-            "paymentPreference": ["KHALTI", "EBANKING", "MOBILE_BANKING", "CONNECT_IPS", "SCT"],
-            "eventHandler": {
-                onSuccess(payload) {
-                    console.log("Khalti Success Payload:", payload);
-                    // Submit the specific form after success
-                    document.getElementById('khalti-form-' + productId).submit();
-                },
-                onError(error) {
-                    console.log("Khalti Error:", error);
-                    alert("Payment failed or cancelled!");
-                },
-                onClose() {
-                    console.log("Khalti widget closed");
-                }
-            }
-        };
-
-        var checkoutSingle = new KhaltiCheckout(khaltiConfig);
-        checkoutSingle.show({amount: amountInPaisa});
-    }
-</script>
-<!-- Cart Modal -->
-<div id="cart-modal" class="fixed inset-0 z-[9999] flex items-center justify-center hidden">
-    <div class="absolute inset-0 bg-black/40" onclick="hideCartModal()"></div>
-    <div class="relative bg-white rounded-2xl shadow-2xl px-10 py-8 w-[380px] mx-4">
-        <button onclick="hideCartModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors">
-            <i class="fas fa-times text-lg"></i>
-        </button>
-        <div class="flex items-center gap-3">
-            <i class="fas fa-check-circle text-green-500 text-2xl"></i>
-            <p class="text-green-600 font-bold text-lg">Added to cart successfully!</p>
-        </div>
-    </div>
-</div>
-
-<script>
-let cartTimer;
-function showCartModal() {
-    document.getElementById('cart-modal').classList.remove('hidden');
-    clearTimeout(cartTimer);
-    cartTimer = setTimeout(hideCartModal, 3000);
-}
-function hideCartModal() {
-    document.getElementById('cart-modal').classList.add('hidden');
-}
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('form.cart-form').forEach(function(form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            fetch(form.action, {
-                method: 'POST',
-                body: new FormData(form),
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            }).finally(showCartModal);
+    <script>
+        let cartTimer;
+        function showCartModal() {
+            document.getElementById('cart-modal').classList.remove('hidden');
+            clearTimeout(cartTimer);
+            cartTimer = setTimeout(hideCartModal, 3000);
+        }
+        function hideCartModal() {
+            document.getElementById('cart-modal').classList.add('hidden');
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('form.cart-form').forEach(function (form) {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: new FormData(form),
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    }).finally(showCartModal);
+                });
+            });
         });
-    });
-});
-</script>
+    </script>
 
 </body>
+
 </html>
