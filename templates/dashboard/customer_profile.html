@@ -168,56 +168,58 @@
                                     class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-gray-50 focus:bg-white transition-all">
                             </div>
                         </div>
-                        <div class="mt-4">
+                        <div id="addresses" class="mt-4">
                             <label class="block text-sm font-semibold text-gray-600 mb-4 flex items-center gap-2">
                                 <i class="fas fa-map-marker-alt text-brand-500"></i> Addresses
                             </label>
-                            
-                            <!-- Address Container -->
-                            <div class="space-y-4" id="addressContainer">
-                                <!-- Address 1 -->
-                                <div class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:border-brand-300 transition-all">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <label class="text-sm font-semibold text-gray-700">Address 1</label>
-                                    </div>
-                                    <textarea name="address" rows="2" placeholder="Enter your primary address"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white focus:bg-white transition-all resize-none">{{ profile.address|default:'' }}</textarea>
-                                </div>
 
-                                <!-- Address 2 -->
-                                {% if profile.address2 or show_address2 %}
-                                <div class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:border-brand-300 transition-all">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <label class="text-sm font-semibold text-gray-700">Address 2</label>
-                                        <button type="button" class="text-red-500 hover:text-red-700 text-xs font-semibold" onclick="removeAddress('address2')">
-                                            <i class="fas fa-times-circle"></i> Remove
+                            <!-- Default Address Field -->
+                            <div class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:border-brand-300 transition-all mb-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <label class="text-sm font-semibold text-gray-700">Default Address</label>
+                                    <div class="flex items-center gap-2">
+                                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-semibold">PRIMARY</span>
+                                        <button type="button" onclick="clearAddress('address')" class="text-red-500 hover:text-red-700 transition-colors" title="Clear this address">
+                                            <i class="fas fa-trash-alt text-sm"></i>
                                         </button>
                                     </div>
-                                    <textarea name="address2" rows="2" placeholder="Enter your secondary address"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white focus:bg-white transition-all resize-none">{{ profile.address2|default:'' }}</textarea>
                                 </div>
-                                {% endif %}
-
-                                <!-- Address 3 -->
-                                {% if profile.address3 or show_address3 %}
-                                <div class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:border-brand-300 transition-all">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <label class="text-sm font-semibold text-gray-700">Address 3</label>
-                                        <button type="button" class="text-red-500 hover:text-red-700 text-xs font-semibold" onclick="removeAddress('address3')">
-                                            <i class="fas fa-times-circle"></i> Remove
-                                        </button>
-                                    </div>
-                                    <textarea name="address3" rows="2" placeholder="Enter your tertiary address"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white focus:bg-white transition-all resize-none">{{ profile.address3|default:'' }}</textarea>
-                                </div>
-                                {% endif %}
+                                <textarea name="address" rows="3" placeholder="Enter your primary delivery address"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white focus:bg-white transition-all resize-none">{{ profile.address|default:'' }}</textarea>
+                                <p class="text-xs text-gray-500 mt-2">This is your primary address and will be used as default for deliveries</p>
                             </div>
 
-                            <!-- Add Address Button -->
-                            <button type="button" id="addAddressBtn" class="mt-4 flex items-center gap-2 text-brand-600 hover:text-brand-700 text-sm font-semibold px-4 py-2 rounded-xl hover:bg-brand-50 transition-all"
-                                {% if profile.address3 and profile.address3|length > 0 %}style="display:none;"{% endif %}>
-                                <i class="fas fa-plus-circle"></i> Add Another Address
-                            </button>
+                            <!-- Address 1 Field -->
+                            <div class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:border-brand-300 transition-all mb-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <label class="text-sm font-semibold text-gray-700">Address 1</label>
+                                    <div class="flex items-center gap-2">
+                                        <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full font-semibold">ADDITIONAL</span>
+                                        <button type="button" onclick="clearAddress('address2')" class="text-red-500 hover:text-red-700 transition-colors" title="Clear this address">
+                                            <i class="fas fa-trash-alt text-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <textarea name="address2" rows="3" placeholder="Enter additional delivery address"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white focus:bg-white transition-all resize-none">{{ profile.address2|default:'' }}</textarea>
+                                <p class="text-xs text-gray-500 mt-2">Additional address for deliveries</p>
+                            </div>
+
+                            <!-- Address 2 Field -->
+                            <div class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:border-brand-300 transition-all">
+                                <div class="flex items-center justify-between mb-3">
+                                    <label class="text-sm font-semibold text-gray-700">Address 2</label>
+                                    <div class="flex items-center gap-2">
+                                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-semibold">ADDITIONAL</span>
+                                        <button type="button" onclick="clearAddress('address3')" class="text-red-500 hover:text-red-700 transition-colors" title="Clear this address">
+                                            <i class="fas fa-trash-alt text-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <textarea name="address3" rows="3" placeholder="Enter another delivery address"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white focus:bg-white transition-all resize-none">{{ profile.address3|default:'' }}</textarea>
+                                <p class="text-xs text-gray-500 mt-2">Another additional address for deliveries</p>
+                            </div>
                         </div>
                         <div class="mt-4">
                             <label class="block text-sm font-semibold text-gray-600 mb-1.5">Username</label>
@@ -274,62 +276,42 @@
 </div>
 
 <script>
-// Handle adding new addresses
-document.getElementById('addAddressBtn').addEventListener('click', function(e) {
-    e.preventDefault();
-    const container = document.getElementById('addressContainer');
-    const addressCount = container.querySelectorAll('[class*="border-2"]').length;
-    
-    if (addressCount >= 3) {
-        alert('Maximum 3 addresses allowed');
-        return;
-    }
-    
-    let addressNum = addressCount + 1;
-    let addressFieldName = 'address' + (addressNum > 1 ? addressNum : '');
-    
-    const newAddressBox = document.createElement('div');
-    newAddressBox.className = 'bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:border-brand-300 transition-all';
-    newAddressBox.id = 'address-box-' + addressFieldName;
-    
-    const labelText = addressNum === 1 ? 'Address 1' : 'Address ' + addressNum;
-    const fieldName = addressNum === 1 ? 'address' : 'address' + addressNum;
-    
-    newAddressBox.innerHTML = `
-        <div class="flex items-center justify-between mb-3">
-            <label class="text-sm font-semibold text-gray-700">${labelText}</label>
-            <button type="button" class="text-red-500 hover:text-red-700 text-xs font-semibold" onclick="removeAddress('${fieldName}')">
-                <i class="fas fa-times-circle"></i> Remove
-            </button>
-        </div>
-        <textarea name="${fieldName}" rows="2" placeholder="Enter your address"
-            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white focus:bg-white transition-all resize-none"></textarea>
-    `;
-    
-    container.appendChild(newAddressBox);
-    
-    // Hide button if we have 3 addresses
-    if (addressCount + 1 >= 3) {
-        document.getElementById('addAddressBtn').style.display = 'none';
-    }
-});
+function clearAddress(fieldName) {
+    if (confirm('Are you sure you want to clear this address?')) {
+        // Create a form to submit the clear address action
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{% url "customer_profile" %}';
 
-function removeAddress(fieldName) {
-    const box = document.getElementById('address-box-' + fieldName);
-    if (box) {
-        box.remove();
-        document.getElementById('addAddressBtn').style.display = 'flex';
+        // Add CSRF token
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfToken) {
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrfmiddlewaretoken';
+            csrfInput.value = csrfToken.value;
+            form.appendChild(csrfInput);
+        }
+
+        // Add action
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = 'clear_address';
+        form.appendChild(actionInput);
+
+        // Add address field
+        const fieldInput = document.createElement('input');
+        fieldInput.type = 'hidden';
+        fieldInput.name = 'address_field';
+        fieldInput.value = fieldName;
+        form.appendChild(fieldInput);
+
+        // Submit the form
+        document.body.appendChild(form);
+        form.submit();
     }
 }
-
-// Show add button if less than 3 addresses on page load
-window.addEventListener('load', function() {
-    const container = document.getElementById('addressContainer');
-    const addressCount = container.querySelectorAll('[class*="border-2"]').length;
-    if (addressCount < 3) {
-        document.getElementById('addAddressBtn').style.display = 'flex';
-    }
-});
 </script>
 </body>
 </html>

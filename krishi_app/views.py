@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
 from django.urls import reverse
 from django.http import HttpResponseRedirect
+from django.utils.safestring import mark_safe
 from decimal import Decimal
 import re
 import requests
@@ -15,6 +16,7 @@ import uuid
 import hmac
 import hashlib
 import base64
+import json
 from django.conf import settings
 from .models import UserProfile, Vegetable, SupplierPurchase, SupplierInventory, CustomerOrder, Cart, CartItem, Feedback
 from django.db.models import Sum, Avg
@@ -299,6 +301,26 @@ def customer_profile(request):
             request.user.save()
             profile.save()
             messages.success(request, 'Profile updated successfully.')
+        elif action == 'clear_address':
+            address_field = request.POST.get('address_field')
+            if address_field == 'address':
+                # Clear default address
+                profile.address = ''
+                profile.save()
+                messages.success(request, 'Default Address cleared successfully.')
+            elif address_field == 'address2':
+                # Clear address2 and shift address3 to address2
+                profile.address2 = profile.address3
+                profile.address3 = ''
+                profile.save()
+                messages.success(request, 'Address 1 cleared successfully.')
+            elif address_field == 'address3':
+                # Clear address3
+                profile.address3 = ''
+                profile.save()
+                messages.success(request, 'Address 2 cleared successfully.')
+            else:
+                messages.error(request, 'Invalid address field.')
         elif action == 'change_password':
             current = request.POST.get('current_password')
             new_pass = request.POST.get('new_password')
@@ -779,12 +801,34 @@ def buy_selected_items(request):
                         'image': item.vegetable.image,
                     }
                 )
+                # Get selected address for this order
+                selected_address = request.POST.get('selected_address', 'address')
+                
+                # Determine shipping address and phone based on selection
+                user_profile = request.user.userprofile
+                if selected_address == 'address':
+                    shipping_addr = user_profile.temporary_address or user_profile.address
+                    shipping_phone = user_profile.temp_phone or user_profile.phone_number
+                elif selected_address == 'address2':
+                    shipping_addr = user_profile.temporary_address or user_profile.address2
+                    shipping_phone = user_profile.temp_phone or user_profile.phone_number
+                elif selected_address == 'address3':
+                    shipping_addr = user_profile.temporary_address or user_profile.address3
+                    shipping_phone = user_profile.temp_phone or user_profile.phone_number
+                else:
+                    # Fallback to primary address
+                    shipping_addr = user_profile.temporary_address or user_profile.address
+                    shipping_phone = user_profile.temp_phone or user_profile.phone_number
+                
+                shipping_address_full = f"{shipping_addr}\nPhone: {shipping_phone}"
+                
                 CustomerOrder.objects.create(
                     customer=request.user,
                     supplier_inventory=inv,
                     quantity=item.quantity,
                     total_price=item.quantity * item.vegetable.price_per_unit,
-                    status=order_status
+                    status=order_status,
+                    shipping_address=shipping_address_full
                 )
                 # Update vegetable stock
                 item.vegetable.quantity -= item.quantity
@@ -833,12 +877,36 @@ def checkout_cart(request):
                 'image': item.vegetable.image,
             }
         )
+        # Get selected address for this order
+        selected_address = request.POST.get('selected_address', 'address')
+        
+        # Determine shipping address and phone based on selection
+        user_profile = request.user.userprofile
+        if selected_address == 'address':
+            shipping_addr = user_profile.temporary_address or user_profile.address
+            shipping_phone = user_profile.temp_phone or user_profile.phone_number
+        elif selected_address == 'address2':
+            shipping_addr = user_profile.temporary_address or user_profile.address2
+            shipping_phone = user_profile.temp_phone or user_profile.phone_number
+        elif selected_address == 'address3':
+            shipping_addr = user_profile.temporary_address or user_profile.address3
+            shipping_phone = user_profile.temp_phone or user_profile.phone_number
+        else:
+            # Fallback to primary address
+            shipping_addr = user_profile.temporary_address or user_profile.address
+            shipping_phone = user_profile.temp_phone or user_profile.phone_number
+        
+        shipping_address_full = f"{shipping_addr}\nPhone: {shipping_phone}"
+        
+        CustomerOrder.objects.get_or_create(customer=request.user) # ensure cart exists (cleanup)
+        
         CustomerOrder.objects.create(
             customer=request.user,
             supplier_inventory=inv,
             quantity=item.quantity,
             total_price=item.quantity * item.vegetable.price_per_unit,
-            status=order_status
+            status=order_status,
+            shipping_address=shipping_address_full
         )
         item.vegetable.quantity -= item.quantity
         if item.vegetable.quantity <= 0:
@@ -979,8 +1047,36 @@ def customer_orders(request):
     # Get cart for floating icon
     cart, _ = Cart.objects.get_or_create(customer=request.user)
     
+    # Build orders data for JavaScript
+    orders_data = {}
+    for o in orders_page:
+        orders_data[str(o.id)] = {
+            'id': str(o.id),
+            'date': o.ordered_at.strftime('%b %d, %Y') if o.ordered_at else 'N/A',
+            'total': str(o.total_price),
+            'status': o.status,
+            'productName': o.supplier_inventory.vegetable_name,
+            'quantity': str(o.quantity),
+            'unitPrice': str(o.supplier_inventory.price_per_unit),
+            'unit': o.supplier_inventory.unit,
+            'buyerName': f"{request.user.first_name} {request.user.last_name}",
+            'buyerPhone': request.user.userprofile.phone_number or 'N/A',
+            'buyerAddress': o.shipping_address or request.user.userprofile.address or 'Address not provided'
+        }
+    
+    # Mark JSON as safe so Django won't escape it
+    orders_json_safe = mark_safe(json.dumps(orders_data))
+    
+    # Add extra details for modal display in table
+    for o in orders_page:
+        o.product_name = o.supplier_inventory.vegetable_name
+        o.unit_price = o.supplier_inventory.price_per_unit
+        o.unit = o.supplier_inventory.unit
+        o.buyer_address = o.shipping_address or o.customer.userprofile.address
+    
     context = {
         'orders': orders_page,
+        'orders_json': orders_json_safe,
         'total_orders': total_orders,
         'pending_orders': pending_orders,
         'confirmed_orders': confirmed_orders,
@@ -993,6 +1089,140 @@ def customer_orders(request):
     }
     
     return render(request, 'dashboard/customer_orders.html', context)
+
+@login_required
+def download_order_receipt(request, pk):
+    """Generate and download order receipt as PDF."""
+    from reportlab.lib.pagesizes import letter
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib import colors
+    from reportlab.lib.units import inch
+    from io import BytesIO
+    from django.http import HttpResponse
+    
+    # Get the order
+    order = get_object_or_404(CustomerOrder, id=pk, customer=request.user)
+    
+    # Create PDF in memory
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter, topMargin=0.5*inch, bottomMargin=0.5*inch)
+    elements = []
+    styles = getSampleStyleSheet()
+    
+    # Custom styles
+    title_style = ParagraphStyle(
+        'CustomTitle',
+        parent=styles['Heading1'],
+        fontSize=24,
+        textColor=colors.HexColor('#22C55E'),
+        spaceAfter=6,
+        alignment=1  # Center
+    )
+    
+    heading_style = ParagraphStyle(
+        'CustomHeading',
+        parent=styles['Heading2'],
+        fontSize=14,
+        textColor=colors.HexColor('#1F2937'),
+        spaceBefore=12,
+        spaceAfter=6
+    )
+    
+    # Title
+    elements.append(Paragraph('KrishiConnect', title_style))
+    elements.append(Paragraph('Order Receipt', styles['Heading2']))
+    elements.append(Spacer(1, 0.2*inch))
+    
+    # Order details table
+    order_data = [
+        ['Order ID:', '#' + str(order.id), 'Date:', order.ordered_at.strftime('%b %d, %Y') if order.ordered_at else 'N/A'],
+        ['Total Amount:', '₹' + str(order.total_price), 'Status:', order.status.title()],
+    ]
+    
+    order_table = Table(order_data, colWidths=[1.5*inch, 1.5*inch, 1.5*inch, 1.5*inch])
+    order_table.setStyle(TableStyle([
+        ('FONT', (0, 0), (-1, -1), 'Helvetica', 11),
+        ('FONT', (0, 0), (0, -1), 'Helvetica-Bold', 11),
+        ('FONT', (2, 0), (2, -1), 'Helvetica-Bold', 11),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+    ]))
+    elements.append(order_table)
+    elements.append(Spacer(1, 0.2*inch))
+    
+    # Customer details
+    elements.append(Paragraph('Customer Details', heading_style))
+    customer_name = f"{request.user.first_name} {request.user.last_name}".strip()
+    customer_phone = request.user.userprofile.phone_number or 'N/A'
+    customer_address = order.shipping_address or request.user.userprofile.address or 'Address not provided'
+    
+    customer_info = f"""
+    <b>Name:</b> {customer_name}<br/>
+    <b>Phone:</b> {customer_phone}<br/>
+    <b>Address:</b> {customer_address}
+    """
+    elements.append(Paragraph(customer_info, styles['Normal']))
+    elements.append(Spacer(1, 0.2*inch))
+    
+    # Items table
+    elements.append(Paragraph('Items Purchased', heading_style))
+    items_data = [
+        ['Product', 'Quantity', 'Unit Price', 'Subtotal']
+    ]
+    items_data.append([
+        order.supplier_inventory.vegetable_name,
+        str(order.quantity) + ' ' + order.supplier_inventory.unit,
+        '₹' + str(order.supplier_inventory.price_per_unit),
+        '₹' + str(order.total_price)
+    ])
+    
+    items_table = Table(items_data, colWidths=[2*inch, 1.5*inch, 1.5*inch, 1.5*inch])
+    items_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#E5E7EB')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 11),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('FONT', (0, 1), (-1, -1), 'Helvetica', 10),
+        ('ALIGN', (2, 1), (-1, -1), 'RIGHT'),
+    ]))
+    elements.append(items_table)
+    elements.append(Spacer(1, 0.2*inch))
+    
+    # Total
+    total_style = ParagraphStyle(
+        'Total',
+        parent=styles['Normal'],
+        fontSize=12,
+        textColor=colors.HexColor('#15803D'),
+        alignment=2  # Right
+    )
+    elements.append(Paragraph(f'<b>Total Amount: ₹{order.total_price}</b>', total_style))
+    elements.append(Spacer(1, 0.3*inch))
+    
+    # Footer
+    footer_style = ParagraphStyle(
+        'Footer',
+        parent=styles['Normal'],
+        fontSize=9,
+        textColor=colors.grey,
+        alignment=1  # Center
+    )
+    elements.append(Paragraph('Thank you for shopping with KrishiConnect!', footer_style))
+    elements.append(Paragraph('For support: support@krishisphere.com', footer_style))
+    
+    # Build PDF
+    doc.build(elements)
+    buffer.seek(0)
+    
+    # Return PDF as download
+    response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="order-{order.id}-receipt.pdf"'
+    return response
 
 @login_required
 def order_from_supplier(request, pk):
@@ -1160,6 +1390,28 @@ def checkout_page(request):
     esewa_signature = base64.b64encode(hash_obj.digest()).decode('utf-8')
     domain = request.build_absolute_uri('/')[:-1]
     
+    # Handle selected address for display
+    selected_address = request.GET.get('selected_address', 'address')
+    
+    # Determine which address to display based on selection
+    user_profile = request.user.userprofile
+    if selected_address == 'address':
+        display_address = user_profile.temporary_address or user_profile.address
+        display_phone = user_profile.temp_phone or user_profile.phone_number
+        display_address_type = "DEFAULT"
+    elif selected_address == 'address2':
+        display_address = user_profile.temporary_address or user_profile.address2
+        display_phone = user_profile.temp_phone or user_profile.phone_number
+        display_address_type = "ADDRESS 1"
+    elif selected_address == 'address3':
+        display_address = user_profile.temporary_address or user_profile.address3
+        display_phone = user_profile.temp_phone or user_profile.phone_number
+        display_address_type = "ADDRESS 2"
+    else:
+        display_address = user_profile.temporary_address or user_profile.address
+        display_phone = user_profile.temp_phone or user_profile.phone_number
+        display_address_type = "DEFAULT"
+
     context = {
         'cart_items': cart_items,
         'items_total': items_total,
@@ -1170,6 +1422,10 @@ def checkout_page(request):
         'transaction_uuid': transaction_uuid,
         'esewa_signature': esewa_signature,
         'domain': domain,
+        'display_address': display_address,
+        'display_phone': display_phone,
+        'display_address_type': display_address_type,
+        'selected_address': selected_address,
     }
     
     return render(request, 'dashboard/checkout.html', context)
@@ -1179,37 +1435,63 @@ def checkout_page(request):
 def update_checkout_address(request):
     """Update user address during checkout"""
     if request.method == 'POST':
-        phone_number = request.POST.get('phone_number', '').strip()
-        address = request.POST.get('address', '').strip()
-        address2 = request.POST.get('address2', '').strip()
-        address3 = request.POST.get('address3', '').strip()
+        selected_address = request.POST.get('selected_address', '')
         items_param = request.POST.get('items', '')  # Preserve items parameter
-        
+
         # Build redirect URL with items parameter if present
         redirect_url = reverse('checkout_page')
         if items_param:
             redirect_url += f'?items={items_param}'
-        
-        if not phone_number or not address:
-            messages.error(request, 'Phone number and address are required')
-            return HttpResponseRedirect(redirect_url)
-        
-        # Validate phone number is 10 digits
-        if not phone_number.isdigit() or len(phone_number) != 10:
-            messages.error(request, 'Phone number must be exactly 10 digits')
-            return HttpResponseRedirect(redirect_url)
-        
-        # Update user profile with all addresses
+
         user_profile = request.user.userprofile
-        user_profile.phone_number = phone_number
-        user_profile.address = address
-        user_profile.address2 = address2 if address2 else None
-        user_profile.address3 = address3 if address3 else None
+
+        if selected_address == 'new_address':
+            # Handle new address addition
+            new_address = request.POST.get('new_address', '').strip()
+            if not new_address:
+                messages.error(request, 'New address is required')
+                return HttpResponseRedirect(redirect_url)
+
+            # Save to the next available address slot in profile
+            if not user_profile.address2:
+                user_profile.address2 = new_address
+                user_profile.temporary_address = new_address
+                messages.success(request, 'New address added as Address 1 and saved for this order.')
+            elif not user_profile.address3:
+                user_profile.address3 = new_address
+                user_profile.temporary_address = new_address
+                messages.success(request, 'New address added as Address 2 and saved for this order.')
+            else:
+                messages.error(request, 'You already have 3 addresses. Please manage your addresses in your profile.')
+                return HttpResponseRedirect(redirect_url)
+
+        elif selected_address in ['address', 'address2', 'address3']:
+            # Handle existing address selection
+            address = request.POST.get('address', '').strip()
+            if not address:
+                messages.error(request, 'Address is required')
+                return HttpResponseRedirect(redirect_url)
+
+            # Save temporarily for this specific order
+            user_profile.temporary_address = address
+
+            # Update the selected address in profile if it was modified
+            if selected_address == 'address':
+                user_profile.address = address
+            elif selected_address == 'address2':
+                user_profile.address2 = address
+            elif selected_address == 'address3':
+                user_profile.address3 = address
+
+            messages.success(request, 'Address updated and saved for this order.')
+
+        else:
+            messages.error(request, 'Please select an address option')
+            return HttpResponseRedirect(redirect_url)
+
         user_profile.save()
-        
-        messages.success(request, 'Address updated successfully')
-        return HttpResponseRedirect(redirect_url)
-    
+        return HttpResponseRedirect(f"{redirect_url}?selected_address={selected_address}")
+
     return redirect('checkout_page')
 
 
@@ -1243,16 +1525,32 @@ def farmer_orders(request):
     
     # Get all orders (purchases) made by suppliers from this farmer's vegetables
     orders = SupplierPurchase.objects.filter(vegetable__farmer=request.user).select_related('supplier', 'vegetable').order_by('-purchased_at')
-    
+    for o in orders:
+        o.is_sp = True
+        o.product_name = o.vegetable.name
+        o.unit_price = o.vegetable.price_per_unit
+        o.buyer_name = f"{o.supplier.first_name} {o.supplier.last_name}"
+        o.buyer_phone = o.supplier.userprofile.phone_number
+        o.buyer_address = o.supplier.userprofile.address
+        o.order_date = o.purchased_at
+
     # Also get customer orders for this farmer's vegetables (through SupplierInventory)
     from django.db.models import Q
     customer_orders = CustomerOrder.objects.filter(
         supplier_inventory__supplier=request.user
     ).select_related('customer', 'supplier_inventory').order_by('-ordered_at')
+    for o in customer_orders:
+        o.is_sp = False
+        o.product_name = o.supplier_inventory.vegetable_name
+        o.unit_price = o.supplier_inventory.price_per_unit
+        o.buyer_name = f"{o.customer.first_name} {o.customer.last_name}"
+        o.buyer_phone = o.customer.userprofile.phone_number
+        o.buyer_address = o.shipping_address or o.customer.userprofile.address
+        o.order_date = o.ordered_at
     
     # Combine both types of orders
     all_orders = list(orders) + list(customer_orders)
-    all_orders.sort(key=lambda o: getattr(o, 'purchased_at', getattr(o, 'ordered_at', None)), reverse=True)
+    all_orders.sort(key=lambda o: getattr(o, 'order_date', None), reverse=True)
     
     # Get status filter from query params
     status_filter = request.GET.get('status', '')
@@ -1280,9 +1578,8 @@ def farmer_orders(request):
         'orders': all_orders,
         'total_orders': total_orders,
         'total_revenue': total_revenue,
-        'pending_orders': pending_orders_count,
-        'confirmed_orders': confirmed_orders_count,
-        'status_filter': status_filter,
+        'pending_orders_count': pending_orders_count,
+        'confirmed_orders_count': confirmed_orders_count,
+        'current_status': status_filter,
     }
-    
     return render(request, 'dashboard/farmer_orders.html', context)

@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'krishi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'krishi_connect',
+        'NAME': 'krishi_db',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
@@ -152,10 +152,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 # Weather API
 WEATHER_API_KEY = '377e71eda40ad3d927fb1e2c4d001e3e'  
-
 # Jazzmin settings
 JAZZMIN_SETTINGS = {
     "site_title": "Krishi Admin",

@@ -173,14 +173,14 @@
                             </p>
                             <p class="text-slate-600">
                                 <i class="fas fa-phone text-brand-600 mr-2"></i>
-                                <span>{{ user.userprofile.phone_number|default:"Not provided" }}</span>
+                                <span>{{ display_phone|default:"Not provided" }}</span>
                             </p>
                             <p class="text-slate-600">
                                 <i class="fas fa-map-pin text-brand-600 mr-2"></i>
-                                <span>{{ user.userprofile.address|default:"Address not set" }}</span>
+                                <span>{{ display_address|default:"Address not set" }}</span>
                             </p>
                             <p class="text-xs text-slate-400 mt-4">
-                                <span class="inline-block px-3 py-1 bg-brand-100 text-brand-700 rounded-full font-semibold">HOME</span>
+                                <span class="inline-block px-3 py-1 bg-brand-100 text-brand-700 rounded-full font-semibold">{{ display_address_type|default:"DEFAULT" }}</span>
                             </p>
                         </div>
                     </div>
@@ -188,76 +188,90 @@
                     <!-- Edit Form (Hidden by default) -->
                     <form method="post" action="{% url 'update_checkout_address' %}" id="editForm" class="hidden mt-6 space-y-4">
                         {% csrf_token %}
-                        
+
                         <!-- Hidden field to preserve selected items -->
                         <input type="hidden" name="items" value="{{ selected_items_param }}">
-                        
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-2">Full Name</label>
-                            <input type="text" name="full_name" value="{{ user.first_name }} {{ user.last_name }}" readonly class="w-full px-4 py-3 bg-slate-100 border border-slate-300 rounded-xl text-slate-600 cursor-not-allowed">
-                        </div>
 
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-2">Phone Number *</label>
-                            <input type="tel" name="phone_number" value="{{ user.userprofile.phone_number|default:'' }}" required pattern="[0-9]{10}" maxlength="10" placeholder="Enter 10-digit number" class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 font-medium" title="Phone number must be 10 digits">
-                            <p class="text-xs text-slate-500 mt-1">Enter 10-digit phone number</p>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-2">Address *</label>
-                            
-                            <!-- Address Container - Grid Layout -->
-                            <div class="grid grid-cols-3 gap-2" id="checkoutAddressContainer">
-                                <!-- Address 1 -->
-                                <div class="bg-slate-50 border-2 border-slate-300 rounded-lg p-2 hover:border-brand-400 transition-all h-32">
-                                    <div class="flex items-center justify-between mb-1">
-                                        <label class="text-xs font-semibold text-slate-700">Address 1</label>
-                                        <input type="radio" name="selected_address" value="address" checked class="w-3 h-3">
+                        <!-- Address Selection (only shown when editing) -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-slate-900 mb-3">Select Delivery Address</h3>
+                            <div class="space-y-3">
+                                {% if user.userprofile.address %}
+                                <label class="flex items-start gap-3 p-4 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-brand-300 transition-all">
+                                    <input type="radio" name="selected_address" value="address" class="mt-1 text-brand-600 focus:ring-brand-500" {% if not selected_address or selected_address == 'address' %}checked{% endif %}>
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span class="font-semibold text-slate-900">Default Address</span>
+                                            <span class="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-full">HOME</span>
+                                        </div>
+                                        <p class="text-sm text-slate-600">{{ user.userprofile.address }}</p>
+                                        {% if user.userprofile.phone_number %}
+                                        <p class="text-sm text-slate-500 mt-1"><i class="fas fa-phone mr-1"></i>{{ user.userprofile.phone_number }}</p>
+                                        {% endif %}
                                     </div>
-                                    <textarea name="address" rows="1" placeholder="Enter address"
-                                        class="w-full px-2 py-1 border border-slate-300 rounded text-xs bg-white focus:outline-none focus:ring-1 focus:ring-brand-500 resize-none">{{ user.userprofile.address|default:'' }}</textarea>
-                                </div>
+                                </label>
+                                {% endif %}
 
-                                <!-- Address 2 -->
                                 {% if user.userprofile.address2 %}
-                                <div class="bg-slate-50 border-2 border-slate-300 rounded-lg p-2 hover:border-brand-400 transition-all h-32">
-                                    <div class="flex items-center justify-between mb-1">
-                                        <label class="text-xs font-semibold text-slate-700">Address 2</label>
-                                        <div class="flex items-center gap-1">
-                                            <input type="radio" name="selected_address" value="address2" class="w-3 h-3">
-                                            <button type="button" class="text-red-500 hover:text-red-700 text-[10px]" onclick="removeCheckoutAddress('address2')">
-                                                <i class="fas fa-times"></i>
-                                            </button>
+                                <label class="flex items-start gap-3 p-4 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-brand-300 transition-all">
+                                    <input type="radio" name="selected_address" value="address2" class="mt-1 text-brand-600 focus:ring-brand-500" {% if selected_address == 'address2' %}checked{% endif %}>
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span class="font-semibold text-slate-900">Address 1</span>
+                                            <span class="px-2 py-1 bg-blue-100 text-blue-600 text-xs rounded-full">WORK</span>
                                         </div>
+                                        <p class="text-sm text-slate-600">{{ user.userprofile.address2 }}</p>
+                                        {% if user.userprofile.phone_number %}
+                                        <p class="text-sm text-slate-500 mt-1"><i class="fas fa-phone mr-1"></i>{{ user.userprofile.phone_number }}</p>
+                                        {% endif %}
                                     </div>
-                                    <textarea name="address2" rows="1" placeholder="Enter address"
-                                        class="w-full px-2 py-1 border border-slate-300 rounded text-xs bg-white focus:outline-none focus:ring-1 focus:ring-brand-500 resize-none">{{ user.userprofile.address2|default:'' }}</textarea>
-                                </div>
+                                </label>
                                 {% endif %}
 
-                                <!-- Address 3 -->
                                 {% if user.userprofile.address3 %}
-                                <div class="bg-slate-50 border-2 border-slate-300 rounded-lg p-2 hover:border-brand-400 transition-all h-32">
-                                    <div class="flex items-center justify-between mb-1">
-                                        <label class="text-xs font-semibold text-slate-700">Address 3</label>
-                                        <div class="flex items-center gap-1">
-                                            <input type="radio" name="selected_address" value="address3" class="w-3 h-3">
-                                            <button type="button" class="text-red-500 hover:text-red-700 text-[10px]" onclick="removeCheckoutAddress('address3')">
-                                                <i class="fas fa-times"></i>
-                                            </button>
+                                <label class="flex items-start gap-3 p-4 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-brand-300 transition-all">
+                                    <input type="radio" name="selected_address" value="address3" class="mt-1 text-brand-600 focus:ring-brand-500" {% if selected_address == 'address3' %}checked{% endif %}>
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span class="font-semibold text-slate-900">Address 2</span>
+                                            <span class="px-2 py-1 bg-green-100 text-green-600 text-xs rounded-full">OTHER</span>
                                         </div>
+                                        <p class="text-sm text-slate-600">{{ user.userprofile.address3 }}</p>
+                                        {% if user.userprofile.phone_number %}
+                                        <p class="text-sm text-slate-500 mt-1"><i class="fas fa-phone mr-1"></i>{{ user.userprofile.phone_number }}</p>
+                                        {% endif %}
                                     </div>
-                                    <textarea name="address3" rows="1" placeholder="Enter address"
-                                        class="w-full px-2 py-1 border border-slate-300 rounded text-xs bg-white focus:outline-none focus:ring-1 focus:ring-brand-500 resize-none">{{ user.userprofile.address3|default:'' }}</textarea>
-                                </div>
+                                </label>
                                 {% endif %}
-                            </div>
 
-                            <!-- Add Address Button -->
-                            <button type="button" id="addCheckoutAddressBtn" class="mt-2 flex items-center gap-1 text-brand-600 hover:text-brand-700 text-xs font-semibold px-2 py-1 rounded hover:bg-brand-50 transition-all"
-                                {% if user.userprofile.address3 and user.userprofile.address3|length > 0 %}style="display:none;"{% endif %}>
-                                <i class="fas fa-plus-circle"></i> Add
-                            </button>
+                                <!-- Add New Address Option -->
+                                <div class="p-4 border-2 border-dashed border-slate-300 rounded-xl hover:border-brand-300 transition-all bg-slate-50 hover:bg-brand-50">
+                                    <div class="flex items-center justify-center gap-3 text-slate-600">
+                                        <input type="radio" name="selected_address" value="new_address" class="mt-1 text-brand-600 focus:ring-brand-500" id="newAddressRadio">
+                                        <label for="newAddressRadio" class="flex items-center gap-3 cursor-pointer flex-1">
+                                            <i class="fas fa-plus-circle text-2xl text-brand-500"></i>
+                                            <div class="text-center">
+                                                <p class="font-semibold text-slate-900">Add New Address</p>
+                                                <p class="text-sm text-slate-500">Enter a new delivery address</p>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="newAddressField" style="display: none;">
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">New Delivery Address *</label>
+                            <textarea name="new_address" rows="3" placeholder="Enter your new delivery address"
+                                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm bg-white resize-none"></textarea>
+                            <p class="text-xs text-slate-500 mt-1">This address will be saved to your profile for future use</p>
+                        </div>
+
+                        <div id="existingAddressField">
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Delivery Address *</label>
+                            <textarea name="address" rows="3" placeholder="Enter your delivery address" required
+                                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm bg-white resize-none">{{ user.userprofile.address|default:'' }}</textarea>
+                            <p class="text-xs text-slate-500 mt-1">This address will be saved to your profile and used for this order</p>
                         </div>
 
                         <div class="flex gap-3 pt-4">
@@ -426,7 +440,7 @@
         function toggleEditForm() {
             const form = document.getElementById('editForm');
             const display = document.getElementById('addressDisplay');
-            
+
             form.classList.toggle('hidden');
             display.classList.toggle('hidden');
         }
@@ -446,7 +460,7 @@
             // First check if address is set
             const address = "{{ user.userprofile.address|escapejs }}".trim();
             const phone = "{{ user.userprofile.phone_number|escapejs }}".trim();
-            
+
             if (!address || !phone) {
                 alert('Please update your shipping address and phone number before proceeding to payment.');
                 document.getElementById('editForm').classList.remove('hidden');
@@ -504,7 +518,7 @@
             // Check if address is set
             const address = "{{ user.userprofile.address|escapejs }}".trim();
             const phone = "{{ user.userprofile.phone_number|escapejs }}".trim();
-            
+
             if (!address || !phone) {
                 alert('Please update your shipping address and phone number before proceeding to payment.');
                 document.getElementById('editForm').classList.remove('hidden');
@@ -528,7 +542,7 @@
             document.getElementById('overlay').classList.remove('hidden', 'opacity-0');
             document.getElementById('overlay').classList.add('opacity-100');
         }
-        
+
         function closeSidebar() {
             document.getElementById('sidebar').classList.add('-translate-x-full');
             document.getElementById('overlay').classList.remove('opacity-100');
@@ -537,79 +551,45 @@
             }, 300);
         }
 
-        function toggleEditForm() {
-            const form = document.getElementById('editForm');
-            const display = document.getElementById('addressDisplay');
-            if (form.classList.contains('hidden')) {
-                form.classList.remove('hidden');
-                display.classList.add('hidden');
-            } else {
-                form.classList.add('hidden');
-                display.classList.remove('hidden');
-            }
-        }
-
-        // Handle adding new addresses in checkout
-        document.getElementById('addCheckoutAddressBtn')?.addEventListener('click', function(e) {
-            e.preventDefault();
-            const container = document.getElementById('checkoutAddressContainer');
-            const addressCount = container.querySelectorAll('[class*="border-2"]').length;
-            
-            if (addressCount >= 3) {
-                alert('Maximum 3 addresses allowed');
-                return;
-            }
-            
-            let addressNum = addressCount + 1;
-            let addressFieldName = 'address' + (addressNum > 1 ? addressNum : '');
-            
-            const newAddressBox = document.createElement('div');
-            newAddressBox.className = 'bg-slate-50 border-2 border-slate-300 rounded-lg p-2 hover:border-brand-400 transition-all h-32';
-            newAddressBox.id = 'checkout-address-box-' + addressFieldName;
-            
-            const labelText = addressNum === 1 ? 'Address 1' : 'Address ' + addressNum;
-            const fieldName = addressNum === 1 ? 'address' : 'address' + addressNum;
-            
-            newAddressBox.innerHTML = `
-                <div class="flex items-center justify-between mb-1">
-                    <label class="text-xs font-semibold text-slate-700">${labelText}</label>
-                    <div class="flex items-center gap-1">
-                        <input type="radio" name="selected_address" value="${fieldName}" class="w-3 h-3">
-                        <button type="button" class="text-red-500 hover:text-red-700 text-[10px]" onclick="removeCheckoutAddress('${fieldName}')">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </div>
-                <textarea name="${fieldName}" rows="1" placeholder="Enter address"
-                    class="w-full px-2 py-1 border border-slate-300 rounded text-xs bg-white focus:outline-none focus:ring-1 focus:ring-brand-500 resize-none"></textarea>
-            `;
-            
-            container.appendChild(newAddressBox);
-            
-            // Hide button if we have 3 addresses
-            if (addressCount + 1 >= 3) {
-                document.getElementById('addCheckoutAddressBtn').style.display = 'none';
+        // Handle URL hash for scrolling to address section when returning from profile
+        window.addEventListener('load', function() {
+            if (window.location.hash === '#addresses') {
+                // Show the edit form to reveal address options
+                toggleEditForm();
+                // Scroll to the address selection section
+                setTimeout(() => {
+                    const addressSection = document.querySelector('.space-y-3');
+                    if (addressSection) {
+                        addressSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 300);
             }
         });
 
-        function removeCheckoutAddress(fieldName) {
-            const box = document.getElementById('checkout-address-box-' + fieldName);
-            if (box) {
-                box.remove();
-                document.getElementById('addCheckoutAddressBtn').style.display = 'flex';
-            }
-        }
+        // Handle address selection changes
+        document.addEventListener('DOMContentLoaded', function() {
+            const addressRadios = document.querySelectorAll('input[name="selected_address"]');
+            const newAddressField = document.getElementById('newAddressField');
+            const existingAddressField = document.getElementById('existingAddressField');
+            const addressTextarea = document.querySelector('textarea[name="address"]');
 
-        // Show add button if less than 3 addresses on page load
-        window.addEventListener('load', function() {
-            const container = document.getElementById('checkoutAddressContainer');
-            if (container) {
-                const addressCount = container.querySelectorAll('[class*="border-2"]').length;
-                if (addressCount < 3) {
-                    const btn = document.getElementById('addCheckoutAddressBtn');
-                    if (btn) btn.style.display = 'flex';
-                }
-            }
+            addressRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'new_address') {
+                        newAddressField.style.display = 'block';
+                        existingAddressField.style.display = 'none';
+                        // Make new address field required
+                        document.querySelector('textarea[name="new_address"]').setAttribute('required', 'required');
+                        addressTextarea.removeAttribute('required');
+                    } else {
+                        newAddressField.style.display = 'none';
+                        existingAddressField.style.display = 'block';
+                        // Make existing address field required
+                        addressTextarea.setAttribute('required', 'required');
+                        document.querySelector('textarea[name="new_address"]').removeAttribute('required');
+                    }
+                });
+            });
         });
     </script>
 

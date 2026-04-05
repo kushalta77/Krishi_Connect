@@ -7,269 +7,196 @@
     <title>My Orders | Krishi Connect</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        heading: ['"Outfit"', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            200: '#bbf7d0',
-                            300: '#86efac',
-                            400: '#4ade80',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#14532d',
-                        },
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); }
-        .sidebar { background: linear-gradient(160deg, #14532d 0%, #166534 100%); border-right: 1px solid rgba(255,255,255,0.1); }
+        body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); }
+        .sidebar { background: linear-gradient(160deg, #14532d 0%, #166534 100%); }
         .nav-item { position: relative; overflow: hidden; transition: all 0.3s ease; }
         .nav-item::before { content: ''; position: absolute; left: 0; top: 0; width: 3px; height: 100%; background-color: #4ade80; transform: scaleY(0); transition: transform 0.3s ease; }
         .nav-item:hover::before, .nav-item.active::before { transform: scaleY(1); }
-        .nav-item:hover, .nav-item.active { background: rgba(255, 255, 255, 0.1); color: #fff; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: #fff; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .table-row { background: white; border-bottom: 1px solid #e2e8f0; transition: all 0.3s ease; }
         .table-row:hover { background: #f9fafb; }
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 0.875rem;
-            border-radius: 0.5rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
+        .status-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.875rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600; }
         .status-pending { background: linear-gradient(135deg, #fef3c7 0%, #fce7b6 100%); color: #b45309; }
         .status-confirmed { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #1e40af; }
         .status-delivered { background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); color: #15803d; }
         .modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 50; }
         .modal.hidden { display: none; }
         .modal-backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); }
-        .modal-content { position: relative; background: white; border-radius: 1rem; max-width: 500px; width: 90%; max-height: 85vh; overflow-y-auto; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15); }
+        .modal-content { position: relative; background: white; border-radius: 1rem; max-width: 600px; width: 90%; max-height: 90vh; overflow-y-auto; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15); }
     </style>
 </head>
-<body class="min-h-screen text-slate-800 font-sans">
-
-<div id="overlay" onclick="closeSidebar()" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-all duration-300 opacity-0"></div>
+<body class="min-h-screen text-slate-800">
 
 <div class="flex h-screen overflow-hidden">
 
-    <!-- Premium Sidebar -->
-    <aside id="sidebar" class="fixed md:static z-50 w-[280px] h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0 transition-transform duration-500 ease-out">
-        
-        <!-- Brand Logo -->
-        <div class="px-8 py-8 relative">
+    <!-- Sidebar -->
+    <aside class="w-72 h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0">
+        <div class="px-8 py-8">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center border border-white/20 shadow-lg">
-                    <i class="fas fa-leaf text-2xl text-brand-400"></i>
+                <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20">
+                    <i class="fas fa-leaf text-2xl text-green-400"></i>
                 </div>
                 <div>
-                    <h2 class="font-heading font-bold text-2xl text-white tracking-tight">Krishi<span class="text-brand-400">Connect</span></h2>
-                    <p class="text-brand-200/80 text-xs tracking-wider uppercase font-semibold mt-1">Farm to Home</p>
+                    <h2 class="font-bold text-2xl text-white">Krishi<span class="text-green-400">Connect</span></h2>
+                    <p class="text-green-200/80 text-[10px] tracking-wider uppercase font-semibold mt-1">Customer Portal</p>
                 </div>
             </div>
         </div>
 
-        <!-- User Profile Card -->
-        <div class="mx-6 mb-8 mt-2 p-1 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 shadow-lg relative overflow-hidden group">
-            <div class="absolute inset-0 bg-brand-600/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
-            <div class="relative p-4 flex items-center gap-4">
-                <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-xl font-heading font-bold text-brand-700 shadow-md">
+        <div class="mx-6 mb-8 mt-2 p-1 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10">
+            <div class="p-4 flex items-center gap-4">
+                <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-xl font-bold text-green-700">
                     {{ user.first_name|first|upper }}
                 </div>
                 <div class="min-w-0 flex-1">
-                    <p class="font-heading font-semibold text-white text-md truncate">{{ user.first_name }} {{ user.last_name }}</p>
-                    <span class="inline-flex items-center gap-1.5 text-[10px] bg-brand-400/20 text-brand-200 px-2 py-0.5 rounded-full mt-1 font-bold uppercase tracking-wider">
-                        <i class="fas fa-circle text-brand-400" style="font-size:6px"></i> Active Customer
+                    <p class="font-semibold text-white truncate">{{ user.first_name }} {{ user.last_name }}</p>
+                    <span class="inline-flex items-center gap-1.5 text-[10px] bg-green-400/20 text-green-200 px-2 py-0.5 rounded-full mt-1 font-bold uppercase tracking-wider">
+                        <i class="fas fa-circle text-green-400" style="font-size:6px"></i> Active Customer
                     </span>
-                    <a href="{% url 'customer_profile' %}" class="mt-2 flex items-center gap-1 text-[10px] text-brand-300 hover:text-white transition-colors">
+                    <a href="{% url 'customer_profile' %}" class="mt-2 flex items-center gap-1 text-[10px] text-green-300 hover:text-white transition-colors">
                         <i class="fas fa-user-cog" style="font-size:9px"></i> View Profile
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Navigation Links -->
         <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto pb-6">
-            <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mb-2">Menu</p>
-
-            <a href="{% url 'customer_dashboard' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-slate-300 hover:text-white">
-                <i class="fas fa-chart-line w-5 text-center text-lg"></i> 
-                <span>Dashboard</span>
+            <p class="text-green-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mb-2">Main Menu</p>
+            <a href="{% url 'customer_dashboard' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-th-large w-5 text-center text-lg"></i><span>Dashboard</span>
             </a>
-            <a href="{% url 'customer_marketplace' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium hover:text-white">
-                <i class="fas fa-store w-5 text-center text-lg"></i> 
-                <span>Marketplace</span>
+            <a href="{% url 'customer_marketplace' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-store w-5 text-center text-lg"></i><span>Marketplace</span>
             </a>
-            <a href="{% url 'customer_orders' %}" class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-white shadow-[0_0_20px_rgba(74,222,128,0.1)]">
-                <i class="fas fa-box-open w-5 text-center text-lg"></i> 
-                <span>My Orders</span>
+            <a href="{% url 'customer_orders' %}" class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-white">
+                <i class="fas fa-shopping-cart w-5 text-center text-lg"></i><span>My Orders</span>
             </a>
 
-            <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Others</p>
-            <a href="{% url 'weather' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium hover:text-white">
-                <i class="fas fa-cloud-sun w-5 text-center text-lg"></i> 
-                <span>Weather Updates</span>
+            <p class="text-green-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Tools</p>
+            <a href="{% url 'weather' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                <i class="fas fa-cloud-sun w-5 text-center text-lg"></i><span>Weather Updates</span>
             </a>
         </nav>
 
-        <!-- Logout Area -->
-        <div class="p-6 border-t border-white/10 mt-auto bg-black/10">
+        <div class="p-6 border-t border-white/10 bg-black/10">
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
-                <button type="submit" class="w-full flex items-center justify-center gap-3 py-3.5 bg-red-500/10 hover:bg-red-500 border border-red-500/20 hover:border-red-500 rounded-xl text-red-400 hover:text-white font-medium transition-all duration-300 shadow-lg">
-                    <i class="fas fa-power-off"></i> 
-                    <span>Logout</span>
+                <button type="submit" class="w-full flex items-center justify-center gap-3 py-3.5 bg-red-500/10 hover:bg-red-500 border border-red-500/20 hover:border-red-500 rounded-xl text-red-400 hover:text-white font-medium transition-all duration-300">
+                    <i class="fas fa-power-off"></i><span>Logout</span>
                 </button>
             </form>
         </div>
     </aside>
 
-    <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col overflow-hidden relative">
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
 
-        <!-- Top Header -->
-        <header class="bg-white border-b border-slate-200 px-8 py-6 shadow-sm flex-shrink-0">
-            <div class="flex items-center justify-between gap-4">
-                <div>
-                    <h1 class="text-4xl font-heading font-bold text-slate-900">📦 My Orders</h1>
-                    <p class="text-slate-500 text-base mt-2">Track and manage all your purchases</p>
-                </div>
-                <button onclick="openSidebar()" class="md:hidden w-10 h-10 flex items-center justify-center bg-brand-50 text-brand-600 rounded-xl hover:bg-brand-100 transition-colors">
-                    <i class="fas fa-bars text-lg"></i>
-                </button>
+        <!-- Top Bar -->
+        <header class="bg-white border-b border-gray-100 px-8 py-6 flex items-center justify-between shadow-sm flex-shrink-0">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">📦 My Orders</h1>
+                <p class="text-gray-500 text-base mt-1">Track and manage all your purchases</p>
             </div>
         </header>
 
-        <!-- Page Content -->
+        <!-- Body -->
         <main class="flex-1 overflow-y-auto px-8 py-8">
 
-            <!-- Statistics Section -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-10">
-                <div class="stat-card">
+            {% for message in messages %}
+            <div class="flex items-center gap-3 p-4 rounded-xl border text-base mb-4 {% if message.tags == 'success' %}bg-green-50 border-green-200 text-green-700{% else %}bg-red-50 border-red-200 text-red-700{% endif %}">
+                <i class="fas {% if message.tags == 'success' %}fa-check-circle text-green-500{% else %}fa-exclamation-circle text-red-500{% endif %} text-lg"></i>
+                {{ message }}
+            </div>
+            {% endfor %}
+
+            <!-- Stats Section -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white rounded-xl border border-gray-100 p-6">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-sm font-bold text-slate-500 uppercase tracking-wider">Total Orders</span>
-                        <i class="fas fa-box text-2xl text-brand-200"></i>
+                        <span class="text-sm font-bold text-gray-600 uppercase tracking-wider">Total Orders</span>
+                        <i class="fas fa-box text-2xl text-green-200"></i>
                     </div>
-                    <p class="text-3xl font-heading font-bold text-slate-800">{{ total_orders }}</p>
+                    <p class="text-3xl font-bold text-gray-800">{{ total_orders }}</p>
                 </div>
-                <div class="stat-card">
+                <div class="bg-white rounded-xl border border-gray-100 p-6">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-sm font-bold text-slate-500 uppercase tracking-wider">Pending</span>
+                        <span class="text-sm font-bold text-gray-600 uppercase tracking-wider">Pending</span>
                         <i class="fas fa-hourglass-half text-2xl text-yellow-200"></i>
                     </div>
-                    <p class="text-3xl font-heading font-bold text-yellow-600">{{ pending_orders }}</p>
+                    <p class="text-3xl font-bold text-yellow-600">{{ pending_orders }}</p>
                 </div>
-                <div class="stat-card">
+                <div class="bg-white rounded-xl border border-gray-100 p-6">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-sm font-bold text-slate-500 uppercase tracking-wider">Confirmed</span>
+                        <span class="text-sm font-bold text-gray-600 uppercase tracking-wider">Confirmed</span>
                         <i class="fas fa-check-circle text-2xl text-blue-200"></i>
                     </div>
-                    <p class="text-3xl font-heading font-bold text-blue-600">{{ confirmed_orders }}</p>
+                    <p class="text-3xl font-bold text-blue-600">{{ confirmed_orders }}</p>
                 </div>
-                <div class="stat-card">
+                <div class="bg-white rounded-xl border border-gray-100 p-6">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-sm font-bold text-slate-500 uppercase tracking-wider">Delivered</span>
+                        <span class="text-sm font-bold text-gray-600 uppercase tracking-wider">Delivered</span>
                         <i class="fas fa-truck text-2xl text-green-200"></i>
                     </div>
-                    <p class="text-3xl font-heading font-bold text-green-600">{{ delivered_orders }}</p>
-                </div>
-                <div class="stat-card">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-sm font-bold text-slate-500 uppercase tracking-wider">Spent</span>
-                        <i class="fas fa-rupiah-sign text-2xl text-brand-200"></i>
-                    </div>
-                    <p class="text-3xl font-heading font-bold text-brand-600">₹{{ total_spent|floatformat:0 }}</p>
+                    <p class="text-3xl font-bold text-green-600">{{ delivered_orders }}</p>
                 </div>
             </div>
 
-            <!-- Filter Section -->
-            <div class="bg-white rounded-2xl border border-slate-200 p-6 mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="flex items-center gap-3">
-                    <i class="fas fa-filter text-brand-500 text-xl"></i>
-                    <h3 class="font-heading font-bold text-slate-800 text-lg">Filter Orders</h3>
-                </div>
-                
-                <form method="GET" action="{% url 'customer_orders' %}" class="flex flex-col sm:flex-row gap-4 w-full md:w-auto" id="filterForm">
-                    <!-- Status Filter -->
-                    <div class="relative w-full sm:w-48 text-left">
-                        <select name="status" onchange="document.getElementById('filterForm').submit();" class="appearance-none w-full bg-slate-50 border border-slate-200 text-slate-700 font-bold py-3 pl-4 pr-10 rounded-xl leading-tight focus:outline-none focus:bg-white focus:border-brand-500 transition-all cursor-pointer">
-                            <option value="all" {% if status_filter == 'all' or not status_filter %}selected{% endif %}>Status: All Orders</option>
-                            <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
-                            <option value="confirmed" {% if status_filter == 'confirmed' %}selected{% endif %}>Confirmed</option>
-                            <option value="delivered" {% if status_filter == 'delivered' %}selected{% endif %}>Delivered</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
-                            <i class="fas fa-chevron-down text-sm"></i>
-                        </div>
-                    </div>
-
-                    <!-- Date Filter -->
-                    <div class="relative w-full sm:w-48 text-left">
-                        <select name="date" onchange="document.getElementById('filterForm').submit();" class="appearance-none w-full bg-slate-50 border border-slate-200 text-slate-700 font-bold py-3 pl-4 pr-10 rounded-xl leading-tight focus:outline-none focus:bg-white focus:border-brand-500 transition-all cursor-pointer">
-                            <option value="all" {% if date_filter == 'all' or not date_filter %}selected{% endif %}>Date: All Time</option>
-                            <option value="today" {% if date_filter == 'today' %}selected{% endif %}>Today</option>
-                            <option value="1_week" {% if date_filter == '1_week' %}selected{% endif %}>Last 7 Days</option>
-                            <option value="3_weeks" {% if date_filter == '3_weeks' %}selected{% endif %}>Last 3 Weeks</option>
-                            <option value="1_month" {% if date_filter == '1_month' %}selected{% endif %}>Last 1 Month</option>
-                            <option value="3_months" {% if date_filter == '3_months' %}selected{% endif %}>Last 3 Months</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
-                            <i class="fas fa-chevron-down text-sm"></i>
-                        </div>
-                    </div>
-                </form>
+            <!-- Filter Bar -->
+            <div class="bg-white rounded-xl border border-gray-100 px-6 py-4 mb-6 flex items-center gap-4 flex-wrap">
+                <i class="fas fa-filter text-gray-400 text-lg"></i>
+                <a href="{% url 'customer_orders' %}" class="text-sm px-3 py-2 rounded-lg font-medium transition {% if not status_filter %}bg-green-600 text-white{% else %}text-gray-600 hover:bg-gray-100 border border-gray-200{% endif %}">
+                    All Orders
+                </a>
+                <a href="?status=pending" class="text-sm px-3 py-2 rounded-lg font-medium transition {% if status_filter == 'pending' %}bg-yellow-600 text-white{% else %}text-gray-600 hover:bg-gray-100 border border-gray-200{% endif %}">
+                    Pending
+                </a>
+                <a href="?status=confirmed" class="text-sm px-3 py-2 rounded-lg font-medium transition {% if status_filter == 'confirmed' %}bg-blue-600 text-white{% else %}text-gray-600 hover:bg-gray-100 border border-gray-200{% endif %}">
+                    Confirmed
+                </a>
+                <a href="?status=delivered" class="text-sm px-3 py-2 rounded-lg font-medium transition {% if status_filter == 'delivered' %}bg-green-600 text-white{% else %}text-gray-600 hover:bg-gray-100 border border-gray-200{% endif %}">
+                    Delivered
+                </a>
+                <span class="ml-auto text-sm text-gray-500">{{ orders|length }} order{{ orders|length|pluralize }}</span>
             </div>
 
             <!-- Orders Table -->
             {% if orders %}
-            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+            <div class="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm">
                 <table class="w-full">
                     <thead>
-                        <tr class="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
-                            <th class="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Order ID</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Date</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Product</th>
-                            <th class="px-6 py-4 text-right text-xs font-bold text-slate-700 uppercase tracking-wider">Total</th>
-                            <th class="px-6 py-4 text-center text-xs font-bold text-slate-700 uppercase tracking-wider">Payment Status</th>
-                            <th class="px-6 py-4 text-center text-xs font-bold text-slate-700 uppercase tracking-wider">Fulfillment</th>
-                            <th class="px-6 py-4 text-center text-xs font-bold text-slate-700 uppercase tracking-wider">Action</th>
+                        <tr class="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Order ID</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Date</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Product</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Total</th>
+                            <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Payment Status</th>
+                            <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Fulfillment</th>
+                            <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for order in orders %}
                         <tr class="table-row">
-                            <td class="px-6 py-4 text-sm font-bold text-slate-800">#{{ order.id }}</td>
-                            <td class="px-6 py-4 text-sm text-slate-600">
+                            <td class="px-6 py-4 text-sm font-bold text-gray-800">#{{ order.id }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">
                                 {% if order.ordered_at %}{{ order.ordered_at|date:"M d, Y" }}{% elif order.purchased_at %}{{ order.purchased_at|date:"M d, Y" }}{% else %}N/A{% endif %}
                             </td>
-                            <td class="px-6 py-4 text-sm text-slate-600">{{ order.product.name|default:"Product" }}</td>
+                             <td class="px-6 py-4 text-sm text-gray-600">{{ order.product_name }}</td>
                             <td class="px-6 py-4 text-sm font-bold text-right text-green-600">₹{{ order.total_price }}</td>
-                            <td class="px-6 py-4 text-sm text-center"><span class="status-badge status-delivered"><i class="fas fa-check-circle"></i> Paid via eSewa</span></td>
+                            <td class="px-6 py-4 text-sm text-center"><span class="status-badge status-completed"><i class="fas fa-check-circle"></i> Paid via eSewa</span></td>
                             <td class="px-6 py-4 text-sm text-center">
-                                <span class="status-badge status-{% if order.status == 'pending' %}pending{% elif order.status == 'confirmed' %}confirmed{% else %}delivered{% endif %}">
+                                <span class="status-badge status-{% if order.status == 'pending' %}pending{% elif order.status == 'confirmed' %}confirmed{% else %}completed{% endif %}">
                                     <i class="fas {% if order.status == 'pending' %}fa-clock{% elif order.status == 'confirmed' %}fa-sync{% else %}fa-check-double{% endif %}"></i>
                                     {% if order.status == 'pending' %}Pending{% elif order.status == 'confirmed' %}Processing{% else %}Delivered{% endif %}
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-sm text-center">
-                                <button onclick="openModal('{{ order.id }}')" class="text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-2 mx-auto">
+                                <button onclick="openModal('{{ order.id }}')" class="text-gray-600 hover:text-gray-900 transition flex items-center justify-center gap-2 mx-auto">
                                     <i class="fas fa-eye"></i> View Details
                                 </button>
                             </td>
@@ -313,16 +240,10 @@
             {% endif %}
 
             {% else %}
-            <div class="text-center py-20">
-                <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-slate-100 to-slate-200 rounded-full mb-8">
-                    <i class="fas fa-inbox text-5xl text-slate-400"></i>
-                </div>
-                <h3 class="text-3xl font-heading font-bold text-slate-800 mb-3">No Orders Yet</h3>
-                <p class="text-slate-500 text-lg mb-1">You haven't placed any orders{% if status_filter %} with status "{{ status_filter }}"{% endif %}.</p>
-                <p class="text-slate-400 mb-8">Start browsing our marketplace to find fresh products!</p>
-                <a href="{% url 'customer_marketplace' %}" class="inline-flex items-center gap-3 bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white font-bold px-8 py-4 rounded-xl transition-all shadow-lg shadow-brand-600/30 hover:shadow-brand-700/40">
-                    <i class="fas fa-store text-xl"></i> Browse Marketplace
-                </a>
+            <div class="bg-white rounded-xl border border-gray-100 p-12 text-center">
+                <div class="text-6xl mb-4">📭</div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">No Orders Found</h3>
+                <p class="text-gray-500">You don't have any orders{% if status_filter %} with status "{{ status_filter }}"{% endif %} yet.</p>
             </div>
             {% endif %}
         </main>
@@ -346,143 +267,181 @@
     <div class="modal-backdrop" onclick="closeModal()"></div>
     <div class="modal-content">
         <!-- Modal Header -->
-        <div class="flex items-center justify-between p-6 border-b border-slate-200">
-            <h2 class="text-4xl font-bold text-slate-800 flex items-center gap-3">
-                <i class="fas fa-box text-brand-600"></i> Order Details
+        <div class="flex items-center justify-between p-6 border-b border-gray-200">
+            <h2 class="text-4xl font-bold text-gray-800 flex items-center gap-3">
+                <i class="fas fa-box text-green-600"></i> Order Details
             </h2>
-            <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 text-2xl">
-                <i class="fas fa-times"></i>
-            </button>
+            <div class="flex items-center gap-3">
+                <button onclick="downloadOrder()" class="text-gray-600 hover:text-gray-900 transition flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50">
+                    <i class="fas fa-download"></i> Download
+                </button>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
 
         <!-- Modal Body -->
-        <div id="modalBody" class="p-4 space-y-4">
+        <div id="modalBody" class="p-6 space-y-6">
             <!-- Order Header Info -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
-                    <p class="text-slate-600 text-xs font-bold uppercase mb-1">Order ID</p>
-                    <p id="modal-order-id" class="text-lg font-bold text-slate-800">#1001</p>
+                    <p class="text-gray-600 text-sm font-bold uppercase mb-2">Order ID</p>
+                    <p id="modal-order-id" class="text-2xl font-bold text-gray-800">#1001</p>
                 </div>
                 <div>
-                    <p class="text-slate-600 text-xs font-bold uppercase mb-1">Order Date</p>
-                    <p id="modal-order-date" class="text-lg font-bold text-slate-800">2025-02-18</p>
+                    <p class="text-gray-600 text-sm font-bold uppercase mb-2">Order Date</p>
+                    <p id="modal-order-date" class="text-2xl font-bold text-gray-800">2025-02-18</p>
                 </div>
                 <div>
-                    <p class="text-slate-600 text-xs font-bold uppercase mb-1">Payment Status</p>
-                    <p class="text-xs font-bold mt-1"><span class="status-badge status-delivered"><i class="fas fa-check-circle"></i> Paid via eSewa</span></p>
+                    <p class="text-gray-600 text-sm font-bold uppercase mb-2">Payment Status</p>
+                    <p class="text-base font-bold mt-1"><span class="status-badge status-confirmed"><i class="fas fa-check-circle"></i> Paid via eSewa</span></p>
                 </div>
                 <div>
-                    <p class="text-slate-600 text-xs font-bold uppercase mb-1">Total Amount</p>
-                    <p id="modal-order-total" class="text-lg font-bold text-green-600">₹788.00</p>
+                    <p class="text-gray-600 text-sm font-bold uppercase mb-2">Total Amount</p>
+                    <p id="modal-order-total" class="text-2xl font-bold text-green-600">₹788.00</p>
                 </div>
             </div>
 
-            <hr class="border-slate-200">
+            <hr class="border-gray-200">
 
             <!-- Fulfillment -->
             <div>
-                <h4 class="text-lg font-bold text-slate-800 mb-2"><i class="fas fa-dolly text-brand-600 mr-2"></i>Fulfillment</h4>
-                <div class="grid grid-cols-2 gap-3">
+                <h4 class="text-xl font-bold text-gray-800 mb-3"><i class="fas fa-dolly text-green-600 mr-2"></i>Fulfillment</h4>
+                <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <p class="text-slate-600 text-xs font-semibold mb-1">Status</p>
-                        <span id="modal-fulfillment-status" class="status-badge status-delivered"><i class="fas fa-check-double"></i> Delivered</span>
+                        <p class="text-gray-600 text-sm font-semibold mb-2">Status</p>
+                        <span id="modal-fulfillment-status" class="status-badge status-completed"><i class="fas fa-check-double"></i> Delivered</span>
                     </div>
                     <div>
-                        <p class="text-slate-600 text-xs font-semibold mb-1">Est. Delivery</p>
-                        <p id="modal-est-delivery" class="text-sm font-bold text-slate-800">Feb 22, 2025</p>
+                        <p class="text-gray-600 text-sm font-semibold mb-2">Est. Delivery</p>
+                        <p id="modal-est-delivery" class="text-base font-bold text-gray-800">Feb 22, 2025</p>
                     </div>
                 </div>
             </div>
 
-            <hr class="border-slate-200">
+            <hr class="border-gray-200">
 
             <!-- Items Purchased -->
             <div>
-                <h4 class="text-lg font-bold text-slate-800 mb-2"><i class="fas fa-shopping-cart text-brand-600 mr-2"></i>Items Purchased</h4>
+                <h4 class="text-xl font-bold text-gray-800 mb-3"><i class="fas fa-shopping-cart text-green-600 mr-2"></i>Items Purchased</h4>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
+                    <table class="w-full text-base">
                         <thead>
-                            <tr class="border-b border-slate-200">
-                                <th class="text-left font-bold text-slate-700 pb-1 text-xs">Item</th>
-                                <th class="text-center font-bold text-slate-700 pb-1 text-xs">Qty</th>
-                                <th class="text-right font-bold text-slate-700 pb-1 text-xs">Price</th>
-                                <th class="text-right font-bold text-slate-700 pb-1 text-xs">Total</th>
+                            <tr class="border-b border-gray-200">
+                                <th class="text-left font-bold text-gray-700 pb-2">Item</th>
+                                <th class="text-center font-bold text-gray-700 pb-2">Quantity</th>
+                                <th class="text-right font-bold text-gray-700 pb-2">Unit Price</th>
+                                <th class="text-right font-bold text-gray-700 pb-2">Subtotal</th>
                             </tr>
                         </thead>
                         <tbody id="modal-items-list">
-                            <tr class="border-b border-slate-100">
-                                <td class="py-2 text-slate-800">Product</td>
-                                <td class="text-center text-slate-800">1</td>
-                                <td class="text-right text-slate-800">₹400</td>
-                                <td class="text-right font-bold text-slate-800">₹400</td>
+                            <tr class="border-b border-gray-100">
+                                <td id="modal-item-name" class="py-3 text-base text-gray-800">Item Name</td>
+                                <td id="modal-item-qty" class="text-center text-base text-gray-800">0</td>
+                                <td id="modal-item-price" class="text-right text-base text-gray-800">₹0.00</td>
+                                <td id="modal-item-subtotal" class="text-right text-base font-bold text-gray-800">₹0.00</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="mt-2 p-2 bg-yellow-50 rounded-lg border border-yellow-200">
-                    <p class="text-right text-sm font-bold text-slate-800">Total: <span id="modal-item-total" class="text-brand-600">₹788.00</span></p>
+                <div class="mt-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                    <p class="text-right text-lg font-bold text-gray-800">Order Total: <span id="modal-item-total" class="text-green-600 text-2xl">₹788.00</span></p>
                 </div>
             </div>
 
-            <hr class="border-slate-200">
+            <hr class="border-gray-200">
 
             <!-- Shipping Address -->
             <div>
-                <h4 class="text-lg font-bold text-slate-800 mb-2"><i class="fas fa-map-marker-alt text-brand-600 mr-2"></i>Shipping Address</h4>
-                <div class="bg-slate-50 border border-slate-200 rounded-lg p-3">
-                    <p class="font-semibold text-slate-800" id="modal-address-name"></p>
-                    <p class="text-sm text-slate-600 mt-1" id="modal-address-line1"></p>
-                    <p class="text-sm text-slate-600" id="modal-address-phone"><i class="fas fa-phone text-brand-600 mr-2"></i></p>
+                <h4 class="text-xl font-bold text-gray-800 mb-3"><i class="fas fa-map-marker-alt text-green-600 mr-2"></i>Shipping Address</h4>
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <p class="text-lg font-semibold text-gray-800" id="modal-buyer-name">Customer Name</p>
+                    <p class="text-base text-gray-600 mt-1 whitespace-pre-line" id="modal-buyer-address">Address Detail</p>
+                    <p class="text-base text-gray-600 mt-2"><i class="fas fa-phone text-green-600 mr-2"></i><span id="modal-buyer-phone">Phone</span></p>
                 </div>
             </div>
 
-            <hr class="border-slate-200">
+            <hr class="border-gray-200">
 
             <!-- Contact Help -->
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-center gap-2">
-                <i class="fas fa-info-circle text-blue-600 text-lg"></i>
-                <div class="text-xs text-blue-800">
-                    <p class="font-semibold mb-0">Need help?</p>
-                    <p>Contact support@krishiconnect.com</p>
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-center gap-3">
+                <i class="fas fa-info-circle text-blue-600 text-2xl"></i>
+                <div class="text-base text-blue-800">
+                    <p class="text-lg font-semibold mb-1">Need help?</p>
+                    <p>Contact support@krishisphere.com</p>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </div>
 
 <script>
-    const orders = {
-        {% for order in orders %}
-        '{{ order.id }}': {
-            id: '{{ order.id }}',
-            date: '{% if order.ordered_at %}{{ order.ordered_at|date:"M d, Y" }}{% elif order.purchased_at %}{{ order.purchased_at|date:"M d, Y" }}{% else %}N/A{% endif %}',
-            total: '{{ order.total_price }}',
-            status: '{{ order.status }}',
-            addressName: '{{ user.first_name }} {{ user.last_name }}',
-            addressLine1: '{{ user.userprofile.address|default:"Address not provided" }}',
-            addressPhone: '{{ user.userprofile.phone_number|default:"N/A" }}'
-        }{% if not forloop.last %},{% endif %}
-        {% endfor %}
-    };
+    const orders = {{ orders_json }};
+
 
     function openModal(orderId) {
         const order = orders[orderId];
-        if (!order) return;
+        if (!order) {
+            console.error('Order not found:', orderId);
+            console.log('Available orders:', Object.keys(orders));
+            return;
+        }
 
         document.getElementById('modal-order-id').textContent = '#' + order.id;
         document.getElementById('modal-order-date').textContent = order.date;
         document.getElementById('modal-order-total').textContent = '₹' + order.total;
+        document.getElementById('modal-buyer-name').textContent = order.buyerName;
+        document.getElementById('modal-buyer-phone').textContent = order.buyerPhone;
+        document.getElementById('modal-buyer-address').textContent = order.buyerAddress;
         document.getElementById('modal-item-total').textContent = '₹' + order.total;
         
-        // Set shipping address from user data (not sample text)
-        document.getElementById('modal-address-name').textContent = order.addressName || '{{ user.first_name }} {{ user.last_name }}';
-        document.getElementById('modal-address-line1').textContent = (order.addressLine1 || '{{ user.userprofile.address|default:"" }}') + ' | ' + (order.addressPhone || '{{ user.userprofile.phone_number|default:"" }}');
+        // Fill item list
+        const itemsList = document.getElementById('modal-items-list');
+        itemsList.innerHTML = `
+            <tr class="border-b border-gray-100">
+                <td class="py-3 text-base text-gray-800">${order.productName}</td>
+                <td class="text-center text-base text-gray-800">${order.quantity} ${order.unit}</td>
+                <td class="text-right text-base text-gray-800">₹${order.unitPrice} / ${order.unit}</td>
+                <td class="text-right text-base font-bold text-gray-800">₹${order.total}</td>
+            </tr>
+        `;
+
+        // Update fulfillment status based on order status
+        const fulfillmentStatus = document.getElementById('modal-fulfillment-status');
+        const status = order.status.toLowerCase();
+        if (status === 'delivered') {
+            fulfillmentStatus.className = 'status-badge status-delivered';
+            fulfillmentStatus.innerHTML = '<i class="fas fa-check-double"></i> Delivered';
+        } else if (status === 'confirmed') {
+            fulfillmentStatus.className = 'status-badge status-confirmed';
+            fulfillmentStatus.innerHTML = '<i class="fas fa-truck"></i> Confirmed';
+        } else if (status === 'pending') {
+            fulfillmentStatus.className = 'status-badge status-pending';
+            fulfillmentStatus.innerHTML = '<i class="fas fa-clock"></i> Pending';
+        } else {
+            fulfillmentStatus.className = 'status-badge status-pending';
+            fulfillmentStatus.innerHTML = '<i class="fas fa-question-circle"></i> ' + order.status;
+        }
+
+        // Store current order ID for download
+        window.currentOrderId = orderId;
 
         document.getElementById('detailModal').classList.remove('hidden');
     }
 
+    function downloadOrder() {
+        if (window.currentOrderId) {
+            // Download PDF from backend
+            const downloadUrl = '/customer/order/' + window.currentOrderId + '/download-receipt/';
+            window.location.href = downloadUrl;
+        }
+    }
+
     function closeModal() {
         document.getElementById('detailModal').classList.add('hidden');
+        window.currentOrderId = null;
     }
 
     window.onclick = function(event) {

@@ -303,10 +303,10 @@
                         </thead>
                         <tbody id="modal-items-list">
                             <tr class="border-b border-gray-100">
-                                <td class="py-3 text-base text-gray-800">Apple (Kashmiri)</td>
-                                <td class="text-center text-base text-gray-800">2 kg</td>
-                                <td class="text-right text-base text-gray-800">₹740.00 / kg</td>
-                                <td class="text-right text-base font-bold text-gray-800">₹480.00</td>
+                                <td id="modal-item-name" class="py-3 text-base text-gray-800">Item Name</td>
+                                <td id="modal-item-qty" class="text-center text-base text-gray-800">0</td>
+                                <td id="modal-item-price" class="text-right text-base text-gray-800">₹0.00</td>
+                                <td id="modal-item-subtotal" class="text-right text-base font-bold text-gray-800">₹0.00</td>
                             </tr>
                         </tbody>
                     </table>
@@ -322,11 +322,9 @@
             <div>
                 <h4 class="text-xl font-bold text-gray-800 mb-3"><i class="fas fa-map-marker-alt text-green-600 mr-2"></i>Buyer Information</h4>
                 <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                    <p class="text-lg font-semibold text-gray-800" id="modal-buyer-name">Aarav Sharma</p>
-                    <p class="text-base text-gray-600 mt-1" id="modal-buyer-address">42, Green Valley Apartments</p>
-                    <p class="text-base text-gray-600">Bangalore, Karnataka - 560001</p>
-                    <p class="text-base text-gray-600">India</p>
-                    <p class="text-base text-gray-600 mt-2"><i class="fas fa-phone text-green-600 mr-2"></i><span id="modal-buyer-phone">+91 98765 43210</span></p>
+                    <p class="text-lg font-semibold text-gray-800" id="modal-buyer-name">Buyer Name</p>
+                    <p class="text-base text-gray-600 mt-1 whitespace-pre-line" id="modal-buyer-address">Address Detail</p>
+                    <p class="text-base text-gray-600 mt-2"><i class="fas fa-phone text-green-600 mr-2"></i><span id="modal-buyer-phone">Phone</span></p>
                 </div>
             </div>
 
@@ -349,12 +347,16 @@
         {% for order in orders %}
         '{{ order.id }}': {
             id: '{{ order.id }}',
-            date: '{% if order.supplier_inventory %}{{ order.ordered_at|date:"M d, Y" }}{% else %}{{ order.purchased_at|date:"M d, Y" }}{% endif %}',
+            date: '{{ order.order_date|date:"M d, Y" }}',
             total: '{{ order.total_price }}',
             status: '{{ order.status }}',
-            buyerName: '{% if order.supplier_inventory %}{{ order.customer.first_name }} {{ order.customer.last_name }}{% else %}{{ order.supplier.first_name }} {{ order.supplier.last_name }}{% endif %}',
-            buyerPhone: '{% if order.supplier_inventory %}{{ order.customer.userprofile.phone_number|default:"N/A" }}{% else %}{{ order.supplier.userprofile.phone_number|default:"N/A" }}{% endif %}',
-            buyerAddress: '{% if order.supplier_inventory %}{{ order.customer.userprofile.address|default:"Address not provided" }}{% else %}{{ order.supplier.userprofile.address|default:"Address not provided" }}{% endif %}'
+            productName: '{{ order.product_name }}',
+            quantity: '{{ order.quantity }}',
+            unitPrice: '{{ order.unit_price }}',
+            unit: '{% if order.vegetable %}{{ order.vegetable.unit }}{% else %}{{ order.supplier_inventory.unit }}{% endif %}',
+            buyerName: '{{ order.buyer_name }}',
+            buyerPhone: '{{ order.buyer_phone|default:"N/A" }}',
+            buyerAddress: '{{ order.buyer_address|default:"Address not provided" }}'
         }{% if not forloop.last %},{% endif %}
         {% endfor %}
     };
@@ -369,7 +371,16 @@
         document.getElementById('modal-buyer-name').textContent = order.buyerName;
         document.getElementById('modal-buyer-phone').textContent = order.buyerPhone;
         document.getElementById('modal-buyer-address').textContent = order.buyerAddress;
-        document.getElementById('modal-item-total').textContent = '₹' + order.total;
+        // Fill item list
+        const itemsList = document.getElementById('modal-items-list');
+        itemsList.innerHTML = `
+            <tr class="border-b border-gray-100">
+                <td class="py-3 text-base text-gray-800">${order.productName}</td>
+                <td class="text-center text-base text-gray-800">${order.quantity} ${order.unit}</td>
+                <td class="text-right text-base text-gray-800">₹${order.unitPrice} / ${order.unit}</td>
+                <td class="text-right text-base font-bold text-gray-800">₹${order.total}</td>
+            </tr>
+        `;
 
         document.getElementById('detailModal').classList.remove('hidden');
     }

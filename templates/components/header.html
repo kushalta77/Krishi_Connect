@@ -63,28 +63,15 @@
                 <!-- User Section -->
                 <div class="hidden md:flex items-center space-x-3">
                     {% if user.is_authenticated and 'reset_password' not in request.resolver_match.url_name and 'forgot_password' not in request.resolver_match.url_name %}
-                    <div class="flex items-center space-x-3">
+                    <a href="{% if user.userprofile.role == 'farmer' %}{% url 'dashboard' %}{% else %}{% url 'customer_dashboard' %}{% endif %}" class="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer group">
                         <div class="text-right">
                             <p class="text-white text-sm font-medium" data-en="Welcome" data-ne="स्वागतम्">Welcome</p>
-                            <p class="text-green-100 text-xs">{{ user.username }}</p>
+                            <p class="text-green-100 text-xs group-hover:text-white transition-colors capitalize">{{ user.userprofile.role }}</p>
                         </div>
-                        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center group-hover:bg-white/30 transition-colors">
                             <i class="fas fa-user text-white text-sm"></i>
                         </div>
-                        {% if request.resolver_match.url_name != 'dashboard' %}
-                        <a href="{% url 'dashboard' %}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2" data-en="Dashboard" data-ne="ड्यासबोर्ड">
-                            <i class="fas fa-tachometer-alt"></i>
-                            <span>Dashboard</span>
-                        </a>
-                        <form method="post" action="{% url 'logout' %}" class="inline">
-                            {% csrf_token %}
-                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2" data-en="Logout" data-ne="लगआउट">
-                                <i class="fas fa-sign-out-alt"></i>
-                                <span>Logout</span>
-                            </button>
-                        </form>
-                        {% endif %}
-                    </div>
+                    </a>
                     {% else %}
                     <div class="flex items-center space-x-2">
                         <a href="{% url 'login' %}" class="text-white hover:text-green-200 px-4 py-2 rounded-lg transition-colors" data-en="Login" data-ne="लगइन">Login</a>

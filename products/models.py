@@ -30,7 +30,7 @@ class Product(models.Model):
     unit = models.CharField(max_length=20, choices=UNIT_CHOICES, default='kg', help_text="Unit type (kg, box, etc)")
     stock_quantity = models.DecimalField(max_digits=10, decimal_places=2, help_text="Available stock")
     min_order_qty = models.DecimalField(max_digits=10, decimal_places=2, default=5, help_text="Minimum order quantity")
-    harvest_date = models.DateField()
+    harvest_date = models.DateField(null=True, blank=True)
     description = models.TextField(blank=True)
     is_active = models.BooleanField(default=True, help_text="Farmer paused/listed this product")
     created_at = models.DateTimeField(auto_now_add=True)

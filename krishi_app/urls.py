@@ -54,6 +54,7 @@ urlpatterns = [
     # Customer URLs
     path('customer/marketplace/', views.customer_marketplace, name='customer_marketplace'),
     path('customer/orders/', views.customer_orders, name='customer_orders'),
+    path('customer/order/<int:pk>/download-receipt/', views.download_order_receipt, name='download_order_receipt'),
     path('customer/order/<int:pk>/', views.order_from_supplier, name='order_from_supplier'),
     path('customer/profile/', views.customer_profile, name='customer_profile'),
     
