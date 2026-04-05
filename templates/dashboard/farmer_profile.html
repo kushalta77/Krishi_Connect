@@ -59,9 +59,6 @@
                     <span class="inline-flex items-center gap-1.5 text-[10px] bg-brand-400/20 text-brand-200 px-2 py-0.5 rounded-full mt-1 font-bold uppercase tracking-wider">
                         <i class="fas fa-circle text-brand-400" style="font-size:6px"></i> Active Farmer
                     </span>
-                    <a href="{% url 'farmer_profile' %}" class="mt-2 flex items-center gap-1 text-[10px] text-brand-300 hover:text-white transition-colors">
-                        <i class="fas fa-user-cog" style="font-size:9px"></i> View Profile
-                    </a>
                 </div>
             </div>
         </div>
@@ -82,6 +79,9 @@
             </a>
             <a href="{% url 'farmer_stock' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
                 <i class="fas fa-warehouse w-5 text-center text-lg"></i><span>Stock Management</span>
+            </a>
+            <a href="{% url 'farmer_profile' %}" class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-white">
+                <i class="fas fa-user-cog w-5 text-center text-lg"></i><span>My Profile</span>
             </a>
             <p class="text-brand-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Tools</p>
             <a href="{% url 'weather' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
