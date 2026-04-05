@@ -188,6 +188,7 @@
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Order ID</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Date</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Buyer</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Product</th>
                             <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Total</th>
                             <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Payment Status</th>
                             <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Fulfillment</th>
@@ -204,6 +205,9 @@
                             <td class="px-6 py-4 text-sm text-gray-600">
                                 {% if order.supplier_inventory %}{{ order.customer.first_name }} {{ order.customer.last_name }}{% else %}{{ order.supplier.first_name }} {{ order.supplier.last_name }}{% endif %}
                             </td>
+                            <td class="px-6 py-4 text-sm text-gray-600 font-medium">
+                                {{ order.product_name }}
+                            </td>
                             <td class="px-6 py-4 text-sm font-bold text-right text-green-600">₹{{ order.total_price }}</td>
                             <td class="px-6 py-4 text-sm text-center"><span class="status-badge status-completed"><i class="fas fa-check-circle"></i> Paid via eSewa</span></td>
                             <td class="px-6 py-4 text-sm text-center">
@@ -213,7 +217,7 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-sm text-center">
-                                <button onclick="openModal('{{ order.id }}')" class="text-gray-600 hover:text-gray-900 transition flex items-center justify-center gap-2 mx-auto">
+                                <button onclick="openModal('{% if order.supplier_inventory %}CO{% else %}SP{% endif %}{{ order.id }}')" class="text-gray-600 hover:text-gray-900 transition flex items-center justify-center gap-2 mx-auto">
                                     <i class="fas fa-eye"></i> View Details
                                 </button>
                             </td>
@@ -242,9 +246,14 @@
             <h2 class="text-4xl font-bold text-gray-800 flex items-center gap-3">
                 <i class="fas fa-box text-green-600"></i> Order Details
             </h2>
-            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-2xl">
-                <i class="fas fa-times"></i>
-            </button>
+            <div class="flex items-center gap-3">
+                <button onclick="downloadOrder()" class="text-gray-600 hover:text-gray-900 transition flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50">
+                    <i class="fas fa-download"></i> Download
+                </button>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
 
         <!-- Modal Body -->
@@ -266,23 +275,6 @@
                 <div>
                     <p class="text-gray-600 text-sm font-bold uppercase mb-2">Total Amount</p>
                     <p id="modal-order-total" class="text-2xl font-bold text-green-600">₹788.00</p>
-                </div>
-            </div>
-
-            <hr class="border-gray-200">
-
-            <!-- Fulfillment -->
-            <div>
-                <h4 class="text-xl font-bold text-gray-800 mb-3"><i class="fas fa-dolly text-green-600 mr-2"></i>Fulfillment</h4>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <p class="text-gray-600 text-sm font-semibold mb-2">Status</p>
-                        <span id="modal-fulfillment-status" class="status-badge status-completed"><i class="fas fa-check-double"></i> Delivered</span>
-                    </div>
-                    <div>
-                        <p class="text-gray-600 text-sm font-semibold mb-2">Est. Delivery</p>
-                        <p id="modal-est-delivery" class="text-base font-bold text-gray-800">Feb 22, 2025</p>
-                    </div>
                 </div>
             </div>
 
@@ -345,18 +337,18 @@
 <script>
     const orders = {
         {% for order in orders %}
-        '{{ order.id }}': {
+        '{% if order.supplier_inventory %}CO{% else %}SP{% endif %}{{ order.id }}': {
             id: '{{ order.id }}',
-            date: '{{ order.order_date|date:"M d, Y" }}',
-            total: '{{ order.total_price }}',
-            status: '{{ order.status }}',
-            productName: '{{ order.product_name }}',
-            quantity: '{{ order.quantity }}',
-            unitPrice: '{{ order.unit_price }}',
-            unit: '{% if order.vegetable %}{{ order.vegetable.unit }}{% else %}{{ order.supplier_inventory.unit }}{% endif %}',
-            buyerName: '{{ order.buyer_name }}',
-            buyerPhone: '{{ order.buyer_phone|default:"N/A" }}',
-            buyerAddress: '{{ order.buyer_address|default:"Address not provided" }}'
+            date: '{{ order.order_date|date:"M d, Y"|escapejs }}',
+            total: '{{ order.total_price|escapejs }}',
+            status: '{{ order.status|escapejs }}',
+            productName: '{{ order.product_name|escapejs }}',
+            quantity: '{{ order.quantity|escapejs }}',
+            unitPrice: '{{ order.unit_price|escapejs }}',
+            unit: '{% if order.vegetable %}{{ order.vegetable.unit|escapejs }}{% else %}{{ order.supplier_inventory.unit|escapejs }}{% endif %}',
+            buyerName: '{{ order.buyer_name|escapejs }}',
+            buyerPhone: '{{ order.buyer_phone|default:"N/A"|escapejs }}',
+            buyerAddress: '{{ order.buyer_address|default:"Address not provided"|escapejs }}'
         }{% if not forloop.last %},{% endif %}
         {% endfor %}
     };
@@ -371,6 +363,8 @@
         document.getElementById('modal-buyer-name').textContent = order.buyerName;
         document.getElementById('modal-buyer-phone').textContent = order.buyerPhone;
         document.getElementById('modal-buyer-address').textContent = order.buyerAddress;
+        document.getElementById('modal-item-total').textContent = '₹' + order.total;
+
         // Fill item list
         const itemsList = document.getElementById('modal-items-list');
         itemsList.innerHTML = `
@@ -382,11 +376,25 @@
             </tr>
         `;
 
+        // Store current order ID for download
+        window.currentOrderFullId = orderId;
+
         document.getElementById('detailModal').classList.remove('hidden');
+    }
+
+    function downloadOrder() {
+        if (window.currentOrderFullId) {
+            // Split prefix (CO or SP) and ID
+            const type = window.currentOrderFullId.substring(0, 2);
+            const id = window.currentOrderFullId.substring(2);
+            const downloadUrl = `/farmer/order/${type}/${id}/download-receipt/`;
+            window.location.href = downloadUrl;
+        }
     }
 
     function closeModal() {
         document.getElementById('detailModal').classList.add('hidden');
+        window.currentOrderFullId = null;
     }
 
     window.onclick = function(event) {

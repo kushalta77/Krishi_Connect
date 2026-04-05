@@ -1562,8 +1562,8 @@ def farmer_orders(request):
     co_orders = CustomerOrder.objects.filter(supplier_inventory__supplier=request.user).count()
     total_orders = sp_orders + co_orders
     
-    sp_revenue = SupplierPurchase.objects.filter(vegetable__farmer=request.user).aggregate(total=Sum('total_price'))['total'] or 0
-    co_revenue = CustomerOrder.objects.filter(supplier_inventory__supplier=request.user).aggregate(total=Sum('total_price'))['total'] or 0
+    sp_revenue = SupplierPurchase.objects.filter(vegetable__farmer=request.user, status__in=['confirmed', 'completed']).aggregate(total=Sum('total_price'))['total'] or 0
+    co_revenue = CustomerOrder.objects.filter(supplier_inventory__supplier=request.user, status__in=['confirmed', 'delivered']).aggregate(total=Sum('total_price'))['total'] or 0
     total_revenue = sp_revenue + co_revenue
     
     sp_pending = SupplierPurchase.objects.filter(vegetable__farmer=request.user, status='pending').count()
@@ -1578,8 +1578,89 @@ def farmer_orders(request):
         'orders': all_orders,
         'total_orders': total_orders,
         'total_revenue': total_revenue,
-        'pending_orders_count': pending_orders_count,
-        'confirmed_orders_count': confirmed_orders_count,
-        'current_status': status_filter,
+        'pending_orders': pending_orders_count,
+        'confirmed_orders': confirmed_orders_count,
+        'status_filter': status_filter,
     }
     return render(request, 'dashboard/farmer_orders.html', context)
+
+
+def download_farmer_order_receipt(request, order_type, pk):
+    """Generate and download farmer order receipt as PDF."""
+    from reportlab.lib.pagesizes import letter
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib import colors
+    from reportlab.lib.units import inch
+    from io import BytesIO
+    from django.http import HttpResponse
+    
+    # Get the order based on type
+    if order_type == 'SP':
+        order = get_object_or_404(SupplierPurchase, id=pk, vegetable__farmer=request.user)
+        buyer_name = f"{order.supplier.first_name} {order.supplier.last_name}"
+        order_date = order.purchased_at
+        product_name = order.vegetable.name
+        buyer_role = "Supplier"
+    else:
+        order = get_object_or_404(CustomerOrder, id=pk, supplier_inventory__supplier=request.user)
+        buyer_name = f"{order.customer.first_name} {order.customer.last_name}"
+        order_date = order.ordered_at
+        product_name = order.supplier_inventory.vegetable_name
+        buyer_role = "Customer"
+        
+    # Create PDF in memory
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter, topMargin=0.5*inch, bottomMargin=0.5*inch)
+    elements = []
+    styles = getSampleStyleSheet()
+    
+    # Custom styles
+    title_style = ParagraphStyle(
+        'CustomTitle',
+        parent=styles['Heading1'],
+        fontSize=24,
+        textColor=colors.HexColor('#22C55E'),
+        spaceAfter=6,
+        alignment=1  # Center
+    )
+    
+    # Title
+    elements.append(Paragraph('KrishiConnect', title_style))
+    elements.append(Paragraph('Sale Receipt (Farmer Copy)', styles['Heading2']))
+    elements.append(Spacer(1, 0.2*inch))
+    
+    # Order details table
+    order_data = [
+        ['Order ID:', '#' + str(order.id), 'Date:', order_date.strftime('%b %d, %Y') if order_date else 'N/A'],
+        ['Product:', product_name, 'Buyer:', buyer_name],
+        ['Total Amount:', '₹' + str(order.total_price), '', ''],
+    ]
+    
+    order_table = Table(order_data, colWidths=[1.5*inch, 2.5*inch, 1*inch, 2*inch])
+    order_table.setStyle(TableStyle([
+        ('FONT', (0, 0), (-1, -1), 'Helvetica', 11),
+        ('FONT', (0, 0), (0, -1), 'Helvetica-Bold', 11),
+        ('FONT', (2, 0), (2, -1), 'Helvetica-Bold', 11),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+    ]))
+    elements.append(order_table)
+    elements.append(Spacer(1, 0.5*inch))
+    
+    # Footer
+    elements.append(Paragraph('Thank you for choosing KrishiConnect!', styles['Italic']))
+    
+    # Build PDF
+    doc.build(elements)
+    
+    # Get PDF from buffer
+    file_data = buffer.getvalue()
+    buffer.close()
+    
+    # Create response
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="receipt_{order_type}{pk}.pdf"'
+    response.write(file_data)
+    return response

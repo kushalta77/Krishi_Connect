@@ -28,6 +28,7 @@ urlpatterns = [
     path('farmer/products/', views.farmer_products, name='farmer_products'),
     path('farmer/stock/', views.farmer_stock, name='farmer_stock'),
     path('farmer/orders/', views.farmer_orders, name='farmer_orders'),
+    path('farmer/order/<str:order_type>/<int:pk>/download-receipt/', views.download_farmer_order_receipt, name='download_farmer_order_receipt'),
     path('farmer/profile/', views.farmer_profile, name='farmer_profile'),
     path('farmer/add-product/', views.add_vegetable, name='add_vegetable'),
     path('farmer/edit-product/<int:pk>/', views.edit_vegetable, name='edit_vegetable'),
