@@ -19,7 +19,7 @@
         }
 
         .sidebar {
-            background: linear-gradient(160deg, #14532d 0%, #166534 100%);
+            background: linear-gradient(160deg, #3b82f6 0%, #1e40af 100%);
         }
 
         .nav-item {
@@ -35,7 +35,7 @@
             top: 0;
             width: 3px;
             height: 100%;
-            background-color: #4ade80;
+            background-color: #93c5fd;
             transform: scaleY(0);
             transition: transform 0.3s ease;
         }
@@ -118,12 +118,57 @@
         .modal-content {
             position: relative;
             background: white;
-            border-radius: 1rem;
-            max-width: 600px;
+            border-radius: 1.5rem;
+            max-width: 700px;
             width: 90%;
             max-height: 90vh;
             overflow-y-auto;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+            border-radius: 1.5rem 1.5rem 0 0;
+            color: white;
+        }
+
+        .modal-section {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 0.875rem;
+            transition: all 0.3s ease;
+        }
+
+        .modal-section:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .modal-stat {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 0.625rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-stat:hover {
+            border-color: #1e40af;
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.1);
         }
     </style>
 </head>
@@ -163,10 +208,6 @@
                             class="inline-flex items-center gap-1.5 text-[10px] bg-green-400/20 text-green-200 px-2 py-0.5 rounded-full mt-1 font-bold uppercase tracking-wider">
                             <i class="fas fa-circle text-green-400" style="font-size:6px"></i> Active Customer
                         </span>
-                        <a href="{% url 'customer_profile' %}"
-                            class="mt-2 flex items-center gap-1 text-[10px] text-green-300 hover:text-white transition-colors">
-                            <i class="fas fa-user-cog" style="font-size:9px"></i> View Profile
-                        </a>
                     </div>
                 </div>
             </div>
@@ -187,6 +228,10 @@
                 </a>
 
                 <p class="text-green-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Tools</p>
+                <a href="{% url 'customer_profile' %}"
+                    class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                    <i class="fas fa-cog w-5 text-center text-lg"></i><span>Settings</span>
+                </a>
                 <a href="{% url 'weather' %}"
                     class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
                     <i class="fas fa-cloud-sun w-5 text-center text-lg"></i><span>Weather Updates</span>
@@ -413,108 +458,104 @@
         <div class="modal-backdrop" onclick="closeModal()"></div>
         <div class="modal-content">
             <!-- Modal Header -->
-            <div class="flex items-center justify-between p-6 border-b border-gray-200">
-                <h2 class="text-4xl font-bold text-gray-800 flex items-center gap-3">
-                    <i class="fas fa-box text-green-600"></i> Order Details
+            <div class="modal-header flex items-center justify-between p-4 border-b-4 border-white/20">
+                <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                    <i class="fas fa-box text-blue-200"></i> Order Details
                 </h2>
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2">
                     <button onclick="downloadOrder()"
-                        class="text-gray-600 hover:text-gray-900 transition flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50">
-                        <i class="fas fa-download"></i> Download
+                        class="text-white hover:bg-white/20 transition flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-white/30 hover:border-white/50 duration-300">
+                        <i class="fas fa-download text-sm"></i> Download
                     </button>
-                    <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-2xl">
+                    <button onclick="closeModal()" class="text-white/70 hover:text-white hover:bg-white/20 rounded-lg w-9 h-9 flex items-center justify-center transition duration-300">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
             </div>
 
             <!-- Modal Body -->
-            <div id="modalBody" class="p-6 space-y-6">
-                <!-- Order Header Info -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div>
-                        <p class="text-gray-600 text-sm font-bold uppercase mb-2">Order ID</p>
-                        <p id="modal-order-id" class="text-2xl font-bold text-gray-800">#1001</p>
+            <div id="modalBody" class="p-4 space-y-3.5">
+                <!-- Order Header Info (Grid) -->
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
+                    <div class="modal-stat">
+                        <p class="text-gray-500 text-[10px] font-bold uppercase mb-1">Order ID</p>
+                        <p id="modal-order-id" class="text-base font-bold text-gray-800">#1001</p>
                     </div>
-                    <div>
-                        <p class="text-gray-600 text-sm font-bold uppercase mb-2">Order Date</p>
-                        <p id="modal-order-date" class="text-2xl font-bold text-gray-800">2025-02-18</p>
+                    <div class="modal-stat">
+                        <p class="text-gray-500 text-[10px] font-bold uppercase mb-1">Order Date</p>
+                        <p id="modal-order-date" class="text-sm font-bold text-gray-800">2025-02-18</p>
                     </div>
-                    <div>
-                        <p class="text-gray-600 text-sm font-bold uppercase mb-2">Payment Status</p>
-                        <p class="text-base font-bold mt-1"><span class="status-badge status-confirmed"><i
-                                    class="fas fa-check-circle"></i> Paid via eSewa</span></p>
+                    <div class="modal-stat">
+                        <p class="text-gray-500 text-[10px] font-bold uppercase mb-1">Payment</p>
+                        <i class="fas fa-check-circle text-blue-600 text-base"></i>
+                        <p class="text-[10px] text-blue-600 font-bold mt-1">Paid</p>
                     </div>
-                    <div>
-                        <p class="text-gray-600 text-sm font-bold uppercase mb-2">Total Amount</p>
-                        <p id="modal-order-total" class="text-2xl font-bold text-green-600">₹788.00</p>
+                    <div class="modal-stat">
+                        <p class="text-gray-500 text-[10px] font-bold uppercase mb-1">Total Amount</p>
+                        <p id="modal-order-total" class="text-base font-bold text-blue-600">₹788</p>
                     </div>
-                    <div>
-                        <p class="text-gray-600 text-sm font-bold uppercase mb-2">Fulfillment</p>
-                        <p class="text-base font-bold mt-1">
-                            <span id="modal-fulfillment-status" class="status-badge status-pending">
-                                <i class="fas fa-clock"></i> Pending
-                            </span>
-                        </p>
+                    <div class="modal-stat">
+                        <p class="text-gray-500 text-[10px] font-bold uppercase mb-1">Status</p>
+                        <span id="modal-fulfillment-status" class="status-badge status-pending inline-block mt-1 text-xs">
+                            <i class="fas fa-clock text-xs"></i> Pending
+                        </span>
                     </div>
                 </div>
 
                 <hr class="border-gray-200">
 
                 <!-- Items Purchased -->
-                <div>
-                    <h4 class="text-xl font-bold text-gray-800 mb-3"><i
-                            class="fas fa-shopping-cart text-green-600 mr-2"></i>Items Purchased</h4>
+                <div class="modal-section">
+                    <h4 class="text-base font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="fas fa-shopping-bag text-blue-600"></i> Items Ordered
+                    </h4>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-base">
+                        <table class="w-full text-sm">
                             <thead>
-                                <tr class="border-b border-gray-200">
-                                    <th class="text-left font-bold text-gray-700 pb-2">Item</th>
-                                    <th class="text-center font-bold text-gray-700 pb-2">Quantity</th>
-                                    <th class="text-right font-bold text-gray-700 pb-2">Unit Price</th>
-                                    <th class="text-right font-bold text-gray-700 pb-2">Subtotal</th>
+                                <tr class="border-b-2 border-gray-300">
+                                    <th class="text-left font-bold text-gray-700 pb-3">Item</th>
+                                    <th class="text-center font-bold text-gray-700 pb-3">Qty</th>
+                                    <th class="text-right font-bold text-gray-700 pb-3">Unit Price</th>
+                                    <th class="text-right font-bold text-gray-700 pb-3">Subtotal</th>
                                 </tr>
                             </thead>
                             <tbody id="modal-items-list">
-                                <tr class="border-b border-gray-100">
-                                    <td id="modal-item-name" class="py-3 text-base text-gray-800">Item Name</td>
-                                    <td id="modal-item-qty" class="text-center text-base text-gray-800">0</td>
-                                    <td id="modal-item-price" class="text-right text-base text-gray-800">₹0.00</td>
-                                    <td id="modal-item-subtotal" class="text-right text-base font-bold text-gray-800">
-                                        ₹0.00</td>
+                                <tr class="border-b border-gray-200 hover:bg-white/50 transition">
+                                    <td id="modal-item-name" class="py-3 text-gray-800 font-medium">Item Name</td>
+                                    <td id="modal-item-qty" class="text-center text-gray-800 font-medium">0</td>
+                                    <td id="modal-item-price" class="text-right text-gray-800">₹0.00</td>
+                                    <td id="modal-item-subtotal" class="text-right font-bold text-gray-800">₹0.00</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="mt-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                        <p class="text-right text-lg font-bold text-gray-800">Order Total: <span id="modal-item-total"
-                                class="text-green-600 text-2xl">₹788.00</span></p>
+                    <div class="mt-3 p-2.5 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border-l-4 border-blue-600">
+                        <p class="text-right text-xs text-gray-700">Order Total:</p>
+                        <p class="text-right text-lg font-bold text-blue-600 mt-0.5">₹<span id="modal-item-total">788.00</span></p>
                     </div>
                 </div>
-
-                <hr class="border-gray-200">
 
                 <!-- Shipping Address -->
-                <div>
-                    <h4 class="text-xl font-bold text-gray-800 mb-3"><i
-                            class="fas fa-map-marker-alt text-green-600 mr-2"></i>Shipping Address</h4>
-                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                        <p class="text-lg font-semibold text-gray-800" id="modal-buyer-name">Customer Name</p>
-                        <p class="text-base text-gray-600 mt-1 whitespace-pre-line" id="modal-buyer-address">Address
-                            Detail</p>
-                        <p class="text-base text-gray-600 mt-2"><i class="fas fa-phone text-green-600 mr-2"></i><span
-                                id="modal-buyer-phone">Phone</span></p>
+                <div class="modal-section">
+                    <h4 class="text-base font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="fas fa-map-pin text-blue-600"></i> Delivery Address
+                    </h4>
+                    <div class="bg-gradient-to-br from-blue-50 to-cyan-50 border-l-4 border-blue-500 rounded-lg p-3">
+                        <p class="text-base font-bold text-gray-800" id="modal-buyer-name">Customer Name</p>
+                        <p class="text-xs text-gray-600 mt-1.5 whitespace-pre-line leading-relaxed" id="modal-buyer-address">Address Detail</p>
+                        <div class="flex items-center gap-2 text-gray-700 mt-2 font-medium text-sm">
+                            <i class="fas fa-phone text-blue-600 w-3.5"></i>
+                            <span id="modal-buyer-phone">Phone</span>
+                        </div>
                     </div>
                 </div>
 
-                <hr class="border-gray-200">
-
-                <!-- Contact Help -->
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-center gap-3">
-                    <i class="fas fa-info-circle text-blue-600 text-2xl"></i>
-                    <div class="text-base text-blue-800">
-                        <p class="text-lg font-semibold mb-1">Need help?</p>
-                        <p>Contact support@krishisphere.com</p>
+                <!-- Help Section -->
+                <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-3 flex items-start gap-2.5">
+                    <i class="fas fa-lightbulb text-amber-600 text-lg mt-0.5 flex-shrink-0"></i>
+                    <div>
+                        <p class="font-bold text-amber-900 text-sm">Need Assistance?</p>
+                        <p class="text-xs text-amber-800 mt-0.5">Contact support at <span class="font-semibold">support@krishisphere.com</span></p>
                     </div>
                 </div>
             </div>
