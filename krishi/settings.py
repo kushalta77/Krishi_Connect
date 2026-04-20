@@ -56,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'krishi.middleware.RequestLoggingMiddleware',  # Logging middleware
 ]
 
 ROOT_URLCONF = 'krishi.urls'
@@ -152,41 +153,118 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Email SMTP Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'kushaltabaniya16@gmail.com'
+EMAIL_HOST_PASSWORD = 'kbcevatfbxcilfuj'
+DEFAULT_FROM_EMAIL = 'Krishi Connect <kushaltabaniya16@gmail.com>'
+
 # Weather API
 WEATHER_API_KEY = '377e71eda40ad3d927fb1e2c4d001e3e'  
+
+# ============================================
+# COMPREHENSIVE LOGGING CONFIGURATION
+# ============================================
+import logging
+import logging.handlers
+import os
+
+# Create logs directory if it doesn't exist
+
+
 # Jazzmin settings
 JAZZMIN_SETTINGS = {
     "site_title": "Krishi Admin",
     "site_header": "Krishi Agriculture Platform",
-    "site_brand": "Krishi",
+    "site_brand": "🌾 Krishi",
+    "site_logo": None,
     "login_logo": None,
+    "login_logo_dark": None,
+    "site_icon": None,
     "welcome_sign": "Welcome to Krishi Admin Panel",
     "copyright": "Krishi Agriculture © 2024",
-    "search_model": ["auth.User", "krishi_app.UserProfile"],
+    "search_model": ["auth.User", "krishi_app.UserProfile", "krishi_app.Vegetable", "krishi_app.CustomerOrder"],
+    "user_avatar": None,
+
+    # Top Menu Links
     "topmenu_links": [
-        {"name": "Home", "url": "admin:index"},
+        {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
         {"name": "View Site", "url": "/", "new_window": True},
+        {"model": "auth.User"},
+        {"app": "krishi_app"},
     ],
+
+    # User Menu
+    "usermenu_links": [
+        {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True, "icon": "fas fa-support"},
+        {"model": "auth.user"}
+    ],
+
+    # Show sidebar
     "show_sidebar": True,
     "navigation_expanded": True,
-    "order_with_respect_to": ["auth", "krishi_app"],
+
+    # Hide these apps when generating side menu
+    "hide_apps": [],
+
+    # Hide these models when generating side menu
+    "hide_models": [],
+
+    # List of apps to base side menu ordering off of
+    "order_with_respect_to": ["auth", "krishi_app", "products"],
+
+    # Custom links to append to app groups, keyed on app name
+    "custom_links": {
+        "krishi_app": [{
+            "name": "Dashboard Analytics",
+            "url": "admin:index",
+            "icon": "fas fa-chart-line",
+            "permissions": ["krishi_app.view_userprofile"]
+        }]
+    },
+
+    # Custom icons for side menu apps/models
     "icons": {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
         "auth.Group": "fas fa-users",
         "krishi_app.UserProfile": "fas fa-leaf",
+        "krishi_app.Vegetable": "fas fa-carrot",
+        "krishi_app.CustomerOrder": "fas fa-shopping-cart",
+        "krishi_app.Cart": "fas fa-cart-plus",
+        "krishi_app.CartItem": "fas fa-list",
+        "products.Vegetable": "fas fa-seedling",
     },
+
+    # Icons that are used when one is not manually specified
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+
+    # Use modals instead of popups
+    "related_modal_active": False,
+
+    # Relative paths to custom CSS/JS scripts
+    "custom_css": "admin/css/custom_admin.css",
+    "custom_js": None,
+
+    # Whether to show the UI customizer on the sidebar
+    "show_ui_builder": False,
+
+    # Change view
     "changeform_format": "horizontal_tabs",
-    "theme": "flatly",
-    "dark_mode_theme": "darkly",
-    "button_classes": {
-        "primary": "btn-primary",
-        "secondary": "btn-secondary",
-        "info": "btn-info",
-        "warning": "btn-warning",
-        "danger": "btn-danger",
-        "success": "btn-success"
-    }
+    "changeform_format_overrides": {
+        "auth.user": "collapsible",
+        "auth.group": "vertical_tabs",
+    },
+
+    # Overriding the login view
+    "login_view": None,
+    "logout_view": None,
+    "password_change_view": None,
 }
 
 JAZZMIN_UI_TWEAKS = {
@@ -195,7 +273,7 @@ JAZZMIN_UI_TWEAKS = {
     "body_small_text": False,
     "brand_small_text": False,
     "brand_colour": "navbar-success",
-    "accent": "accent-olive",
+    "accent": "accent-emerald",
     "navbar": "navbar-dark",
     "no_navbar_border": False,
     "navbar_fixed": False,
@@ -209,8 +287,8 @@ JAZZMIN_UI_TWEAKS = {
     "sidebar_nav_compact_style": False,
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": False,
-    "theme": "flatly",
-    "dark_mode_theme": "darkly",
+    "theme": "default",
+    "dark_mode_theme": None,
     "button_classes": {
         "primary": "btn-primary",
         "secondary": "btn-secondary",
@@ -218,7 +296,8 @@ JAZZMIN_UI_TWEAKS = {
         "warning": "btn-warning",
         "danger": "btn-danger",
         "success": "btn-success"
-    }
+    },
+    "actions_sticky_top": False
 }
 
 

@@ -1,0 +1,764 @@
+[ERROR] 2026-04-07 07:59:05 | C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi\middleware.py:85 | process_exception() | [EXCEPTION] {'method': 'GET', 'path': '/customer/dashboard/', 'exception_type': 'RelatedObjectDoesNotExist', 'exception_message': 'User has no userprofile.', 'client_ip': '127.0.0.1', 'user': 'baniya', 'traceback': 'Traceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\core\\handlers\\base.py", line 197, in _get_response\n    response = wrapped_callback(request, *callback_args, **callback_kwargs)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\contrib\\auth\\decorators.py", line 23, in _wrapper_view\n    return view_func(request, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\krishi_Connect\\krishicon\\krishi\\krishi_app\\views.py", line 230, in customer_dashboard\n    user_profile = request.user.userprofile\n                   ^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\utils\\functional.py", line 268, in inner\n    return func(_wrapped, *args)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\db\\models\\fields\\related_descriptors.py", line 492, in __get__\n    raise self.RelatedObjectDoesNotExist(\ndjango.contrib.auth.models.User.userprofile.RelatedObjectDoesNotExist: User has no userprofile.\n'}
+Exception Type: None
+[ERROR] 2026-04-07 07:59:06 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\utils\log.py:246 | log_response() | Internal Server Error: /customer/dashboard/
+Exception Type: (<class 'django.contrib.auth.models.User.userprofile.RelatedObjectDoesNotExist'>, RelatedObjectDoesNotExist('User has no userprofile.'), <traceback object at 0x000001DC6897F7C0>)
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi_app\views.py", line 230, in customer_dashboard
+    user_profile = request.user.userprofile
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\utils\functional.py", line 268, in inner
+    return func(_wrapped, *args)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 492, in __get__
+    raise self.RelatedObjectDoesNotExist(
+django.contrib.auth.models.User.userprofile.RelatedObjectDoesNotExist: User has no userprofile.
+[ERROR] 2026-04-07 07:59:06 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\servers\basehttp.py:212 | log_message() | "GET /customer/dashboard/ HTTP/1.1" 500 100491
+Exception Type: None
+[ERROR] 2026-04-07 08:37:13 | C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi\middleware.py:85 | process_exception() | [EXCEPTION] {'method': 'GET', 'path': '/farmer/dashboard/', 'exception_type': 'NoReverseMatch', 'exception_message': "Reverse for 'farmer_analytics' not found. 'farmer_analytics' is not a valid view function or pattern name.", 'client_ip': '127.0.0.1', 'user': 'cabin', 'traceback': 'Traceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\core\\handlers\\base.py", line 197, in _get_response\n    response = wrapped_callback(request, *callback_args, **callback_kwargs)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\contrib\\auth\\decorators.py", line 23, in _wrapper_view\n    return view_func(request, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\krishi_Connect\\krishicon\\krishi\\krishi_app\\views.py", line 222, in dashboard\n    return render(request, \'dashboard/farmer_dashboard.html\', context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\shortcuts.py", line 24, in render\n    content = loader.render_to_string(template_name, context, request, using=using)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader.py", line 62, in render_to_string\n    return template.render(context, request)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\backends\\django.py", line 61, in render\n    return self.template.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 175, in render\n    return self._render(context)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 167, in _render\n    return self.nodelist.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 1005, in render\n    return SafeString("".join([node.render_annotated(context) for node in self]))\n                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 966, in render_annotated\n    return self.render(context)\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\defaulttags.py", line 471, in render\n    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\urls\\base.py", line 88, in reverse\n    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\urls\\resolvers.py", line 828, in _reverse_with_prefix\n    raise NoReverseMatch(msg)\ndjango.urls.exceptions.NoReverseMatch: Reverse for \'farmer_analytics\' not found. \'farmer_analytics\' is not a valid view function or pattern name.\n'}
+Exception Type: None
+[ERROR] 2026-04-07 08:37:13 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\utils\log.py:246 | log_response() | Internal Server Error: /farmer/dashboard/
+Exception Type: (<class 'django.urls.exceptions.NoReverseMatch'>, NoReverseMatch("Reverse for 'farmer_analytics' not found. 'farmer_analytics' is not a valid view function or pattern name."), <traceback object at 0x000001FAB0CB8800>)
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi_app\views.py", line 222, in dashboard
+    return render(request, 'dashboard/farmer_dashboard.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\defaulttags.py", line 471, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'farmer_analytics' not found. 'farmer_analytics' is not a valid view function or pattern name.
+[ERROR] 2026-04-07 08:37:13 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\servers\basehttp.py:212 | log_message() | "GET /farmer/dashboard/ HTTP/1.1" 500 154632
+Exception Type: None
+[ERROR] 2026-04-07 08:38:23 | C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi\middleware.py:85 | process_exception() | [EXCEPTION] {'method': 'GET', 'path': '/farmer/dashboard/', 'exception_type': 'NoReverseMatch', 'exception_message': "Reverse for 'farmer_analytics' not found. 'farmer_analytics' is not a valid view function or pattern name.", 'client_ip': '127.0.0.1', 'user': 'cabin', 'traceback': 'Traceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\core\\handlers\\base.py", line 197, in _get_response\n    response = wrapped_callback(request, *callback_args, **callback_kwargs)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\contrib\\auth\\decorators.py", line 23, in _wrapper_view\n    return view_func(request, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\krishi_Connect\\krishicon\\krishi\\krishi_app\\views.py", line 222, in dashboard\n    return render(request, \'dashboard/farmer_dashboard.html\', context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\shortcuts.py", line 24, in render\n    content = loader.render_to_string(template_name, context, request, using=using)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader.py", line 62, in render_to_string\n    return template.render(context, request)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\backends\\django.py", line 61, in render\n    return self.template.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 175, in render\n    return self._render(context)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 167, in _render\n    return self.nodelist.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 1005, in render\n    return SafeString("".join([node.render_annotated(context) for node in self]))\n                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 966, in render_annotated\n    return self.render(context)\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\defaulttags.py", line 471, in render\n    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\urls\\base.py", line 88, in reverse\n    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\urls\\resolvers.py", line 828, in _reverse_with_prefix\n    raise NoReverseMatch(msg)\ndjango.urls.exceptions.NoReverseMatch: Reverse for \'farmer_analytics\' not found. \'farmer_analytics\' is not a valid view function or pattern name.\n'}
+Exception Type: None
+[ERROR] 2026-04-07 08:38:23 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\utils\log.py:246 | log_response() | Internal Server Error: /farmer/dashboard/
+Exception Type: (<class 'django.urls.exceptions.NoReverseMatch'>, NoReverseMatch("Reverse for 'farmer_analytics' not found. 'farmer_analytics' is not a valid view function or pattern name."), <traceback object at 0x000001FAB3028940>)
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi_app\views.py", line 222, in dashboard
+    return render(request, 'dashboard/farmer_dashboard.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\defaulttags.py", line 471, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'farmer_analytics' not found. 'farmer_analytics' is not a valid view function or pattern name.
+[ERROR] 2026-04-07 08:38:23 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\servers\basehttp.py:212 | log_message() | "GET /farmer/dashboard/ HTTP/1.1" 500 154632
+Exception Type: None
+[ERROR] 2026-04-07 08:38:25 | C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi\middleware.py:85 | process_exception() | [EXCEPTION] {'method': 'GET', 'path': '/farmer/dashboard/', 'exception_type': 'NoReverseMatch', 'exception_message': "Reverse for 'farmer_analytics' not found. 'farmer_analytics' is not a valid view function or pattern name.", 'client_ip': '127.0.0.1', 'user': 'cabin', 'traceback': 'Traceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\core\\handlers\\base.py", line 197, in _get_response\n    response = wrapped_callback(request, *callback_args, **callback_kwargs)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\contrib\\auth\\decorators.py", line 23, in _wrapper_view\n    return view_func(request, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\krishi_Connect\\krishicon\\krishi\\krishi_app\\views.py", line 222, in dashboard\n    return render(request, \'dashboard/farmer_dashboard.html\', context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\shortcuts.py", line 24, in render\n    content = loader.render_to_string(template_name, context, request, using=using)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader.py", line 62, in render_to_string\n    return template.render(context, request)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\backends\\django.py", line 61, in render\n    return self.template.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 175, in render\n    return self._render(context)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 167, in _render\n    return self.nodelist.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 1005, in render\n    return SafeString("".join([node.render_annotated(context) for node in self]))\n                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 966, in render_annotated\n    return self.render(context)\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\defaulttags.py", line 471, in render\n    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\urls\\base.py", line 88, in reverse\n    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\urls\\resolvers.py", line 828, in _reverse_with_prefix\n    raise NoReverseMatch(msg)\ndjango.urls.exceptions.NoReverseMatch: Reverse for \'farmer_analytics\' not found. \'farmer_analytics\' is not a valid view function or pattern name.\n'}
+Exception Type: None
+[ERROR] 2026-04-07 08:38:25 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\utils\log.py:246 | log_response() | Internal Server Error: /farmer/dashboard/
+Exception Type: (<class 'django.urls.exceptions.NoReverseMatch'>, NoReverseMatch("Reverse for 'farmer_analytics' not found. 'farmer_analytics' is not a valid view function or pattern name."), <traceback object at 0x000001FAB3063B40>)
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi_app\views.py", line 222, in dashboard
+    return render(request, 'dashboard/farmer_dashboard.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\defaulttags.py", line 471, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'farmer_analytics' not found. 'farmer_analytics' is not a valid view function or pattern name.
+[ERROR] 2026-04-07 08:38:25 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\servers\basehttp.py:212 | log_message() | "GET /farmer/dashboard/ HTTP/1.1" 500 154632
+Exception Type: None
+[ERROR] 2026-04-07 08:39:51 | C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi\middleware.py:85 | process_exception() | [EXCEPTION] {'method': 'GET', 'path': '/farmer/dashboard/', 'exception_type': 'NoReverseMatch', 'exception_message': "Reverse for 'farmer_analytics' not found. 'farmer_analytics' is not a valid view function or pattern name.", 'client_ip': '127.0.0.1', 'user': 'cabin', 'traceback': 'Traceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\core\\handlers\\base.py", line 197, in _get_response\n    response = wrapped_callback(request, *callback_args, **callback_kwargs)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\contrib\\auth\\decorators.py", line 23, in _wrapper_view\n    return view_func(request, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\krishi_Connect\\krishicon\\krishi\\krishi_app\\views.py", line 222, in dashboard\n    return render(request, \'dashboard/farmer_dashboard.html\', context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\shortcuts.py", line 24, in render\n    content = loader.render_to_string(template_name, context, request, using=using)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader.py", line 62, in render_to_string\n    return template.render(context, request)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\backends\\django.py", line 61, in render\n    return self.template.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 175, in render\n    return self._render(context)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 167, in _render\n    return self.nodelist.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 1005, in render\n    return SafeString("".join([node.render_annotated(context) for node in self]))\n                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 966, in render_annotated\n    return self.render(context)\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\defaulttags.py", line 471, in render\n    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\urls\\base.py", line 88, in reverse\n    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\urls\\resolvers.py", line 828, in _reverse_with_prefix\n    raise NoReverseMatch(msg)\ndjango.urls.exceptions.NoReverseMatch: Reverse for \'farmer_analytics\' not found. \'farmer_analytics\' is not a valid view function or pattern name.\n'}
+Exception Type: None
+[ERROR] 2026-04-07 08:39:51 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\utils\log.py:246 | log_response() | Internal Server Error: /farmer/dashboard/
+Exception Type: (<class 'django.urls.exceptions.NoReverseMatch'>, NoReverseMatch("Reverse for 'farmer_analytics' not found. 'farmer_analytics' is not a valid view function or pattern name."), <traceback object at 0x000001FAB0CD1600>)
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi_app\views.py", line 222, in dashboard
+    return render(request, 'dashboard/farmer_dashboard.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\defaulttags.py", line 471, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'farmer_analytics' not found. 'farmer_analytics' is not a valid view function or pattern name.
+[ERROR] 2026-04-07 08:39:51 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\servers\basehttp.py:212 | log_message() | "GET /farmer/dashboard/ HTTP/1.1" 500 154632
+Exception Type: None
+[ERROR] 2026-04-08 17:22:37 | C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi\middleware.py:85 | process_exception() | [EXCEPTION] {'method': 'GET', 'path': '/', 'exception_type': 'TemplateSyntaxError', 'exception_message': "Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?", 'client_ip': '127.0.0.1', 'user': 'Anonymous', 'traceback': 'Traceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 505, in parse\n    compile_func = self.tags[command]\n                   ~~~~~~~~~^^^^^^^^^\nKeyError: \'static\'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\core\\handlers\\base.py", line 197, in _get_response\n    response = wrapped_callback(request, *callback_args, **callback_kwargs)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\krishi_Connect\\krishicon\\krishi\\krishi_app\\views.py", line 27, in home\n    return render(request, \'home.html\', {\'featured_products\': featured_products})\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\shortcuts.py", line 24, in render\n    content = loader.render_to_string(template_name, context, request, using=using)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader.py", line 62, in render_to_string\n    return template.render(context, request)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\backends\\django.py", line 61, in render\n    return self.template.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 175, in render\n    return self._render(context)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 167, in _render\n    return self.nodelist.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 1005, in render\n    return SafeString("".join([node.render_annotated(context) for node in self]))\n                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 966, in render_annotated\n    return self.render(context)\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 132, in render\n    compiled_parent = self.get_parent(context)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 129, in get_parent\n    return self.find_template(parent, context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 107, in find_template\n    template, origin = context.template.engine.find_template(\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\engine.py", line 157, in find_template\n    template = loader.get_template(name, skip=skip)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loaders\\cached.py", line 57, in get_template\n    template = super().get_template(template_name, skip)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loaders\\base.py", line 28, in get_template\n    return Template(\n           ^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 154, in __init__\n    self.nodelist = self.compile_nodelist()\n                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 200, in compile_nodelist\n    return parser.parse()\n           ^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 507, in parse\n    self.invalid_block_tag(token, command, parse_until)\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 568, in invalid_block_tag\n    raise self.error(\ndjango.template.exceptions.TemplateSyntaxError: Invalid block tag on line 10: \'static\'. Did you forget to register or load this tag?\n'}
+Exception Type: None
+[ERROR] 2026-04-08 17:22:38 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\utils\log.py:246 | log_response() | Internal Server Error: /
+Exception Type: (<class 'django.template.exceptions.TemplateSyntaxError'>, TemplateSyntaxError("Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?"), <traceback object at 0x000001FCBD6DFAC0>)
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 505, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi_app\views.py", line 27, in home
+    return render(request, 'home.html', {'featured_products': featured_products})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 132, in render
+    compiled_parent = self.get_parent(context)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 129, in get_parent
+    return self.find_template(parent, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 107, in find_template
+    template, origin = context.template.engine.find_template(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\engine.py", line 157, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 200, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 507, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 568, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?
+[ERROR] 2026-04-08 17:22:38 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\servers\basehttp.py:212 | log_message() | "GET / HTTP/1.1" 500 192183
+Exception Type: None
+[ERROR] 2026-04-08 17:22:49 | C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi\middleware.py:85 | process_exception() | [EXCEPTION] {'method': 'GET', 'path': '/', 'exception_type': 'TemplateSyntaxError', 'exception_message': "Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?", 'client_ip': '127.0.0.1', 'user': 'Anonymous', 'traceback': 'Traceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 505, in parse\n    compile_func = self.tags[command]\n                   ~~~~~~~~~^^^^^^^^^\nKeyError: \'static\'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\core\\handlers\\base.py", line 197, in _get_response\n    response = wrapped_callback(request, *callback_args, **callback_kwargs)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\krishi_Connect\\krishicon\\krishi\\krishi_app\\views.py", line 27, in home\n    return render(request, \'home.html\', {\'featured_products\': featured_products})\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\shortcuts.py", line 24, in render\n    content = loader.render_to_string(template_name, context, request, using=using)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader.py", line 62, in render_to_string\n    return template.render(context, request)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\backends\\django.py", line 61, in render\n    return self.template.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 175, in render\n    return self._render(context)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 167, in _render\n    return self.nodelist.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 1005, in render\n    return SafeString("".join([node.render_annotated(context) for node in self]))\n                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 966, in render_annotated\n    return self.render(context)\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 132, in render\n    compiled_parent = self.get_parent(context)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 129, in get_parent\n    return self.find_template(parent, context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 107, in find_template\n    template, origin = context.template.engine.find_template(\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\engine.py", line 157, in find_template\n    template = loader.get_template(name, skip=skip)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loaders\\cached.py", line 57, in get_template\n    template = super().get_template(template_name, skip)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loaders\\base.py", line 28, in get_template\n    return Template(\n           ^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 154, in __init__\n    self.nodelist = self.compile_nodelist()\n                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 200, in compile_nodelist\n    return parser.parse()\n           ^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 507, in parse\n    self.invalid_block_tag(token, command, parse_until)\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 568, in invalid_block_tag\n    raise self.error(\ndjango.template.exceptions.TemplateSyntaxError: Invalid block tag on line 10: \'static\'. Did you forget to register or load this tag?\n'}
+Exception Type: None
+[ERROR] 2026-04-08 17:22:50 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\utils\log.py:246 | log_response() | Internal Server Error: /
+Exception Type: (<class 'django.template.exceptions.TemplateSyntaxError'>, TemplateSyntaxError("Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?"), <traceback object at 0x000001FCBD6FB080>)
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 505, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi_app\views.py", line 27, in home
+    return render(request, 'home.html', {'featured_products': featured_products})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 132, in render
+    compiled_parent = self.get_parent(context)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 129, in get_parent
+    return self.find_template(parent, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 107, in find_template
+    template, origin = context.template.engine.find_template(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\engine.py", line 157, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 200, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 507, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 568, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?
+[ERROR] 2026-04-08 17:22:50 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\servers\basehttp.py:212 | log_message() | "GET / HTTP/1.1" 500 192320
+Exception Type: None
+[ERROR] 2026-04-08 17:24:21 | C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi\middleware.py:85 | process_exception() | [EXCEPTION] {'method': 'GET', 'path': '/', 'exception_type': 'TemplateSyntaxError', 'exception_message': "Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?", 'client_ip': '127.0.0.1', 'user': 'Anonymous', 'traceback': 'Traceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 505, in parse\n    compile_func = self.tags[command]\n                   ~~~~~~~~~^^^^^^^^^\nKeyError: \'static\'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\core\\handlers\\base.py", line 197, in _get_response\n    response = wrapped_callback(request, *callback_args, **callback_kwargs)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\krishi_Connect\\krishicon\\krishi\\krishi_app\\views.py", line 27, in home\n    return render(request, \'home.html\', {\'featured_products\': featured_products})\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\shortcuts.py", line 24, in render\n    content = loader.render_to_string(template_name, context, request, using=using)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader.py", line 62, in render_to_string\n    return template.render(context, request)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\backends\\django.py", line 61, in render\n    return self.template.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 175, in render\n    return self._render(context)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 167, in _render\n    return self.nodelist.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 1005, in render\n    return SafeString("".join([node.render_annotated(context) for node in self]))\n                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 966, in render_annotated\n    return self.render(context)\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 132, in render\n    compiled_parent = self.get_parent(context)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 129, in get_parent\n    return self.find_template(parent, context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 107, in find_template\n    template, origin = context.template.engine.find_template(\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\engine.py", line 157, in find_template\n    template = loader.get_template(name, skip=skip)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loaders\\cached.py", line 57, in get_template\n    template = super().get_template(template_name, skip)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loaders\\base.py", line 28, in get_template\n    return Template(\n           ^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 154, in __init__\n    self.nodelist = self.compile_nodelist()\n                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 200, in compile_nodelist\n    return parser.parse()\n           ^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 507, in parse\n    self.invalid_block_tag(token, command, parse_until)\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 568, in invalid_block_tag\n    raise self.error(\ndjango.template.exceptions.TemplateSyntaxError: Invalid block tag on line 10: \'static\'. Did you forget to register or load this tag?\n'}
+Exception Type: None
+[ERROR] 2026-04-08 17:24:21 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\utils\log.py:246 | log_response() | Internal Server Error: /
+Exception Type: (<class 'django.template.exceptions.TemplateSyntaxError'>, TemplateSyntaxError("Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?"), <traceback object at 0x000001FCBD705D00>)
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 505, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi_app\views.py", line 27, in home
+    return render(request, 'home.html', {'featured_products': featured_products})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 132, in render
+    compiled_parent = self.get_parent(context)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 129, in get_parent
+    return self.find_template(parent, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 107, in find_template
+    template, origin = context.template.engine.find_template(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\engine.py", line 157, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 200, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 507, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 568, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?
+[ERROR] 2026-04-08 17:24:21 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\servers\basehttp.py:212 | log_message() | "GET / HTTP/1.1" 500 192320
+Exception Type: None
+[ERROR] 2026-04-08 17:24:26 | C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi\middleware.py:85 | process_exception() | [EXCEPTION] {'method': 'GET', 'path': '/organic-crops/', 'exception_type': 'TemplateSyntaxError', 'exception_message': "Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?", 'client_ip': '127.0.0.1', 'user': 'Anonymous', 'traceback': 'Traceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 505, in parse\n    compile_func = self.tags[command]\n                   ~~~~~~~~~^^^^^^^^^\nKeyError: \'static\'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\core\\handlers\\base.py", line 197, in _get_response\n    response = wrapped_callback(request, *callback_args, **callback_kwargs)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\krishi_Connect\\krishicon\\krishi\\krishi_app\\views.py", line 275, in organic_crops\n    return render(request, \'organic_crops.html\')\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\shortcuts.py", line 24, in render\n    content = loader.render_to_string(template_name, context, request, using=using)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader.py", line 62, in render_to_string\n    return template.render(context, request)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\backends\\django.py", line 61, in render\n    return self.template.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 175, in render\n    return self._render(context)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 167, in _render\n    return self.nodelist.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 1005, in render\n    return SafeString("".join([node.render_annotated(context) for node in self]))\n                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 966, in render_annotated\n    return self.render(context)\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 132, in render\n    compiled_parent = self.get_parent(context)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 129, in get_parent\n    return self.find_template(parent, context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 107, in find_template\n    template, origin = context.template.engine.find_template(\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\engine.py", line 157, in find_template\n    template = loader.get_template(name, skip=skip)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loaders\\cached.py", line 57, in get_template\n    template = super().get_template(template_name, skip)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loaders\\base.py", line 28, in get_template\n    return Template(\n           ^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 154, in __init__\n    self.nodelist = self.compile_nodelist()\n                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 200, in compile_nodelist\n    return parser.parse()\n           ^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 507, in parse\n    self.invalid_block_tag(token, command, parse_until)\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 568, in invalid_block_tag\n    raise self.error(\ndjango.template.exceptions.TemplateSyntaxError: Invalid block tag on line 10: \'static\'. Did you forget to register or load this tag?\n'}
+Exception Type: None
+[ERROR] 2026-04-08 17:24:26 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\utils\log.py:246 | log_response() | Internal Server Error: /organic-crops/
+Exception Type: (<class 'django.template.exceptions.TemplateSyntaxError'>, TemplateSyntaxError("Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?"), <traceback object at 0x000001FCBD552280>)
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 505, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi_app\views.py", line 275, in organic_crops
+    return render(request, 'organic_crops.html')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 132, in render
+    compiled_parent = self.get_parent(context)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 129, in get_parent
+    return self.find_template(parent, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 107, in find_template
+    template, origin = context.template.engine.find_template(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\engine.py", line 157, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 200, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 507, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 568, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?
+[ERROR] 2026-04-08 17:24:26 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\servers\basehttp.py:212 | log_message() | "GET /organic-crops/ HTTP/1.1" 500 190070
+Exception Type: None
+[ERROR] 2026-04-08 17:24:31 | C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi\middleware.py:85 | process_exception() | [EXCEPTION] {'method': 'GET', 'path': '/marketplace/product/1/', 'exception_type': 'TemplateSyntaxError', 'exception_message': "Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?", 'client_ip': '127.0.0.1', 'user': 'Anonymous', 'traceback': 'Traceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 505, in parse\n    compile_func = self.tags[command]\n                   ~~~~~~~~~^^^^^^^^^\nKeyError: \'static\'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\core\\handlers\\base.py", line 197, in _get_response\n    response = wrapped_callback(request, *callback_args, **callback_kwargs)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\krishi_Connect\\krishicon\\krishi\\krishi_app\\views.py", line 555, in product_detail\n    return render(request, \'public_product_detail.html\', {\'vegetable\': vegetable})\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\shortcuts.py", line 24, in render\n    content = loader.render_to_string(template_name, context, request, using=using)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader.py", line 62, in render_to_string\n    return template.render(context, request)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\backends\\django.py", line 61, in render\n    return self.template.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 175, in render\n    return self._render(context)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 167, in _render\n    return self.nodelist.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 1005, in render\n    return SafeString("".join([node.render_annotated(context) for node in self]))\n                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 966, in render_annotated\n    return self.render(context)\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 132, in render\n    compiled_parent = self.get_parent(context)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 129, in get_parent\n    return self.find_template(parent, context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 107, in find_template\n    template, origin = context.template.engine.find_template(\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\engine.py", line 157, in find_template\n    template = loader.get_template(name, skip=skip)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loaders\\cached.py", line 57, in get_template\n    template = super().get_template(template_name, skip)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loaders\\base.py", line 28, in get_template\n    return Template(\n           ^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 154, in __init__\n    self.nodelist = self.compile_nodelist()\n                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 200, in compile_nodelist\n    return parser.parse()\n           ^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 507, in parse\n    self.invalid_block_tag(token, command, parse_until)\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 568, in invalid_block_tag\n    raise self.error(\ndjango.template.exceptions.TemplateSyntaxError: Invalid block tag on line 10: \'static\'. Did you forget to register or load this tag?\n'}
+Exception Type: None
+[ERROR] 2026-04-08 17:24:31 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\utils\log.py:246 | log_response() | Internal Server Error: /marketplace/product/1/
+Exception Type: (<class 'django.template.exceptions.TemplateSyntaxError'>, TemplateSyntaxError("Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?"), <traceback object at 0x000001FCBD5C0C40>)
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 505, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi_app\views.py", line 555, in product_detail
+    return render(request, 'public_product_detail.html', {'vegetable': vegetable})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 132, in render
+    compiled_parent = self.get_parent(context)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 129, in get_parent
+    return self.find_template(parent, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 107, in find_template
+    template, origin = context.template.engine.find_template(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\engine.py", line 157, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 200, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 507, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 568, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?
+[ERROR] 2026-04-08 17:24:31 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\servers\basehttp.py:212 | log_message() | "GET /marketplace/product/1/ HTTP/1.1" 500 191570
+Exception Type: None
+[ERROR] 2026-04-08 17:24:32 | C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi\middleware.py:85 | process_exception() | [EXCEPTION] {'method': 'GET', 'path': '/marketplace/', 'exception_type': 'TemplateSyntaxError', 'exception_message': "Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?", 'client_ip': '127.0.0.1', 'user': 'Anonymous', 'traceback': 'Traceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 505, in parse\n    compile_func = self.tags[command]\n                   ~~~~~~~~~^^^^^^^^^\nKeyError: \'static\'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\core\\handlers\\base.py", line 197, in _get_response\n    response = wrapped_callback(request, *callback_args, **callback_kwargs)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\krishi_Connect\\krishicon\\krishi\\krishi_app\\views.py", line 541, in public_marketplace\n    return render(request, \'marketplace.html\', {\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\shortcuts.py", line 24, in render\n    content = loader.render_to_string(template_name, context, request, using=using)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader.py", line 62, in render_to_string\n    return template.render(context, request)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\backends\\django.py", line 61, in render\n    return self.template.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 175, in render\n    return self._render(context)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 167, in _render\n    return self.nodelist.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 1005, in render\n    return SafeString("".join([node.render_annotated(context) for node in self]))\n                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 966, in render_annotated\n    return self.render(context)\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 132, in render\n    compiled_parent = self.get_parent(context)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 129, in get_parent\n    return self.find_template(parent, context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 107, in find_template\n    template, origin = context.template.engine.find_template(\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\engine.py", line 157, in find_template\n    template = loader.get_template(name, skip=skip)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loaders\\cached.py", line 57, in get_template\n    template = super().get_template(template_name, skip)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loaders\\base.py", line 28, in get_template\n    return Template(\n           ^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 154, in __init__\n    self.nodelist = self.compile_nodelist()\n                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 200, in compile_nodelist\n    return parser.parse()\n           ^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 507, in parse\n    self.invalid_block_tag(token, command, parse_until)\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 568, in invalid_block_tag\n    raise self.error(\ndjango.template.exceptions.TemplateSyntaxError: Invalid block tag on line 10: \'static\'. Did you forget to register or load this tag?\n'}
+Exception Type: None
+[ERROR] 2026-04-08 17:24:33 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\utils\log.py:246 | log_response() | Internal Server Error: /marketplace/
+Exception Type: (<class 'django.template.exceptions.TemplateSyntaxError'>, TemplateSyntaxError("Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?"), <traceback object at 0x000001FCBD688180>)
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 505, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi_app\views.py", line 541, in public_marketplace
+    return render(request, 'marketplace.html', {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 132, in render
+    compiled_parent = self.get_parent(context)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 129, in get_parent
+    return self.find_template(parent, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 107, in find_template
+    template, origin = context.template.engine.find_template(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\engine.py", line 157, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 200, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 507, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 568, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?
+[ERROR] 2026-04-08 17:24:33 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\servers\basehttp.py:212 | log_message() | "GET /marketplace/ HTTP/1.1" 500 195696
+Exception Type: None
+[ERROR] 2026-04-08 17:24:39 | C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi\middleware.py:85 | process_exception() | [EXCEPTION] {'method': 'GET', 'path': '/', 'exception_type': 'TemplateSyntaxError', 'exception_message': "Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?", 'client_ip': '127.0.0.1', 'user': 'Anonymous', 'traceback': 'Traceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 505, in parse\n    compile_func = self.tags[command]\n                   ~~~~~~~~~^^^^^^^^^\nKeyError: \'static\'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\core\\handlers\\base.py", line 197, in _get_response\n    response = wrapped_callback(request, *callback_args, **callback_kwargs)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\krishi_Connect\\krishicon\\krishi\\krishi_app\\views.py", line 27, in home\n    return render(request, \'home.html\', {\'featured_products\': featured_products})\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\shortcuts.py", line 24, in render\n    content = loader.render_to_string(template_name, context, request, using=using)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader.py", line 62, in render_to_string\n    return template.render(context, request)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\backends\\django.py", line 61, in render\n    return self.template.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 175, in render\n    return self._render(context)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 167, in _render\n    return self.nodelist.render(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 1005, in render\n    return SafeString("".join([node.render_annotated(context) for node in self]))\n                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 966, in render_annotated\n    return self.render(context)\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 132, in render\n    compiled_parent = self.get_parent(context)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 129, in get_parent\n    return self.find_template(parent, context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loader_tags.py", line 107, in find_template\n    template, origin = context.template.engine.find_template(\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\engine.py", line 157, in find_template\n    template = loader.get_template(name, skip=skip)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loaders\\cached.py", line 57, in get_template\n    template = super().get_template(template_name, skip)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\loaders\\base.py", line 28, in get_template\n    return Template(\n           ^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 154, in __init__\n    self.nodelist = self.compile_nodelist()\n                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 200, in compile_nodelist\n    return parser.parse()\n           ^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 507, in parse\n    self.invalid_block_tag(token, command, parse_until)\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\template\\base.py", line 568, in invalid_block_tag\n    raise self.error(\ndjango.template.exceptions.TemplateSyntaxError: Invalid block tag on line 10: \'static\'. Did you forget to register or load this tag?\n'}
+Exception Type: None
+[ERROR] 2026-04-08 17:24:39 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\utils\log.py:246 | log_response() | Internal Server Error: /
+Exception Type: (<class 'django.template.exceptions.TemplateSyntaxError'>, TemplateSyntaxError("Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?"), <traceback object at 0x000001FCBD791600>)
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 505, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi_app\views.py", line 27, in home
+    return render(request, 'home.html', {'featured_products': featured_products})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 132, in render
+    compiled_parent = self.get_parent(context)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 129, in get_parent
+    return self.find_template(parent, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loader_tags.py", line 107, in find_template
+    template, origin = context.template.engine.find_template(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\engine.py", line 157, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 200, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 507, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\template\base.py", line 568, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 10: 'static'. Did you forget to register or load this tag?
+[ERROR] 2026-04-08 17:24:39 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\servers\basehttp.py:212 | log_message() | "GET / HTTP/1.1" 500 192320
+Exception Type: None
+[ERROR] 2026-04-08 19:20:31 | C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi\middleware.py:85 | process_exception() | [EXCEPTION] {'method': 'GET', 'path': '/customer/dashboard/', 'exception_type': 'RelatedObjectDoesNotExist', 'exception_message': 'User has no userprofile.', 'client_ip': '127.0.0.1', 'user': 'baniya', 'traceback': 'Traceback (most recent call last):\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\core\\handlers\\base.py", line 197, in _get_response\n    response = wrapped_callback(request, *callback_args, **callback_kwargs)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\contrib\\auth\\decorators.py", line 23, in _wrapper_view\n    return view_func(request, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\krishi_Connect\\krishicon\\krishi\\krishi_app\\views.py", line 230, in customer_dashboard\n    user_profile = request.user.userprofile\n                   ^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\utils\\functional.py", line 268, in inner\n    return func(_wrapped, *args)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Vision\\Desktop\\krishi\\my_venv\\Lib\\site-packages\\django\\db\\models\\fields\\related_descriptors.py", line 492, in __get__\n    raise self.RelatedObjectDoesNotExist(\ndjango.contrib.auth.models.User.userprofile.RelatedObjectDoesNotExist: User has no userprofile.\n'}
+Exception Type: None
+[ERROR] 2026-04-08 19:20:31 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\utils\log.py:246 | log_response() | Internal Server Error: /customer/dashboard/
+Exception Type: (<class 'django.contrib.auth.models.User.userprofile.RelatedObjectDoesNotExist'>, RelatedObjectDoesNotExist('User has no userprofile.'), <traceback object at 0x000001CAD4F272C0>)
+Traceback (most recent call last):
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\krishi_Connect\krishicon\krishi\krishi_app\views.py", line 230, in customer_dashboard
+    user_profile = request.user.userprofile
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\utils\functional.py", line 268, in inner
+    return func(_wrapped, *args)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 492, in __get__
+    raise self.RelatedObjectDoesNotExist(
+django.contrib.auth.models.User.userprofile.RelatedObjectDoesNotExist: User has no userprofile.
+[ERROR] 2026-04-08 19:20:31 | C:\Users\Vision\Desktop\krishi\my_venv\Lib\site-packages\django\core\servers\basehttp.py:212 | log_message() | "GET /customer/dashboard/ HTTP/1.1" 500 99849
+Exception Type: None

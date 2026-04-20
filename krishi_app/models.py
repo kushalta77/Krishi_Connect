@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=20, choices=[('farmer', 'Farmer'), ('expert', 'Expert'), ('supplier', 'Supplier'), ('customer', 'Customer')])
+    role = models.CharField(max_length=20, choices=[('farmer', 'Farmer'), ('expert', 'Expert'), ('customer', 'Customer')])
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     address = models.TextField(max_length=255, blank=True, null=True)
     address2 = models.TextField(max_length=255, blank=True, null=True)
@@ -11,6 +11,9 @@ class UserProfile(models.Model):
     temporary_address = models.TextField(max_length=255, blank=True, null=True)
     temp_phone = models.CharField(max_length=15, blank=True, null=True)
     profile_image = models.ImageField(upload_to='profiles/', blank=True, null=True)
+    official_document = models.ImageField(upload_to='documents/', blank=True, null=True)
+    is_approved = models.BooleanField(default=True)  # Set to False only for farmers, others default to True
+    approval_date = models.DateTimeField(blank=True, null=True)
     
     def __str__(self):
         return f"{self.user.username} - {self.role}"
@@ -59,29 +62,6 @@ class Vegetable(models.Model):
     def __str__(self):
         return f"{self.name} by {self.farmer.username}"
 
-class SupplierPurchase(models.Model):
-    supplier = models.ForeignKey(User, on_delete=models.CASCADE, related_name='supplier_purchases')
-    vegetable = models.ForeignKey(Vegetable, on_delete=models.CASCADE)
-    quantity = models.DecimalField(max_digits=10, decimal_places=2)
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)
-    status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('confirmed', 'Confirmed'), ('completed', 'Completed')], default='pending')
-    purchased_at = models.DateTimeField(auto_now_add=True)
-    
-    def __str__(self):
-        return f"{self.supplier.username} - {self.vegetable.name}"
-
-class SupplierInventory(models.Model):
-    supplier = models.ForeignKey(User, on_delete=models.CASCADE, related_name='inventory')
-    vegetable_name = models.CharField(max_length=100)
-    quantity = models.DecimalField(max_digits=10, decimal_places=2)
-    unit = models.CharField(max_length=20)
-    price_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='supplier_inventory/', blank=True, null=True)
-    available = models.BooleanField(default=True)
-    
-    def __str__(self):
-        return f"{self.vegetable_name} - {self.supplier.username}"
-
 class Cart(models.Model):
     customer = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cart')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -99,15 +79,16 @@ class CartItem(models.Model):
 
 class CustomerOrder(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
-    supplier_inventory = models.ForeignKey(SupplierInventory, on_delete=models.CASCADE)
+    vegetable = models.ForeignKey(Vegetable, on_delete=models.CASCADE)
     quantity = models.DecimalField(max_digits=10, decimal_places=2)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     shipping_address = models.TextField(blank=True, null=True)
-    status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('confirmed', 'Confirmed'), ('delivered', 'Delivered')], default='pending')
+    status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('confirmed', 'Confirmed'), ('delivered', 'Delivered'), ('cancelled', 'Cancelled')], default='pending')
     ordered_at = models.DateTimeField(auto_now_add=True)
+    viewed_by_farmer = models.BooleanField(default=False)  # Track if farmer has viewed this order
     
     def __str__(self):
-        return f"{self.customer.username} - {self.supplier_inventory.vegetable_name}"
+        return f"{self.customer.username} - {self.vegetable.name}"
 
 
 class Feedback(models.Model):

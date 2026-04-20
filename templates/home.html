@@ -73,30 +73,30 @@
     </div>
 
     <!-- Content -->
-    <div class="relative z-10 max-w-6xl mx-auto px-4 text-center text-white">
-        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-green-200 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
-            <i class="fas fa-leaf"></i> Nepal's #1 Organic Agriculture Portal
+    <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-green-200 text-xs sm:text-sm font-bold uppercase tracking-widest px-3 sm:px-4 py-2 rounded-full mb-4 sm:mb-6">
+            <i class="fas fa-leaf"></i> <span class="hidden xs:inline">Nepal's #1 Organic Agriculture Portal</span><span class="xs:hidden">Organic Agriculture</span>
         </div>
-        <h1 class="text-5xl md:text-7xl font-black mb-4 text-white drop-shadow-2xl" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.8);" data-en="Krishi Connect Nepal" data-ne="कृषि कनेक्ट नेपाल">
+        <h1 class="text-3xl sm:text-5xl md:text-7xl font-black mb-2 sm:mb-4 text-white drop-shadow-2xl" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.8);" data-en="Krishi Connect Nepal" data-ne="कृषि कनेक्ट नेपाल">
             Krishi Connect Nepal
         </h1>
-        <h2 class="text-2xl md:text-3xl font-light mb-6 text-green-100" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.7);" data-en="AgroConnect - Smart Agriculture Portal" data-ne="AgroConnect - आधुनिक कृषि पोर्टल">
+        <h2 class="text-xl sm:text-2xl md:text-3xl font-light mb-6 sm:mb-12 text-green-100" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.7);" data-en="AgroConnect - Smart Agriculture Portal" data-ne="AgroConnect - आधुनिक कृषि पोर्टल">
             AgroConnect - Smart Agriculture Portal
         </h2>
-        <p class="text-lg md:text-xl mb-12 text-white/90 max-w-3xl mx-auto leading-relaxed" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.6);" data-en="Connecting traditional knowledge with modern technology for Nepal's agricultural revolution" data-ne="हाम्रो पुर्खाको परम्परागत जैविक कृषिलाई आधुनिक प्रविधिसँग जोडेर नेपालको कृषि क्रान्तिमा सहभागी बनौं">
+        <p class="text-base sm:text-lg md:text-xl mb-8 sm:mb-12 text-white/90 max-w-3xl mx-auto leading-relaxed" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.6);" data-en="Connecting traditional knowledge with modern technology for Nepal's agricultural revolution" data-ne="हाम्रो पुर्खाको परम्परागत जैविक कृषिलाई आधुनिक प्रविधिसँग जोडेर नेपालको कृषि क्रान्तिमा सहभागी बनौं">
             Connecting traditional knowledge with modern technology for Nepal's agricultural revolution
         </p>
-        <div class="flex flex-col sm:flex-row gap-6 justify-center items-center flex-wrap">
-            <a href="{% url 'organic_crops' %}" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-10 py-4 rounded-full font-bold hover:from-green-600 hover:to-green-700 transition-all duration-300 shadow-2xl transform hover:scale-105 flex items-center gap-2" data-en="Explore Organic Crops" data-ne="जैविक बाली खोज्नुहोस्">
+        <div class="flex flex-col xs:flex-row gap-3 sm:gap-6 justify-center items-center flex-wrap">
+            <a href="{% url 'organic_crops' %}" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 sm:px-10 py-3 sm:py-4 rounded-full font-bold hover:from-green-600 hover:to-green-700 transition-all duration-300 shadow-2xl transform hover:scale-105 flex items-center gap-2 text-sm sm:text-base" data-en="Explore Organic Crops" data-ne="जैविक बाली खोज्नुहोस्">
                 <i class="fas fa-seedling"></i>
                 <span>Explore Organic Crops</span>
             </a>
-            <a href="{% url 'weather' %}" class="border-2 border-white/60 text-white px-10 py-4 rounded-full font-bold hover:bg-white/15 backdrop-blur-sm transition-all duration-300 shadow-xl hover:scale-105 flex items-center gap-2" data-en="Check Weather" data-ne="मौसम जाँच गर्नुहोस्">
+            <a href="{% url 'weather' %}" class="border-2 border-white/60 text-white px-6 sm:px-10 py-3 sm:py-4 rounded-full font-bold hover:bg-white/15 backdrop-blur-sm transition-all duration-300 shadow-xl hover:scale-105 flex items-center gap-2 text-sm sm:text-base" data-en="Check Weather" data-ne="मौसम जाँच गर्नुहोस्">
                 <i class="fas fa-cloud-sun"></i>
                 <span>Check Weather</span>
             </a>
             {% if user.is_authenticated and user.role == 'farmer' %}
-            <a href="{% url 'add_vegetable' %}" class="border-2 border-white/60 text-white px-10 py-4 rounded-full font-bold hover:bg-white/15 backdrop-blur-sm transition-all duration-300 shadow-xl hover:scale-105 flex items-center gap-2" data-en="List New Product" data-ne="नयाँ उत्पादन सूचीबद्ध गर्नुहोस्">
+            <a href="{% url 'add_vegetable' %}" class="border-2 border-white/60 text-white px-6 sm:px-10 py-3 sm:py-4 rounded-full font-bold hover:bg-white/15 backdrop-blur-sm transition-all duration-300 shadow-xl hover:scale-105 flex items-center gap-2 text-sm sm:text-base" data-en="List New Product" data-ne="नयाँ उत्पादन सूचीबद्ध गर्नुहोस्">
                 <i class="fas fa-plus-circle"></i>
                 <span>List New Product</span>
             </a>

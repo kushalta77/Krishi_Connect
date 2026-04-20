@@ -58,7 +58,7 @@
         <!-- Premium Sidebar -->
         <aside id="sidebar"
             class="fixed md:static z-50 w-[280px] h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0 transition-transform duration-500 ease-out"
-            style="background: linear-gradient(160deg, #14532d 0%, #166534 100%); border-right: 1px solid rgba(255,255,255,0.1);">
+            style="background: linear-gradient(160deg, #3b82f6 0%, #1e40af 100%); border-right: 1px solid rgba(255,255,255,0.1);">
 
             <!-- Brand Logo -->
             <div class="px-8 py-8 relative">
@@ -69,7 +69,7 @@
                     </div>
                     <div>
                         <h2 class="font-heading font-bold text-2xl text-white tracking-tight">Krishi<span
-                                style="color: #4ade80;">Connect</span></h2>
+                                class="text-brand-400">Connect</span></h2>
                         <p class="text-brand-200/80 text-xs tracking-wider uppercase font-semibold mt-1">Farm to Home
                         </p>
                     </div>
@@ -127,6 +127,18 @@
                     style="position: relative; overflow: hidden; transition: all 0.3s ease;">
                     <i class="fas fa-cloud-sun w-5 text-center text-lg"></i>
                     <span>Weather Updates</span>
+                </a>
+                <a href="{% url 'customer_profile' %}"
+                    class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium"
+                    style="position: relative; overflow: hidden; transition: all 0.3s ease;">
+                    <i class="fas fa-cog w-5 text-center text-lg"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="{% url 'customer_analytics' %}"
+                    class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium"
+                    style="position: relative; overflow: hidden; transition: all 0.3s ease;">
+                    <i class="fas fa-chart-bar w-5 text-center text-lg"></i>
+                    <span>Analytics</span>
                 </a>
             </nav>
 
@@ -197,23 +209,39 @@
                                 <!-- Display Address -->
                                 <div id="addressDisplay"
                                     class="bg-gradient-to-br from-slate-50 to-slate-100 p-6 rounded-xl border border-slate-200">
-                                    <div class="space-y-3">
-                                        <p class="text-slate-600">
-                                            <span class="font-semibold text-slate-900">{{ user.first_name }} {{ user.last_name }}</span>
-                                        </p>
-                                        <p class="text-slate-600">
-                                            <i class="fas fa-phone text-brand-600 mr-2"></i>
-                                            <span>{{ display_phone|default:"Not provided" }}</span>
-                                        </p>
-                                        <p class="text-slate-600">
-                                            <i class="fas fa-map-pin text-brand-600 mr-2"></i>
-                                            <span>{{ display_address|default:"Address not set" }}</span>
-                                        </p>
-                                        <p class="text-xs text-slate-400 mt-4">
-                                            <span
-                                                class="inline-block px-3 py-1 bg-brand-100 text-brand-700 rounded-full font-semibold">{{ display_address_type|default:"DEFAULT" }}</span>
-                                        </p>
+                                    {% if display_address or user.userprofile.phone_number %}
+                                    <div class="flex items-start gap-4">
+                                        <div class="w-10 h-10 bg-brand-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                            <i class="fas fa-map-marker-alt text-brand-600"></i>
+                                        </div>
+                                        <div class="space-y-1.5 flex-1">
+                                            <div class="flex items-center gap-2">
+                                                <p class="font-bold text-slate-900">{{ user.first_name }} {{ user.last_name }}</p>
+                                                <span class="px-2 py-0.5 bg-brand-100 text-brand-700 text-xs font-bold rounded-full">{{ display_address_type }}</span>
+                                            </div>
+                                            {% if display_phone %}
+                                            <p class="text-slate-600 text-sm flex items-center gap-2">
+                                                <i class="fas fa-phone text-brand-500 w-4"></i>
+                                                {{ display_phone }}
+                                            </p>
+                                            {% endif %}
+                                            {% if display_address %}
+                                            <p class="text-slate-600 text-sm flex items-start gap-2">
+                                                <i class="fas fa-map-pin text-brand-500 w-4 mt-0.5"></i>
+                                                {{ display_address }}
+                                            </p>
+                                            {% endif %}
+                                        </div>
                                     </div>
+                                    {% else %}
+                                    <div class="flex items-center gap-3 text-amber-700 bg-amber-50 border border-amber-200 rounded-xl p-4">
+                                        <i class="fas fa-exclamation-triangle text-amber-500 text-lg"></i>
+                                        <div>
+                                            <p class="font-semibold text-sm">No address saved</p>
+                                            <p class="text-xs mt-0.5">Click Edit to add your delivery address</p>
+                                        </div>
+                                    </div>
+                                    {% endif %}
                                 </div>
 
                                 <!-- Edit Form (Hidden by default) -->
@@ -243,8 +271,7 @@
                                                     <p class="text-sm text-slate-600">{{ user.userprofile.address }}</p>
                                                     {% if user.userprofile.phone_number %}
                                                     <p class="text-sm text-slate-500 mt-1"><i
-                                                            class="fas fa-phone mr-1"></i>{{
-                                                        user.userprofile.phone_number }}</p>
+                                                            class="fas fa-phone mr-1"></i>{{ user.userprofile.phone_number }}</p>
                                                     {% endif %}
                                                 </div>
                                             </label>
@@ -264,8 +291,7 @@
                                                     </p>
                                                     {% if user.userprofile.phone_number %}
                                                     <p class="text-sm text-slate-500 mt-1"><i
-                                                            class="fas fa-phone mr-1"></i>{{
-                                                        user.userprofile.phone_number }}</p>
+                                                            class="fas fa-phone mr-1"></i>{{ user.userprofile.phone_number }}</p>
                                                     {% endif %}
                                                 </div>
                                             </label>
@@ -285,8 +311,7 @@
                                                     </p>
                                                     {% if user.userprofile.phone_number %}
                                                     <p class="text-sm text-slate-500 mt-1"><i
-                                                            class="fas fa-phone mr-1"></i>{{
-                                                        user.userprofile.phone_number }}</p>
+                                                            class="fas fa-phone mr-1"></i>{{ user.userprofile.phone_number }}</p>
                                                     {% endif %}
                                                 </div>
                                             </label>
@@ -328,7 +353,7 @@
                                             *</label>
                                         <textarea name="address" rows="3" placeholder="Enter your delivery address"
                                             required
-                                            class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm bg-white resize-none">{{ user.userprofile.address|default:'' }}</textarea>
+                                            class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm bg-white resize-none">{{ display_address|default:'' }}</textarea>
                                         <p class="text-xs text-slate-500 mt-1">This address will be saved to your
                                             profile and used for this order</p>
                                     </div>
@@ -655,20 +680,28 @@
                         const existingAddressField = document.getElementById('existingAddressField');
                         const addressTextarea = document.querySelector('textarea[name="address"]');
 
+                        const addressValues = {
+                            'address': "{{ user.userprofile.address|escapejs }}",
+                            'address2': "{{ user.userprofile.address2|escapejs }}",
+                            'address3': "{{ user.userprofile.address3|escapejs }}",
+                        };
+
                         addressRadios.forEach(radio => {
                             radio.addEventListener('change', function () {
                                 if (this.value === 'new_address') {
                                     newAddressField.style.display = 'block';
                                     existingAddressField.style.display = 'none';
-                                    // Make new address field required
                                     document.querySelector('textarea[name="new_address"]').setAttribute('required', 'required');
                                     addressTextarea.removeAttribute('required');
                                 } else {
                                     newAddressField.style.display = 'none';
                                     existingAddressField.style.display = 'block';
-                                    // Make existing address field required
                                     addressTextarea.setAttribute('required', 'required');
                                     document.querySelector('textarea[name="new_address"]').removeAttribute('required');
+                                    // Update textarea with selected address value
+                                    if (addressValues[this.value]) {
+                                        addressTextarea.value = addressValues[this.value];
+                                    }
                                 }
                             });
                         });

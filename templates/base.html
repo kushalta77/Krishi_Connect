@@ -22,7 +22,9 @@
     {% include 'components/footer.html' %}
     {% endblock %}
     
+    {% block toast %}
     {% include 'components/toast.html' %}
+    {% endblock %}
 
     <!-- Cart Modal Popup -->
     <div id="cart-modal" class="fixed inset-0 z-[9999] flex items-center justify-center hidden">
@@ -44,7 +46,7 @@
         function showCartModal() {
             document.getElementById('cart-modal').classList.remove('hidden');
             clearTimeout(cartModalTimer);
-            cartModalTimer = setTimeout(hideCartModal, 3000);
+            cartModalTimer = setTimeout(hideCartModal, 2000);
         }
 
         function hideCartModal() {

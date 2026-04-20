@@ -340,6 +340,32 @@
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
         }
+
+        /* Responsive Sidebar Mobile */
+        @media (max-width: 768px) {
+            #sidebar {
+                position: fixed !important;
+                left: 0;
+                top: 0;
+                width: 100%;
+                max-width: 340px;
+                height: 100vh;
+                z-index: 50;
+            }
+
+            #sidebar.-translate-x-full {
+                transform: translateX(-100%);
+            }
+
+            #overlay {
+                position: fixed;
+                z-index: 40;
+            }
+
+            #overlay.hidden {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 
@@ -354,7 +380,7 @@
 
         <!-- Premium Sidebar -->
         <aside id="sidebar"
-            class="fixed md:static z-50 w-[280px] h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0 transition-transform duration-500 ease-out">
+            class="fixed md:static z-50 w-full sm:w-80 md:w-auto h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0 transition-transform duration-300 ease-out">
 
             <!-- Brand Logo -->
             <div class="px-8 py-8 relative">
@@ -420,10 +446,11 @@
                     <i class="fas fa-cog w-5 text-center text-lg"></i>
                     <span>Settings</span>
                 </a>
-                <a href="{% url 'weather' %}"
+                
+                <a href="{% url 'customer_analytics' %}"
                     class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                    <i class="fas fa-cloud-sun w-5 text-center text-lg"></i>
-                    <span>Weather Updates</span>
+                    <i class="fas fa-chart-bar w-5 text-center text-lg"></i>
+                    <span>Analytics</span>
                 </a>
 
             </nav>
@@ -782,7 +809,7 @@
                                                     class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
                                                     <i class="fas fa-box"></i>
                                                 </div>
-                                                <span class="font-bold text-slate-700">{{ order.supplier_inventory.vegetable_name }}</span>
+                                                <span class="font-bold text-slate-700">{{ order.vegetable.name }}</span>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 text-slate-600 font-medium">{{ order.ordered_at|date:"M d, Y" }}</td>
@@ -848,18 +875,41 @@
     <script>
         // Sidebar Mobile Toggle
         function openSidebar() {
-            document.getElementById('sidebar').classList.remove('-translate-x-full');
-            document.getElementById('overlay').classList.remove('hidden', 'opacity-0');
-            document.getElementById('overlay').classList.add('opacity-100');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+            overlay.classList.add('opacity-100');
         }
 
         function closeSidebar() {
-            document.getElementById('sidebar').classList.add('-translate-x-full');
-            document.getElementById('overlay').classList.remove('opacity-100');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.remove('opacity-100');
             setTimeout(() => {
-                document.getElementById('overlay').classList.add('hidden');
+                overlay.classList.add('hidden');
             }, 300);
         }
+
+        // Initialize: Hide sidebar on mobile on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+
+            // Close sidebar when clicking any link
+            const navLinks = sidebar.querySelectorAll('nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    closeSidebar();
+                });
+            });
+        });
 
         function showAddToCartModal(form) {
             const modal = document.getElementById('cartSuccessModal');
@@ -969,7 +1019,7 @@
         function showCartModal() {
             document.getElementById('cart-modal').classList.remove('hidden');
             clearTimeout(cartTimer);
-            cartTimer = setTimeout(hideCartModal, 3000);
+            cartTimer = setTimeout(hideCartModal, 2000);
         }
         function hideCartModal() {
             document.getElementById('cart-modal').classList.add('hidden');

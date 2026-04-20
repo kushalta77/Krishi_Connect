@@ -1,199 +1,292 @@
 {% extends 'base.html' %}
-
 {% block title %}Register - Krishi Connect{% endblock %}
-
-{% block header %}{% endblock %}
 {% block footer %}{% endblock %}
 
 {% block content %}
 <style>
+    body { background: #f0fdf4; }
     .page-bg {
         position: fixed;
         inset: 0;
-        z-index: 0;
+        z-index: -1;
         background-color: #5b8fa8;
         background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1920&auto=format&fit=crop&q=80');
         background-size: cover;
         background-position: center;
     }
+    .input-field {
+        width: 100%;
+        padding: 0.6rem 0.875rem;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 0.5rem;
+        background: #f9fafb;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+        outline: none;
+    }
+    .input-field:focus { border-color: #16a34a; background: #fff; box-shadow: 0 0 0 3px rgba(22,163,74,0.1); }
+    .input-label { display: block; font-size: 0.8rem; font-weight: 600; color: #374151; margin-bottom: 0.3rem; }
 </style>
 
 <div class="page-bg"></div>
 
 <div class="min-h-screen flex items-center justify-center py-8 px-4 relative" style="z-index: 10;">
-    <div class="max-w-lg w-full">
-        <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl border border-green-100 overflow-hidden">
-            <!-- Header Section -->
-            <div class="bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-5 text-center">
-                <div class="mx-auto h-14 w-14 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm mb-3">
-                    <i class="fas fa-seedling text-white text-3xl"></i>
+
+    <div class="w-full max-w-xl">
+
+        <!-- Card -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-green-100">
+
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-green-600 to-emerald-500 px-8 py-4 text-center">
+                <div class="flex items-center justify-center gap-3">
+                    <div class="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-seedling text-white text-lg"></i>
+                    </div>
+                    <div class="text-left">
+                        <h2 class="text-lg font-bold text-white leading-tight">Join Krishi Connect</h2>
+                        <p class="text-green-100 text-xs">Create your account today</p>
+                    </div>
                 </div>
-                <h2 class="text-2xl font-bold text-white mb-1">Join Krishi Connect</h2>
-                
             </div>
-            
-            <!-- Form Section -->
-            <div class="px-6 py-5">
+
+            <!-- Form -->
+            <div class="px-8 py-6">
                 <form method="post" enctype="multipart/form-data" class="space-y-4">
                     {% csrf_token %}
-                    {% if form.errors %}
-                        <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-r-lg">
-                            {% for field, errors in form.errors.items %}
-                                {% for error in errors %}
-                                    <p class="text-red-700 text-sm flex items-center">
-                                        <i class="fas fa-exclamation-circle mr-2"></i>{{ error }}
-                                    </p>
-                                {% endfor %}
-                            {% endfor %}
+
+                    <!-- Role -->
+                    <div>
+                        <label class="input-label"><i class="fas fa-user-tag text-green-600 mr-1"></i>Register as</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
+                            <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-green-400 hover:bg-green-50 transition-all has-[:checked]:border-green-500 has-[:checked]:bg-green-50" id="farmerLabel">
+                                <input type="radio" name="role" value="farmer" id="roleFarmer" class="hidden" {% if role == 'farmer' or not role %}checked{% endif %}>
+                                <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-lg flex-shrink-0">🌾</div>
+                                <div>
+                                    <p class="font-semibold text-gray-800 text-sm">Farmer</p>
+                                    <p class="text-xs text-gray-400">Sell products</p>
+                                </div>
+                                <div id="farmerCheck" class="ml-auto w-5 h-5 rounded-full border-2 border-green-500 flex items-center justify-center flex-shrink-0">
+                                    <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-green-400 hover:bg-green-50 transition-all has-[:checked]:border-green-500 has-[:checked]:bg-green-50" id="customerLabel">
+                                <input type="radio" name="role" value="customer" id="roleCustomer" class="hidden" {% if role == 'customer' %}checked{% endif %}>
+                                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-lg flex-shrink-0">🛒</div>
+                                <div>
+                                    <p class="font-semibold text-gray-800 text-sm">Customer</p>
+                                    <p class="text-xs text-gray-400">Buy products</p>
+                                </div>
+                                <div id="customerCheck" class="ml-auto w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center flex-shrink-0">
+                                    <div class="w-2.5 h-2.5 rounded-full bg-transparent"></div>
+                                </div>
+                            </label>
                         </div>
-                    {% endif %}
-                    
-                    <!-- Role Selection -->
-                    <div class="relative">
-                        <label class="block text-sm font-semibold text-gray-700 mb-1"><i class="fas fa-user-tag text-green-600 mr-1"></i>Role
-                        </label>
-                        <select name="role" required class="w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-gray-50 hover:bg-white">
-                            <option value="farmer" {% if role == 'farmer' %}selected{% endif %}>🌾 Farmer</option>
-                            
-                            <option value="customer" {% if role == 'customer' %}selected{% endif %}>🛒 Customer</option>
-                        </select>
                     </div>
-                    
+
+                    <!-- Name Row -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="input-label"><i class="fas fa-user text-green-600 mr-1"></i>First Name</label>
+                            <input name="first_name" type="text" required value="{% if first_name %}{{ first_name }}{% endif %}" class="input-field" placeholder="First name">
+                        </div>
+                        <div>
+                            <label class="input-label"><i class="fas fa-user text-green-600 mr-1"></i>Last Name</label>
+                            <input name="last_name" type="text" required value="{% if last_name %}{{ last_name }}{% endif %}" class="input-field" placeholder="Last name">
+                        </div>
+                    </div>
+
                     <!-- Username -->
-                    <div class="relative">
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">
-                            <i class="fas fa-at text-green-600 mr-1"></i>Username
-                        </label>
-                        <input name="username" type="text" required value="{% if username %}{{ username }}{% endif %}" 
-                               class="w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-gray-50 hover:bg-white" 
-                               placeholder="Choose a unique username">
+                    <div>
+                        <label class="input-label"><i class="fas fa-at text-green-600 mr-1"></i>Username</label>
+                        <input name="username" type="text" required value="{% if username %}{{ username }}{% endif %}" class="input-field" placeholder="Choose a unique username">
                     </div>
-                    
-                    <!-- Name Fields -->
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1"><i class="fas fa-user text-green-600 mr-1"></i>First Name</label>
-                            <input name="first_name" type="text" required value="{% if first_name %}{{ first_name }}{% endif %}" 
-                                   class="w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-gray-50 hover:bg-white" 
-                                   placeholder="First name">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1"><i class="fas fa-user text-green-600 mr-1"></i>Last Name</label>
-                            <input name="last_name" type="text" required value="{% if last_name %}{{ last_name }}{% endif %}" 
-                                   class="w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-gray-50 hover:bg-white" 
-                                   placeholder="Last name">
-                        </div>
-                    </div>
-                    
+
                     <!-- Email -->
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1"><i class="fas fa-envelope text-green-600 mr-1"></i>Email</label>
-                        <input name="email" type="email" required value="{% if email %}{{ email }}{% endif %}" 
-                               class="w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-gray-50 hover:bg-white" 
-                               placeholder="your@email.com">
+                        <label class="input-label"><i class="fas fa-envelope text-green-600 mr-1"></i>Email</label>
+                        <input name="email" type="email" required value="{% if email %}{{ email }}{% endif %}" class="input-field" placeholder="your@email.com">
                     </div>
-                    
-                    <!-- Password Fields -->
-                    <div class="grid grid-cols-2 gap-3">
+
+                    <!-- Password Row -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1"><i class="fas fa-lock text-green-600 mr-1"></i>Password</label>
+                            <label class="input-label"><i class="fas fa-lock text-green-600 mr-1"></i>Password</label>
                             <div class="relative">
-                                <input id="password1Input" name="password1" type="password" required 
-                                       class="w-full px-3 py-2.5 pr-10 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-gray-50 hover:bg-white" 
-                                       placeholder="Password">
-                                <button type="button" onclick="togglePassword1Visibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors">
-                                    <i id="password1Icon" class="fas fa-eye text-sm"></i>
+                                <input id="pw1" name="password1" type="password" required class="input-field pr-9" placeholder="Min 8 chars">
+                                <button type="button" onclick="togglePw('pw1','ic1')" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                    <i id="ic1" class="fas fa-eye text-xs"></i>
                                 </button>
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1"><i class="fas fa-lock text-green-600 mr-1"></i>Confirm Password</label>
+                            <label class="input-label"><i class="fas fa-lock text-green-600 mr-1"></i>Confirm</label>
                             <div class="relative">
-                                <input id="password2Input" name="password2" type="password" required 
-                                       class="w-full px-3 py-2.5 pr-10 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-gray-50 hover:bg-white" 
-                                       placeholder="Confirm">
-                                <button type="button" onclick="togglePassword2Visibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors">
-                                    <i id="password2Icon" class="fas fa-eye text-sm"></i>
+                                <input id="pw2" name="password2" type="password" required class="input-field pr-9" placeholder="Repeat password">
+                                <button type="button" onclick="togglePw('pw2','ic2')" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                    <i id="ic2" class="fas fa-eye text-xs"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Profile Picture Upload -->
-                    <div class="flex items-center gap-3">
-                        <div id="avatarPreview" class="w-14 h-14 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0 text-gray-400 text-2xl overflow-hidden border-2 border-gray-300">
-                            <i class="fas fa-user-circle"></i>
+
+                    <!-- Profile Photo + Document side by side -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+                        <!-- Profile Photo -->
+                        <div>
+                            <label class="input-label"><i class="fas fa-camera text-green-600 mr-1"></i>Profile Photo</label>
+                            <input type="file" name="profile_image" accept="image/*" id="imgInput" class="hidden" onchange="previewImg(event)">
+                            <div onclick="document.getElementById('imgInput').click()"
+                                class="border-2 border-dashed border-gray-200 rounded-xl p-3 text-center cursor-pointer hover:border-green-400 hover:bg-green-50 transition-all h-28 flex flex-col items-center justify-center gap-1"
+                                id="imgZone">
+                                <div id="imgPreview" class="flex flex-col items-center gap-1">
+                                    <i class="fas fa-user-circle text-3xl text-gray-300"></i>
+                                    <p class="text-xs text-gray-400">Click to upload</p>
+                                </div>
+                            </div>
                         </div>
-                        <input type="file" name="profile_image" accept="image/*" id="imageInput" class="hidden" onchange="previewImage(event)" required>
-                        <label for="imageInput" class="px-6 py-2.5 bg-gray-300 hover:bg-gray-400 rounded-lg cursor-pointer font-semibold text-gray-700 transition-colors text-sm">
-                            Upload Image
-                        </label>
+
+                        <!-- Official Document -->
+                        <div id="docSection">
+                            <label class="input-label">
+                                <i class="fas fa-id-card text-green-600 mr-1"></i>Official Document
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input type="file" name="official_document" accept="image/*" id="docInput" class="hidden" onchange="previewDoc(event)">
+                            <div onclick="document.getElementById('docInput').click()"
+                                class="border-2 border-dashed border-gray-200 rounded-xl p-3 text-center cursor-pointer hover:border-green-400 hover:bg-green-50 transition-all h-28 flex flex-col items-center justify-center gap-1"
+                                id="docZone">
+                                <div id="docPreview" class="flex flex-col items-center gap-1">
+                                    <i class="fas fa-id-card text-3xl text-gray-300"></i>
+                                    <p class="text-xs text-gray-400">Citizenship / ID</p>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                    
-                    <!-- Submit Button -->
-                    <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg">
+
+                    <!-- Submit -->
+                    <div id="errorBox" class="hidden bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600 space-y-1"></div>
+
+                    <button type="submit" id="submitBtn"
+                        class="w-full bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 text-white font-bold py-3 rounded-xl transition-all shadow-md hover:shadow-lg text-sm mt-2">
                         <i class="fas fa-user-plus mr-2"></i>Create Account
                     </button>
                 </form>
-                
-                <!-- Login Link -->
-                <div class="mt-3 text-center p-3 bg-gray-50 rounded-lg">
-                    <p class="text-gray-600 text-sm">
-                        Already have an account?
-                        <a href="{% url 'login' %}" class="text-green-600 hover:text-green-800 font-semibold ml-1 transition-colors">
-                            <i class="fas fa-sign-in-alt mr-1"></i>Login here
-                        </a>
-                    </p>
-                </div>
+
+                <!-- Login link -->
+                <p class="text-center text-sm text-gray-500 mt-4">
+                    Already have an account?
+                    <a href="{% url 'login' %}" class="text-green-600 hover:text-green-800 font-semibold ml-1">Login here</a>
+                </p>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    function togglePassword1Visibility() {
-        const passwordInput = document.getElementById('password1Input');
-        const passwordIcon = document.getElementById('password1Icon');
-        
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            passwordIcon.classList.remove('fa-eye');
-            passwordIcon.classList.add('fa-eye-slash');
-        } else {
-            passwordInput.type = 'password';
-            passwordIcon.classList.remove('fa-eye-slash');
-            passwordIcon.classList.add('fa-eye');
-        }
+    function togglePw(inputId, iconId) {
+        const inp = document.getElementById(inputId);
+        const ic = document.getElementById(iconId);
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+        ic.classList.toggle('fa-eye');
+        ic.classList.toggle('fa-eye-slash');
     }
 
-    function togglePassword2Visibility() {
-        const passwordInput = document.getElementById('password2Input');
-        const passwordIcon = document.getElementById('password2Icon');
-        
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            passwordIcon.classList.remove('fa-eye');
-            passwordIcon.classList.add('fa-eye-slash');
-        } else {
-            passwordInput.type = 'password';
-            passwordIcon.classList.remove('fa-eye-slash');
-            passwordIcon.classList.add('fa-eye');
-        }
-    }
-
-    /** Image Upload */
-    function previewImage(event) {
+    function previewImg(event) {
         const file = event.target.files[0];
-        const avatarPreview = document.getElementById('avatarPreview');
-        
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                avatarPreview.innerHTML = `<img src="${e.target.result}" alt="Profile" class="w-full h-full object-cover">`;
-            };
-            reader.readAsDataURL(file);
-        }
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            document.getElementById('imgPreview').innerHTML =
+                `<img src="${e.target.result}" class="h-20 w-20 object-cover rounded-lg mx-auto">`;
+        };
+        reader.readAsDataURL(file);
+        document.getElementById('imgZone').classList.add('border-green-400', 'bg-green-50');
     }
 
+    function previewDoc(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            document.getElementById('docPreview').innerHTML =
+                `<img src="${e.target.result}" class="h-20 object-contain rounded-lg mx-auto"><p class="text-xs text-green-600 font-semibold mt-1">✓ Uploaded</p>`;
+        };
+        reader.readAsDataURL(file);
+        document.getElementById('docZone').classList.add('border-green-400', 'bg-green-50');
+    }
+
+    const docSection = document.getElementById('docSection');
+    const farmerRadio = document.getElementById('roleFarmer');
+    const customerRadio = document.getElementById('roleCustomer');
+    const farmerLabel = document.getElementById('farmerLabel');
+    const customerLabel = document.getElementById('customerLabel');
+    const farmerCheck = document.getElementById('farmerCheck');
+    const customerCheck = document.getElementById('customerCheck');
+
+    function updateRole() {
+        const isFarmer = farmerRadio.checked;
+        docSection.style.display = isFarmer ? 'block' : 'none';
+
+        farmerLabel.classList.toggle('border-green-500', isFarmer);
+        farmerLabel.classList.toggle('bg-green-50', isFarmer);
+        farmerLabel.classList.toggle('border-gray-200', !isFarmer);
+        farmerCheck.innerHTML = isFarmer
+            ? '<div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>'
+            : '<div class="w-2.5 h-2.5 rounded-full bg-transparent"></div>';
+        farmerCheck.classList.toggle('border-green-500', isFarmer);
+        farmerCheck.classList.toggle('border-gray-300', !isFarmer);
+
+        customerLabel.classList.toggle('border-green-500', !isFarmer);
+        customerLabel.classList.toggle('bg-green-50', !isFarmer);
+        customerLabel.classList.toggle('border-gray-200', isFarmer);
+        customerCheck.innerHTML = !isFarmer
+            ? '<div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>'
+            : '<div class="w-2.5 h-2.5 rounded-full bg-transparent"></div>';
+        customerCheck.classList.toggle('border-green-500', !isFarmer);
+        customerCheck.classList.toggle('border-gray-300', isFarmer);
+    }
+
+    farmerRadio.addEventListener('change', updateRole);
+    customerRadio.addEventListener('change', updateRole);
+    updateRole();
+
+    // Instant client-side validation
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const errors = [];
+        const first = document.querySelector('[name=first_name]').value.trim();
+        const last = document.querySelector('[name=last_name]').value.trim();
+        const username = document.querySelector('[name=username]').value.trim();
+        const email = document.querySelector('[name=email]').value.trim();
+        const pw1 = document.getElementById('pw1').value;
+        const pw2 = document.getElementById('pw2').value;
+        const imgFile = document.getElementById('imgInput').files[0];
+        const isFarmer = farmerRadio.checked;
+        const docFile = document.getElementById('docInput').files[0];
+
+        if (!first || first.length < 2) errors.push('First name must be at least 2 characters.');
+        if (!last || last.length < 2) errors.push('Last name must be at least 2 characters.');
+        if (!username || username.length < 3) errors.push('Username must be at least 3 characters.');
+        if (!/^[a-zA-Z0-9_]+$/.test(username)) errors.push('Username can only contain letters, numbers and underscores.');
+        if (!email || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) errors.push('Please enter a valid email address.');
+        if (!pw1 || pw1.length < 8) errors.push('Password must be at least 8 characters.');
+        if (!/[A-Za-z]/.test(pw1)) errors.push('Password must contain at least one letter.');
+        if (!/[0-9]/.test(pw1)) errors.push('Password must contain at least one number.');
+        if (pw1 !== pw2) errors.push('Passwords do not match.');
+        if (!imgFile) errors.push('Please upload a profile photo.');
+        if (isFarmer && !docFile) errors.push('Official document is required for farmer registration.');
+
+        const box = document.getElementById('errorBox');
+        if (errors.length > 0) {
+            e.preventDefault();
+            box.classList.remove('hidden');
+            box.innerHTML = errors.map(err => `<p><i class="fas fa-exclamation-circle mr-1"></i>${err}</p>`).join('');
+            box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            box.classList.add('hidden');
+        }
+    });
 </script>
 {% endblock %}

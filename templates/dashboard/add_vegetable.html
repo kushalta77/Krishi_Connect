@@ -17,14 +17,43 @@
         .nav-item:hover::before, .nav-item.active::before { transform: scaleY(1); }
         .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: #fff; }
         ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        /* Responsive Sidebar Mobile */
+        @media (max-width: 768px) {
+            #sidebar {
+                position: fixed !important;
+                left: 0;
+                top: 0;
+                width: 100%;
+                max-width: 340px;
+                height: 100vh;
+                z-index: 50;
+            }
+
+            #sidebar.-translate-x-full {
+                transform: translateX(-100%);
+            }
+
+            #overlay {
+                position: fixed;
+                z-index: 40;
+            }
+
+            #overlay.hidden {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen text-slate-800">
 
+    <!-- Mobile Overlay -->
+    <div id="overlay" onclick="closeSidebar()" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-all duration-300 opacity-0"></div>
+
 <div class="flex h-screen overflow-hidden">
 
     <!-- Sidebar -->
-    <aside class="w-72 h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0">
+    <aside id="sidebar" class="fixed md:static z-50 w-full sm:w-80 md:w-auto h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0 transition-transform duration-300 ease-out">
         <div class="px-8 py-8">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20">
@@ -53,30 +82,30 @@
 
         <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto pb-6">
             <p class="text-green-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mb-2">Main Menu</p>
-            <a href="{% url 'dashboard' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-th-large w-5 text-center text-lg"></i><span>Dashboard</span>
+            <a href="{% url 'dashboard' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium truncate">
+                <i class="fas fa-th-large w-5 text-center text-lg flex-shrink-0"></i><span class="truncate">Dashboard</span>
             </a>
-            <a href="{% url 'add_vegetable' %}" class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-white">
-                <i class="fas fa-plus-circle w-5 text-center text-lg"></i><span>List New Product</span>
+            <a href="{% url 'add_vegetable' %}" class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-white truncate">
+                <i class="fas fa-plus-circle w-5 text-center text-lg flex-shrink-0"></i><span class="truncate">List New Product</span>
             </a>
-            <a href="{% url 'farmer_products' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-boxes w-5 text-center text-lg"></i><span>My Products</span>
+            <a href="{% url 'farmer_products' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium truncate">
+                <i class="fas fa-boxes w-5 text-center text-lg flex-shrink-0"></i><span class="truncate">My Products</span>
             </a>
-            <a href="{% url 'farmer_orders' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-shopping-cart w-5 text-center text-lg"></i><span>Orders</span>
+            <a href="{% url 'farmer_orders' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium truncate">
+                <i class="fas fa-shopping-cart w-5 text-center text-lg flex-shrink-0"></i><span class="truncate">Orders</span>
             </a>
-            <a href="{% url 'farmer_stock' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-warehouse w-5 text-center text-lg"></i><span>Stock Management</span>
+            <a href="{% url 'farmer_stock' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium truncate">
+                <i class="fas fa-warehouse w-5 text-center text-lg flex-shrink-0"></i><span class="truncate">Stock Management</span>
             </a>
-            <a href="{% url 'farmer_profile' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-user-cog w-5 text-center text-lg"></i><span>My Profile</span>
+            <a href="{% url 'farmer_profile' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium truncate">
+                <i class="fas fa-user-cog w-5 text-center text-lg flex-shrink-0"></i><span class="truncate">My Profile</span>
             </a>
             <p class="text-green-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Tools</p>
-            <a href="{% url 'weather' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-cloud-sun w-5 text-center text-lg"></i><span>Weather Updates</span>
+            <a href="{% url 'weather' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium truncate">
+                <i class="fas fa-cloud-sun w-5 text-center text-lg flex-shrink-0"></i><span class="truncate">Weather Updates</span>
             </a>
-            <a href="#chatbot" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-robot w-5 text-center text-lg"></i><span>Chatbot</span>
+            <a href="#chatbot" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium truncate">
+                <i class="fas fa-robot w-5 text-center text-lg flex-shrink-0"></i><span class="truncate">Chatbot</span>
             </a>
             
         </nav>
@@ -96,9 +125,14 @@
 
         <!-- Top Header -->
         <header class="bg-white/80 backdrop-blur-md border-b border-gray-100 px-8 py-5 flex items-center justify-between shadow-sm flex-shrink-0">
-            <div>
-                <h1 class="text-2xl font-bold text-slate-800">🌱 List New Product</h1>
-                <p class="text-slate-400 text-sm mt-0.5">Add a new product to the marketplace</p>
+            <div class="flex items-center gap-4">
+                <button onclick="openSidebar()" class="md:hidden w-10 h-10 flex items-center justify-center bg-green-50 text-green-600 rounded-xl hover:bg-green-100 transition-colors">
+                    <i class="fas fa-bars text-lg"></i>
+                </button>
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-800">🌱 List New Product</h1>
+                    <p class="text-slate-400 text-sm mt-0.5">Add a new product to the marketplace</p>
+                </div>
             </div>
             <a href="{% url 'farmer_products' %}" class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all">
                 <i class="fas fa-arrow-left"></i> Back to Products
@@ -242,6 +276,55 @@ const labels = { vegetable: 'Vegetable Name', fruit: 'Fruit Name', grain: 'Grain
 function updateNameLabel() {
     document.getElementById('name-label').textContent = labels[document.getElementById('category').value] || 'Product Name';
 }
+
+// Sidebar Toggle Functions
+function openSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    sidebar.classList.remove('-translate-x-full');
+    overlay.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    sidebar.classList.add('-translate-x-full');
+    overlay.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+// Initialize Sidebar on Load
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    
+    // Always hide sidebar on mobile (under 768px) on page load
+    if (window.innerWidth < 768) {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+    }
+
+    const sidebarLinks = document.querySelectorAll('#sidebar .nav-item, #sidebar form button');
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            // Close sidebar immediately on click
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+    });
+});
+
+// Handle window resize
+window.addEventListener('resize', function() {
+    const sidebar = document.getElementById('sidebar');
+    if (window.innerWidth >= 768) {
+        sidebar.classList.remove('-translate-x-full');
+    } else if (window.innerWidth < 768) {
+        sidebar.classList.add('-translate-x-full');
+    }
+});
 </script>
 </body>
 </html>

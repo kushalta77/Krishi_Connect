@@ -17,14 +17,42 @@
         .nav-item:hover::before, .nav-item.active::before { transform: scaleY(1); }
         .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: #fff; }
         ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        /* Responsive Sidebar Mobile */
+        @media (max-width: 768px) {
+            #sidebar {
+                position: fixed !important;
+                left: 0;
+                top: 0;
+                width: 100%;
+                max-width: 340px;
+                height: 100vh;
+                z-index: 50;
+            }
+
+            #sidebar.-translate-x-full {
+                transform: translateX(-100%);
+            }
+
+            #overlay {
+                position: fixed;
+                z-index: 40;
+            }
+
+            #overlay.hidden {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen text-slate-800">
+    <!-- Mobile Overlay -->
+    <div id="overlay" onclick="closeSidebar()" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-all duration-300 opacity-0"></div>
 
-<div class="flex h-screen overflow-hidden">
+    <div class="flex h-screen overflow-hidden">
 
-    <!-- Sidebar -->
-    <aside class="w-72 h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed md:static z-50 w-full sm:w-80 md:w-auto h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0 transition-transform duration-300 ease-out">
         <div class="px-8 py-8">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20">
@@ -64,6 +92,7 @@
             </a>
             <a href="{% url 'farmer_orders' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
                 <i class="fas fa-shopping-cart w-5 text-center text-lg"></i><span>Orders</span>
+                {% if new_orders_count > 0 %}<span class="ml-auto bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">{{ new_orders_count }}</span>{% endif %}
             </a>
             <a href="{% url 'farmer_stock' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
                 <i class="fas fa-warehouse w-5 text-center text-lg"></i><span>Stock Management</span>
@@ -94,13 +123,18 @@
     <div class="flex-1 flex flex-col overflow-hidden">
 
         <!-- Top Bar -->
-        <header class="bg-white border-b border-gray-100 px-8 py-5 flex items-center justify-between shadow-sm flex-shrink-0">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-800">My Listed Products</h1>
-                <p class="text-gray-400 text-base mt-0.5">All products you have listed on the marketplace</p>
+        <header class="bg-white/80 backdrop-blur border-b border-gray-100 px-8 py-5 flex items-center justify-between shadow-sm flex-shrink-0">
+            <div class="flex items-center gap-4">
+                <button onclick="openSidebar()" class="md:hidden w-10 h-10 flex items-center justify-center bg-green-50 text-green-600 rounded-xl hover:bg-green-100 transition-colors">
+                    <i class="fas fa-bars text-lg"></i>
+                </button>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">My Listed Products</h1>
+                    <p class="text-gray-400 text-base mt-0.5">All products you have listed on the marketplace</p>
+                </div>
             </div>
-            <a href="{% url 'add_vegetable' %}" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-xl text-base font-semibold transition-all shadow-sm shadow-green-200">
-                <i class="fas fa-plus"></i> Add New Product
+            <a href="{% url 'add_vegetable' %}" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-xl text-xs font-semibold transition-all shadow-sm shadow-green-200">
+                <i class="fas fa-plus"></i> <span class="hidden sm:inline">Add New Product</span>
             </a>
         </header>
 
@@ -264,6 +298,55 @@ function filterProducts() {
     });
     document.getElementById('noResults').classList.toggle('hidden', visible > 0);
 }
+
+// Sidebar Toggle Functions
+function openSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    sidebar.classList.remove('-translate-x-full');
+    overlay.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    sidebar.classList.add('-translate-x-full');
+    overlay.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+// Initialize Sidebar on Load
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    
+    // Always hide sidebar on mobile (under 768px) on page load
+    if (window.innerWidth < 768) {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+    }
+
+    const sidebarLinks = document.querySelectorAll('#sidebar .nav-item, #sidebar form button');
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            // Close sidebar immediately on click
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+    });
+});
+
+// Handle window resize
+window.addEventListener('resize', function() {
+    const sidebar = document.getElementById('sidebar');
+    if (window.innerWidth >= 768) {
+        sidebar.classList.remove('-translate-x-full');
+    } else if (window.innerWidth < 768) {
+        sidebar.classList.add('-translate-x-full');
+    }
+});
 </script>
 </body>
 </html>

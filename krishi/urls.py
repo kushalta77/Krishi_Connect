@@ -18,11 +18,29 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
+from krishi_app import views as krishi_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('krishi_app.urls')),
     path('', include('products.urls')),
+
+    # Password Reset URLs
+    path('password-reset/', krishi_views.custom_password_reset, name='password_reset'),
+
+    path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(
+        template_name='registration/password_reset_done.html'
+    ), name='password_reset_done'),
+
+    path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
+        template_name='registration/password_reset_confirm.html',
+        success_url='/password-reset-complete/'
+    ), name='password_reset_confirm'),
+
+    path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(
+        template_name='registration/password_reset_complete.html'
+    ), name='password_reset_complete'),
 ]
 
 if settings.DEBUG:

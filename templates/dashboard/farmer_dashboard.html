@@ -129,6 +129,32 @@
         .swiper-pagination-bullet-active {
             background: #16a34a !important;
         }
+
+        /* Responsive Sidebar Mobile */
+        @media (max-width: 768px) {
+            #sidebar {
+                position: fixed !important;
+                left: 0;
+                top: 0;
+                width: 100%;
+                max-width: 340px;
+                height: 100vh;
+                z-index: 50;
+            }
+
+            #sidebar.-translate-x-full {
+                transform: translateX(-100%);
+            }
+
+            #overlay {
+                position: fixed;
+                z-index: 40;
+            }
+
+            #overlay.hidden {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen text-slate-800 font-sans selection:bg-brand-200">
@@ -139,7 +165,7 @@
 <div class="flex h-screen overflow-hidden">
 
     <!-- Premium Sidebar (Similar to Customer Dashboard updates) -->
-    <aside id="sidebar" class="fixed md:static z-50 w-72 h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0 transition-transform duration-500 ease-out">
+    <aside id="sidebar" class="fixed md:static z-50 w-full sm:w-80 md:w-auto h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0 transition-transform duration-300 ease-out">
         <div class="px-8 py-8 relative">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center border border-white/20 shadow-lg">
@@ -172,31 +198,35 @@
         </div>
 
         <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto pb-6">
-            <p class="text-brand-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mb-2">Main Menu</p>
-            <a href="{% url 'dashboard' %}" class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-white">
-                <i class="fas fa-th-large w-5 text-center text-lg"></i><span>Dashboard</span>
+            <p class="text-brand-300 text-sm font-bold uppercase tracking-[0.2em] px-4 py-2 mb-2">Main Menu</p>
+            <a href="{% url 'dashboard' %}" class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-white truncate">
+                <i class="fas fa-th-large w-5 text-center text-lg flex-shrink-0"></i><span class="truncate">Dashboard</span>
             </a>
-            <a href="{% url 'add_vegetable' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-plus-circle w-5 text-center text-lg"></i><span>List New Product</span>
+            <a href="{% url 'add_vegetable' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium truncate">
+                <i class="fas fa-plus-circle w-5 text-center text-lg flex-shrink-0"></i><span class="truncate">List New Product</span>
             </a>
-            <a href="{% url 'farmer_products' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-boxes w-5 text-center text-lg"></i><span>My Products</span>
+            <a href="{% url 'farmer_products' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium truncate">
+                <i class="fas fa-boxes w-5 text-center text-lg flex-shrink-0"></i><span class="truncate">My Products</span>
             </a>
-            <a href="{% url 'farmer_orders' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-shopping-cart w-5 text-center text-lg"></i><span>Orders</span>
+            <a href="{% url 'farmer_orders' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium truncate">
+                <i class="fas fa-shopping-cart w-5 text-center text-lg flex-shrink-0"></i><span class="truncate">Orders</span>
+                <span id="orders-badge" class="ml-auto bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 {% if new_orders_count == 0 %}hidden{% endif %}">{{ new_orders_count }}</span>
             </a>
-            <a href="{% url 'farmer_stock' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-warehouse w-5 text-center text-lg"></i><span>Stock Management</span>
+            <a href="{% url 'farmer_stock' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium truncate">
+                <i class="fas fa-warehouse w-5 text-center text-lg flex-shrink-0"></i><span class="truncate">Stock Management</span>
             </a>
-            <a href="{% url 'farmer_profile' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-user-cog w-5 text-center text-lg"></i><span>My Profile</span>
+            <a href="{% url 'farmer_profile' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium truncate">
+                <i class="fas fa-user-cog w-5 text-center text-lg flex-shrink-0"></i><span class="truncate">My Profile</span>
             </a>
             <p class="text-brand-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Tools</p>
-            <a href="{% url 'weather' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-cloud-sun w-5 text-center text-lg"></i><span>Weather Updates</span>
+            <a href="{% url 'weather' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium truncate">
+                <i class="fas fa-cloud-sun w-5 text-center text-lg flex-shrink-0"></i><span class="truncate">Weather Updates</span>
             </a>
-            <a href="#chatbot" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                <i class="fas fa-robot w-5 text-center text-lg"></i><span>Chatbot</span>
+            <a href="{% url 'farmer_analytics' %}" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium truncate">
+                <i class="fas fa-chart-bar w-5 text-center text-lg flex-shrink-0"></i><span class="truncate">Analytics</span>
+            </a>
+            <a href="#chatbot" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium truncate">
+                <i class="fas fa-robot w-5 text-center text-lg flex-shrink-0"></i><span class="truncate">Chatbot</span>
             </a>
         </nav>
 
@@ -228,11 +258,11 @@
                 </div>
             </div>
             <div class="flex items-center gap-3">
-                <a href="{% url 'weather' %}" class="hidden sm:flex items-center gap-2 bg-sky-50 hover:bg-sky-100 text-sky-600 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all border border-sky-100">
-                    <i class="fas fa-cloud-sun"></i> Weather
+                <a href="{% url 'weather' %}" class="hidden sm:flex items-center gap-2 bg-sky-50 hover:bg-sky-100 text-sky-600 px-3 py-2 rounded-xl text-xs font-semibold transition-all border border-sky-100">
+                    <i class="fas fa-cloud-sun"></i>
                 </a>
-                <a href="{% url 'add_vegetable' %}" class="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg hover:-translate-y-0.5">
-                    <i class="fas fa-plus text-brand-400"></i> List Product
+                <a href="{% url 'add_vegetable' %}" class="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-3 py-2 rounded-xl text-xs font-semibold transition-all shadow-lg hover:-translate-y-0.5">
+                    <i class="fas fa-plus text-brand-400"></i> <span class="hidden sm:inline">List Product</span>
                 </a>
             </div>
         </header>
@@ -476,16 +506,63 @@
 <script>
     // Sidebar Mobile Toggle
     function openSidebar() {
-        document.getElementById('sidebar').classList.remove('-translate-x-full');
-        document.getElementById('overlay').classList.remove('hidden', 'opacity-0');
-        document.getElementById('overlay').classList.add('opacity-100');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+        overlay.classList.add('opacity-100');
     }
     
     function closeSidebar() {
-        document.getElementById('sidebar').classList.add('-translate-x-full');
-        document.getElementById('overlay').classList.remove('opacity-100');
-        setTimeout(() => { document.getElementById('overlay').classList.add('hidden'); }, 300);
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.remove('opacity-100');
+        setTimeout(() => {
+            overlay.classList.add('hidden');
+        }, 300);
     }
+
+    // Initialize: Hide sidebar on mobile on page load & close on link click
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        
+        // Always hide sidebar on mobile (under 768px) on page load
+        if (window.innerWidth < 768) {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        }
+
+        // Close sidebar when clicking any link
+        const navLinks = sidebar.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Close sidebar before navigation
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            });
+        });
+        
+        // Also close sidebar when clicking form buttons (logout)
+        const formButtons = sidebar.querySelectorAll('form button');
+        formButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                closeSidebar();
+            });
+        });
+    });
+
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        const sidebar = document.getElementById('sidebar');
+        if (window.innerWidth >= 768) {
+            sidebar.classList.remove('-translate-x-full');
+        } else if (window.innerWidth < 768) {
+            sidebar.classList.add('-translate-x-full');
+        }
+    });
 
     // Initialize Daraz Similar Swiper Carousel
     var swiper = new Swiper(".productSwiper", {
@@ -511,6 +588,87 @@
             1280: { slidesPerView: 4, spaceBetween: 24 },
         },
     });
+
+    // Real-time Order Notifications Badge
+    let lastOrderCount = {{ new_orders_count }};
+    
+    function updateOrdersBadge() {
+        fetch('{% url "get_new_orders_count" %}')
+            .then(response => response.json())
+            .then(data => {
+                const badge = document.getElementById('orders-badge');
+                const count = data.count;
+                
+                // Only update if count changed
+                if (count !== lastOrderCount) {
+                    lastOrderCount = count;
+                    
+                    if (count > 0) {
+                        badge.textContent = count;
+                        badge.classList.remove('hidden');
+                        
+                        // Play notification sound
+                        playNotificationSound();
+                        
+                        // Show browser notification
+                        showBrowserNotification(count);
+                    } else {
+                        badge.classList.add('hidden');
+                    }
+                }
+            })
+            .catch(error => console.log('Error checking orders:', error));
+    }
+    
+    // Play notification sound
+    function playNotificationSound() {
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            oscillator.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        } catch (e) {
+            // Silent fail
+        }
+    }
+    
+    // Show browser notification
+    function showBrowserNotification(count) {
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification('New Order!', {
+                body: `You have ${count} new order${count > 1 ? 's' : ''}`,
+                icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">📦</text></svg>',
+                tag: 'order-notification',
+            });
+        }
+    }
+    
+    // Request notification permission
+    if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+    }
+    
+    // Check for new orders every 5 seconds
+    setInterval(updateOrdersBadge, 5000);
+    
+    // Also check on page visibility change
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+            updateOrdersBadge();
+        }
+    });
+
 </script>
 </body>
 </html>

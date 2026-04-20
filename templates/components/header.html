@@ -55,6 +55,13 @@
                 </a>
             </nav>
 
+            <!-- Mobile Hamburger Menu Button -->
+            <button id="mobileMenuBtn" class="lg:hidden flex flex-col space-y-1.5 focus:outline-none absolute z-50" style="right: 60px;">
+                <span class="w-5 h-0.5 bg-white block transition-all duration-300"></span>
+                <span class="w-5 h-0.5 bg-white block transition-all duration-300"></span>
+                <span class="w-5 h-0.5 bg-white block transition-all duration-300"></span>
+            </button>
+
             <!-- Right Section -->
             <div class="flex items-center">
             </div>
@@ -96,6 +103,69 @@
     </div>
 </header>
 
+<!-- Mobile Menu -->
+<nav id="mobileMenu" class="hidden lg:hidden shadow-2xl">
+    <div class="bg-gradient-to-b from-green-700 to-green-800 px-4 py-6 space-y-1">
+        <a href="/" class="mobile-nav-link" data-en="Home" data-ne="घर">
+            <i class="fas fa-home w-5"></i> Home
+        </a>
+        {% if user.is_authenticated and user.userprofile.role == 'farmer' %}
+        <a href="/weather/" class="mobile-nav-link" data-en="Weather" data-ne="मौसम">
+            <i class="fas fa-cloud-sun w-5"></i> Weather
+        </a>
+        <a href="/market/" class="mobile-nav-link" data-en="Market" data-ne="बजार">
+            <i class="fas fa-chart-line w-5"></i> Market
+        </a>
+        <a href="{% url 'public_marketplace' %}" class="mobile-nav-link">
+            <i class="fas fa-store w-5"></i> Marketplace
+        </a>
+        <a href="/about/" class="mobile-nav-link">
+            <i class="fas fa-info-circle w-5"></i> About Us
+        </a>
+        <a href="/blog/" class="mobile-nav-link">
+            <i class="fas fa-blog w-5"></i> Blog
+        </a>
+        {% else %}
+        <a href="/about/" class="mobile-nav-link">
+            <i class="fas fa-info-circle w-5"></i> About Us
+        </a>
+        <a href="/solutions/" class="mobile-nav-link">
+            <i class="fas fa-lightbulb w-5"></i> Our Solutions
+        </a>
+        <a href="{% url 'public_marketplace' %}" class="mobile-nav-link">
+            <i class="fas fa-store w-5"></i> Marketplace
+        </a>
+        <a href="/blog/" class="mobile-nav-link">
+            <i class="fas fa-blog w-5"></i> Blog
+        </a>
+        <a href="/feedback/" class="mobile-nav-link">
+            <i class="fas fa-comment w-5"></i> Feedback
+        </a>
+        {% endif %}
+
+        <div class="border-t border-green-600/50 my-3 pt-3">
+        {% if user.is_authenticated %}
+        <a href="{% if user.userprofile.role == 'farmer' %}{% url 'dashboard' %}{% else %}{% url 'customer_dashboard' %}{% endif %}" class="mobile-nav-link">
+            <i class="fas fa-tachometer-alt w-5"></i> Dashboard
+        </a>
+        <form method="post" action="{% url 'logout' %}" class="mt-1">
+            {% csrf_token %}
+            <button type="submit" class="mobile-nav-link w-full text-left text-red-300 hover:text-red-200 hover:bg-red-500/20">
+                <i class="fas fa-sign-out-alt w-5"></i> Logout
+            </button>
+        </form>
+        {% else %}
+        <a href="{% url 'login' %}" class="mobile-nav-link">
+            <i class="fas fa-sign-in-alt w-5"></i> Login
+        </a>
+        <a href="{% url 'register' %}" class="mobile-nav-link bg-white/10 font-semibold">
+            <i class="fas fa-user-plus w-5"></i> Register
+        </a>
+        {% endif %}
+        </div>
+    </div>
+</nav>
+
 <style>
     .nav-link {
         @apply text-white/80 hover:text-white px-4 py-2 transition-all duration-300 relative flex items-center space-x-3;
@@ -128,9 +198,44 @@
         color: white;
         transform: translateY(-2px);
     }
+
+    .mobile-nav-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: rgba(255,255,255,0.85);
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+    .mobile-nav-link:hover {
+        background: rgba(255,255,255,0.12);
+        color: white;
+        transform: translateX(4px);
+    }
 </style>
 
 <script>
+    // Mobile Menu Toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', function () {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close menu when a link is clicked
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', function () {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+    }
+
     // Language Toggle Functionality
     let currentLang = 'en';
 

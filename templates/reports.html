@@ -212,7 +212,7 @@
                         <i class="fas fa-box text-purple-500 text-sm"></i>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="font-bold text-gray-800 text-sm truncate">{{ order.supplier_inventory.vegetable_name }}</p>
+                        <p class="font-bold text-gray-800 text-sm truncate">{{ order.vegetable.name }}</p>
                         <p class="text-gray-400 text-xs">by {{ order.customer.username }} · {{ order.ordered_at|date:"M d, Y" }}</p>
                     </div>
                     <span class="font-bold text-green-600 text-sm">₹{{ order.total_price|floatformat:0 }}</span>

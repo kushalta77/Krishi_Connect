@@ -3,6 +3,12 @@
 
 {% block title %}Marketplace | Krishi Connect{% endblock %}
 
+{% block extrahead %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
 <style>
     :root {
@@ -119,7 +125,7 @@
                 Fresh <span
                     class="bg-gradient-to-r from-emerald-500 to-teal-500 text-transparent bg-clip-text">Marketplace</span>
             </h1>
-            <p class="text-slate-500 text-lg md:text-xl font-medium relative z-10">Discover 100% organic produce
+            <p class="text-slate-500 text-lg md:text-xl font-medium relative z-10">Discover 100% organic products
                 directly from local farmers.</p>
         </div>
 
@@ -133,12 +139,10 @@
                     </h3>
                     <select onchange="filterCat(this.value)" id="category-dropdown"
                         class="w-full border border-slate-200 hover:border-emerald-400 rounded-2xl px-4 py-3 text-sm font-bold text-slate-600 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 cursor-pointer transition-all">
-                        <option value="all">🌿 All Produce</option>
-                        <option value="vegetable">🥕 Vegetables</option>
-                        <option value="fruit">🍎 Fruits</option>
-                        <option value="grain">🌾 Grains</option>
-                        <option value="spice">🌶️ Spices</option>
-                        <option value="other">📦 Other</option>
+                        <option value="all" {% if not selected_category or selected_category == 'all' %}selected{% endif %}>🌿 All Products</option>
+                        {% for cat_value, cat_name in categories %}
+                        <option value="{{ cat_value }}" {% if selected_category == cat_value %}selected{% endif %}>{{ cat_name }}</option>
+                        {% endfor %}
                     </select>
 
                     <div class="mt-6 p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
@@ -171,7 +175,7 @@
                 </div>
 
                 <!-- Product Grid -->
-                <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
                     {% for veg in vegetables %}
                     <!-- Product Card -->
                     <div class="product-card group relative" data-category="{{ veg.category }}"
@@ -179,7 +183,7 @@
                         data-farmer="{{ veg.farmer.first_name|lower }} {{ veg.farmer.last_name|lower }}">
 
                         <!-- Image Container -->
-                        <div class="relative h-40 w-4/5 mx-auto overflow-hidden cursor-pointer rounded-xl"
+                        <div class="relative h-32 w-4/5 mx-auto overflow-hidden cursor-pointer rounded-xl"
                             onclick="window.location='{% url 'product_detail' veg.pk %}'">
                             {% if veg.image %}
                             <img src="{{ veg.image.url }}" alt="{{ veg.name }}"
@@ -217,8 +221,7 @@
                                     title="{{ veg.name }}"
                                     onclick="window.location='{% url 'product_detail' veg.pk %}'">{{ veg.name }}</h3>
                                 <p class="text-slate-500 text-xs font-medium flex items-center gap-1">
-                                    <i class="fas fa-house-chimney text-emerald-500/60"></i> Farmer: {{
-                                    veg.farmer.first_name }} {{ veg.farmer.last_name }}
+                                    <i class="fas fa-house-chimney text-emerald-500/60"></i> Farmer: {{ veg.farmer.first_name }} {{ veg.farmer.last_name }}
                                 </p>
                             </div>
 
@@ -228,16 +231,13 @@
                                     <div>
                                         {% if veg.discount_price %}
                                         <div class="flex items-baseline gap-2">
-                                            <span class="text-2xl text-emerald-600 leading-none">₹{{ veg.discount_price
-                                                }}</span>
-                                            <span class="text-xs text-slate-400 line-through">₹{{ veg.price_per_unit
-                                                }}</span>
+                                            <span class="text-2xl text-emerald-600 leading-none">₹{{ veg.discount_price }}</span>
+                                            <span class="text-xs text-slate-400 line-through">₹{{ veg.price_per_unit }}</span>
                                         </div>
                                         <span class="text-xs text-slate-500 font-medium">per {{ veg.unit }}</span>
                                         {% else %}
                                         <div class="flex items-baseline gap-1">
-                                            <span class="text-2xl text-emerald-600 leading-none">₹{{ veg.price_per_unit
-                                                }}</span>
+                                            <span class="text-2xl text-emerald-600 leading-none">₹{{ veg.price_per_unit }}</span>
                                             <span class="text-xs text-slate-500 font-medium">/ {{ veg.unit }}</span>
                                         </div>
                                         {% endif %}
@@ -272,7 +272,7 @@
 
                                 <!-- Action Buttons -->
                                 {% if user.is_authenticated and user.userprofile.role == 'customer' %}
-                                <div class="grid grid-cols-2 gap-2 mt-auto">
+                                <div class="mt-auto">
                                     <!-- Buy Now Route -->
                                     <form method="post" action="{% url 'buy_now_action' veg.pk %}" class="w-full">
                                         {% csrf_token %}
@@ -280,17 +280,6 @@
                                         <button type="submit"
                                             class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl transition-all shadow-md text-sm flex items-center justify-center focus:ring-2 focus:ring-slate-400 focus:outline-none">
                                             Buy Now
-                                        </button>
-                                    </form>
-
-                                    <!-- Add to Cart Route -->
-                                    <form method="post" action="{% url 'add_to_cart' veg.pk %}"
-                                        class="w-full cart-form">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="quantity" value="1">
-                                        <button type="submit"
-                                            class="w-full bg-emerald-50 hover:bg-emerald-500 hover:text-white border border-emerald-200 hover:border-emerald-500 text-emerald-700 font-bold py-2.5 rounded-xl transition-all shadow-sm text-sm flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
-                                            <i class="fas fa-cart-shopping"></i> Add Cart
                                         </button>
                                     </form>
                                 </div>
@@ -307,7 +296,7 @@
                         </div>
                         <h3 class="font-heading font-black text-2xl text-slate-800 mb-2">Marketplace is Empty</h3>
                         <p class="text-slate-500 text-center max-w-sm">Farmers haven't listed any products yet. Check
-                            back soon for fresh organic produce!</p>
+                            back soon for fresh organic products!</p>
                     </div>
                     {% endfor %}
                 </div>
@@ -328,15 +317,27 @@
                     </button>
                 </div>
 
-            </div>
-        </div>
-    </div>
+</div>
+</div>
 </div>
 
 <script>
+    // Get initial category from data attribute or default to 'all'
+    let activeCat = 'all';
+
     function filterCat(cat) {
         activeCat = cat;
         document.getElementById('category-dropdown').value = cat;
+
+        // Update URL with category parameter
+        const url = new URL(window.location);
+        if (cat === 'all') {
+            url.searchParams.delete('category');
+        } else {
+            url.searchParams.set('category', cat);
+        }
+        window.history.pushState({}, '', url);
+
         applyFilters();
     }
 
@@ -364,7 +365,6 @@
 
         // Toggle no results specific to filters
         const noResultsDiv = document.getElementById('no-results');
-        const initialEmptyDiv = document.getElementById('empty-initial');
 
         if (visible === 0) {
             // if user is actively searching/filtering, show 'no-search-results' message
@@ -378,31 +378,40 @@
 
     // Auto-apply on page load
     document.addEventListener('DOMContentLoaded', function () {
+        // Set initial category from URL or default
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryParam = urlParams.get('category');
+        
+        // Try to get category from dropdown value or from URL
+        const categoryDropdown = document.getElementById('category-dropdown');
+        if (categoryParam) {
+            activeCat = categoryParam;
+            if (categoryDropdown) {
+                categoryDropdown.value = categoryParam;
+            }
+        } else if (categoryDropdown && categoryDropdown.value) {
+            activeCat = categoryDropdown.value;
+        }
+
         if (document.getElementById('search-input').value.trim()) {
             applyFilters();
         }
-
-        // Cart modal
-        document.querySelectorAll('form.cart-form').forEach(function (form) {
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-                fetch(form.action, {
-                    method: 'POST',
-                    body: new FormData(form),
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                }).finally(showCartModal);
-            });
-        });
     });
 
     let cartTimer;
     function showCartModal() {
-        document.getElementById('cart-modal').classList.remove('hidden');
-        clearTimeout(cartTimer);
-        cartTimer = setTimeout(hideCartModal, 3000);
+        const modal = document.getElementById('cart-modal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            clearTimeout(cartTimer);
+            cartTimer = setTimeout(hideCartModal, 1000);
+        }
     }
     function hideCartModal() {
-        document.getElementById('cart-modal').classList.add('hidden');
+        const modal = document.getElementById('cart-modal');
+        if (modal) {
+            modal.classList.add('hidden');
+        }
     }
 </script>
 

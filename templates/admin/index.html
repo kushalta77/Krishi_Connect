@@ -1,0 +1,285 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}Dashboard | 🌾 Krishi Admin{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <!-- Content Header -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">
+                        <i class="fas fa-tachometer-alt text-success"></i>
+                        Dashboard
+                    </h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">Home</a></li>
+                        <li class="breadcrumb-item active">Dashboard</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Welcome Message -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <h5 class="alert-heading">
+                            <i class="fas fa-leaf"></i>
+                            Welcome to Krishi Admin Panel!
+                        </h5>
+                        <p class="mb-0">Manage your agriculture marketplace efficiently. Monitor users, orders, and platform performance from this centralized dashboard.</p>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-lg-3 col-6">
+                    <div class="stats-card">
+                        <div class="stat-icon success">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-value">{{ user_count|default:"0" }}</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="stats-card">
+                        <div class="stat-icon primary">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <div class="stat-value">{{ farmer_count|default:"0" }}</div>
+                        <div class="stat-label">Farmers</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="stats-card">
+                        <div class="stat-icon warning">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-value">{{ order_count|default:"0" }}</div>
+                        <div class="stat-label">Total Orders</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="stats-card">
+                        <div class="stat-icon success">
+                            <i class="fas fa-carrot"></i>
+                        </div>
+                        <div class="stat-value">{{ vegetable_count|default:"0" }}</div>
+                        <div class="stat-label">Vegetables</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="row">
+                <!-- Recent Orders -->
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-shopping-cart text-success"></i>
+                                Recent Orders
+                            </h3>
+                            <div class="card-tools">
+                                <a href="{% url 'admin:krishi_app_customerorder_changelist' %}" class="btn btn-success btn-sm">
+                                    <i class="fas fa-eye"></i> View All
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-striped mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>Customer</th>
+                                            <th>Vegetable</th>
+                                            <th>Status</th>
+                                            <th>Amount</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for order in recent_orders %}
+                                        <tr>
+                                            <td>#{{ order.id }}</td>
+                                            <td>{{ order.customer.get_full_name|default:order.customer.username }}</td>
+                                            <td>{{ order.vegetable.name }}</td>
+                                            <td>
+                                                <span class="badge badge-{% if order.status == 'confirmed' %}success{% elif order.status == 'pending' %}warning{% elif order.status == 'delivered' %}info{% else %}secondary{% endif %}">
+                                                    {{ order.status|title }}
+                                                </span>
+                                            </td>
+                                            <td>₹{{ order.total_price }}</td>
+                                            <td>{{ order.ordered_at|date:"M d, Y" }}</td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted py-4">
+                                                <i class="fas fa-shopping-cart fa-2x mb-2"></i>
+                                                <br>No orders yet
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions & System Info -->
+                <div class="col-lg-4">
+                    <!-- Quick Actions -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-bolt text-warning"></i>
+                                Quick Actions
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'admin:auth_user_add' %}" class="btn btn-primary">
+                                    <i class="fas fa-user-plus"></i> Add User
+                                </a>
+                                <a href="{% url 'admin:krishi_app_vegetable_add' %}" class="btn btn-success">
+                                    <i class="fas fa-plus-circle"></i> Add Vegetable
+                                </a>
+                                <a href="{% url 'admin:krishi_app_customerorder_changelist' %}" class="btn btn-info">
+                                    <i class="fas fa-list"></i> Manage Orders
+                                </a>
+                                <a href="{% url 'admin:krishi_app_userprofile_changelist' %}" class="btn btn-secondary">
+                                    <i class="fas fa-users-cog"></i> User Profiles
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- System Status -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-server text-info"></i>
+                                System Status
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-sm">Database</span>
+                                    <span class="badge badge-success">Connected</span>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar bg-success" style="width: 100%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-sm">Media Storage</span>
+                                    <span class="badge badge-success">Active</span>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar bg-success" style="width: 100%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-0">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-sm">Cache</span>
+                                    <span class="badge badge-success">Working</span>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar bg-success" style="width: 100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Platform Overview -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-chart-line text-primary"></i>
+                                Platform Overview
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-md-3">
+                                    <div class="border-right">
+                                        <h4 class="text-success mb-0">
+                                            <i class="fas fa-rupee-sign"></i>
+                                            {{ total_revenue|default:"0" }}
+                                        </h4>
+                                        <p class="text-muted mb-0">Total Revenue</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="border-right">
+                                        <h4 class="text-primary mb-0">
+                                            <i class="fas fa-shopping-bag"></i>
+                                            {{ pending_orders|default:"0" }}
+                                        </h4>
+                                        <p class="text-muted mb-0">Pending Orders</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="border-right">
+                                        <h4 class="text-info mb-0">
+                                            <i class="fas fa-check-circle"></i>
+                                            {{ confirmed_orders|default:"0" }}
+                                        </h4>
+                                        <p class="text-muted mb-0">Confirmed Orders</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <h4 class="text-warning mb-0">
+                                        <i class="fas fa-clock"></i>
+                                        {{ avg_order_time|default:"--" }}
+                                    </h4>
+                                    <p class="text-muted mb-0">Avg. Processing Time</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+// Auto-refresh dashboard data every 5 minutes
+setInterval(function() {
+    // You can add AJAX calls here to refresh dashboard data
+    console.log('Dashboard refresh check...');
+}, 300000);
+
+// Add loading animation to buttons
+document.querySelectorAll('.btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        if (this.href && !this.href.includes('#')) {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+        }
+    });
+});
+</script>
+{% endblock %}

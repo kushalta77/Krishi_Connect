@@ -7,7 +7,7 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.utils.safestring import mark_safe
 from decimal import Decimal
 import re
@@ -18,7 +18,7 @@ import hashlib
 import base64
 import json
 from django.conf import settings
-from .models import UserProfile, Vegetable, SupplierPurchase, SupplierInventory, CustomerOrder, Cart, CartItem, Feedback
+from .models import UserProfile, Vegetable, CustomerOrder, Cart, CartItem, Feedback
 from django.db.models import Sum, Avg
 from django.db import models
 
@@ -35,6 +35,16 @@ def login_view(request):
             user_obj = User.objects.get(email=email)
             user = authenticate(request, username=user_obj.username, password=password)
             if user:
+                # Check if user is a farmer and if they are approved
+                try:
+                    user_profile = user.userprofile
+                    if user_profile.role == 'farmer' and not user_profile.is_approved:
+                        messages.error(request, 'Your farmer account is pending admin approval. Please wait for approval to login.')
+                        return render(request, 'registration/login.html')
+                except UserProfile.DoesNotExist:
+                    messages.error(request, 'User profile not found. Please contact support.')
+                    return render(request, 'registration/login.html')
+                
                 login(request, user)
                 messages.success(request, 'Login successful!')
                 return redirect('dashboard')
@@ -55,6 +65,7 @@ def register_view(request):
         last_name = request.POST.get('last_name', '').strip()
         role = request.POST.get('role', 'farmer')
         profile_image = request.FILES.get('profile_image')
+        official_document = request.FILES.get('official_document')
         
         errors = []
         
@@ -110,8 +121,11 @@ def register_view(request):
         elif not re.match(r'^[a-zA-Z\s]+$', last_name):
             errors.append('Last name can only contain letters and spaces.')
         
-        if role not in ['farmer', 'expert', 'supplier', 'customer']:
+        if role not in ['farmer', 'expert', 'customer']:
             errors.append('Invalid role selected.')
+
+        if role == 'farmer' and not official_document:
+            errors.append('Official document is required for farmer registration.')
         
         if profile_image:
             if profile_image.size > 5 * 1024 * 1024:
@@ -120,6 +134,14 @@ def register_view(request):
             allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
             if profile_image.content_type not in allowed_types:
                 errors.append('Profile image must be a JPEG, PNG, or GIF file.')
+
+        if official_document:
+            if official_document.size > 5 * 1024 * 1024:
+                errors.append('Official document size must be less than 5MB.')
+
+            allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
+            if official_document.content_type not in allowed_types:
+                errors.append('Official document must be a JPEG, PNG, or GIF file.')
         
         if errors:
             for error in errors:
@@ -133,34 +155,29 @@ def register_view(request):
             }
             return render(request, 'registration/register.html', context)
         
-        try:
-            user = User.objects.create_user(
-                username=username,
-                email=email,
-                password=password1,
-                first_name=first_name,
-                last_name=last_name
-            )
-            
-            UserProfile.objects.create(
-                user=user,
-                role=role,
-                profile_image=profile_image
-            )
-            
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password1,
+            first_name=first_name,
+            last_name=last_name
+        )
+
+        is_approved = True if role != 'farmer' else False
+
+        UserProfile.objects.create(
+            user=user,
+            role=role,
+            profile_image=profile_image,
+            official_document=official_document,
+            is_approved=is_approved
+        )
+
+        if role == 'farmer':
+            messages.success(request, 'Registration successful! Your account is pending admin approval. You will receive an email once approved.')
+        else:
             messages.success(request, 'Registration successful! Please login to continue.')
-            return redirect('login')
-            
-        except Exception as e:
-            messages.error(request, f'An error occurred during registration. Please try again.')
-            context = {
-                'username': username,
-                'email': email,
-                'first_name': first_name,
-                'last_name': last_name,
-                'role': role,
-            }
-            return render(request, 'registration/register.html', context)
+        return redirect('login')
     
     return render(request, 'registration/register.html')
 
@@ -170,6 +187,20 @@ def logout_view(request):
         messages.success(request, 'Logged out successfully')
         return redirect('home')
     return redirect('home')
+
+@login_required
+def get_new_orders_count(request):
+    """API endpoint to get count of new (unviewed) orders for farmer - for real-time badge updates"""
+    if request.user.userprofile.role != 'farmer':
+        return JsonResponse({'count': 0, 'error': 'Only farmers can access this'})
+    
+    # Count unviewed orders that are pending or confirmed
+    count = CustomerOrder.objects.filter(
+        vegetable__farmer=request.user, 
+        status__in=['pending', 'confirmed'],
+        viewed_by_farmer=False
+    ).count()
+    return JsonResponse({'count': count})
 
 @login_required
 def dashboard(request):
@@ -182,18 +213,14 @@ def dashboard(request):
         available_vegetables = vegetables.filter(available=True).count()
         sold_out = vegetables.filter(available=False).count()
         
-        sp_earnings = SupplierPurchase.objects.filter(vegetable__farmer=request.user).aggregate(total=Sum('total_price'))['total'] or 0
-        co_earnings = CustomerOrder.objects.filter(supplier_inventory__supplier=request.user).aggregate(total=Sum('total_price'))['total'] or 0
-        total_earnings = sp_earnings + co_earnings
+        # Calculate earnings from direct customer orders
+        total_earnings = CustomerOrder.objects.filter(vegetable__farmer=request.user).aggregate(total=Sum('total_price'))['total'] or 0
         
-        sp_orders = SupplierPurchase.objects.filter(vegetable__farmer=request.user).count()
-        co_orders = CustomerOrder.objects.filter(supplier_inventory__supplier=request.user).count()
-        total_orders = sp_orders + co_orders
+        # Calculate total orders
+        total_orders = CustomerOrder.objects.filter(vegetable__farmer=request.user).count()
         
-        # Merge recent
-        recent_sp = list(SupplierPurchase.objects.filter(vegetable__farmer=request.user).order_by('-purchased_at')[:5])
-        recent_co = list(CustomerOrder.objects.filter(supplier_inventory__supplier=request.user).order_by('-ordered_at')[:5])
-        recent_purchases = sorted(recent_sp + recent_co, key=lambda x: getattr(x, 'purchased_at', getattr(x, 'ordered_at', None)), reverse=True)[:5]
+        # Get recent orders
+        recent_orders = CustomerOrder.objects.filter(vegetable__farmer=request.user).order_by('-ordered_at')[:5]
         
         context = {
             'user_role': user_profile.role,
@@ -204,19 +231,12 @@ def dashboard(request):
             'sold_out': sold_out,
             'total_earnings': total_earnings,
             'total_orders': total_orders,
-            'recent_purchases': recent_purchases,
+            'recent_orders': recent_orders,
+            'new_orders_count': CustomerOrder.objects.filter(vegetable__farmer=request.user, status__in=['pending', 'confirmed'], viewed_by_farmer=False).count(),
         }
         return render(request, 'dashboard/farmer_dashboard.html', context)
     elif user_profile.role == 'expert':
         return render(request, 'dashboard/expert_dashboard.html', {'user_role': user_profile.role})
-    elif user_profile.role == 'supplier':
-        purchases = SupplierPurchase.objects.filter(supplier=request.user)
-        inventory = SupplierInventory.objects.filter(supplier=request.user)
-        return render(request, 'dashboard/supplier_dashboard.html', {
-            'user_role': user_profile.role,
-            'purchases': purchases,
-            'inventory': inventory,
-        })
     return redirect('home')
 
 @login_required
@@ -376,7 +396,7 @@ def farmer_profile(request):
                 update_session_auth_hash(request, request.user)
                 messages.success(request, 'Password changed successfully.')
         return redirect('farmer_profile')
-    return render(request, 'dashboard/farmer_profile.html', {'profile': profile})
+    return render(request, 'dashboard/farmer_profile.html', {'profile': profile, 'new_orders_count': CustomerOrder.objects.filter(vegetable__farmer=request.user, status__in=['pending', 'confirmed'], viewed_by_farmer=False).count()})
 
 
 # Farmer Views
@@ -384,13 +404,14 @@ def farmer_profile(request):
 def farmer_stock(request):
     if request.user.userprofile.role != 'farmer':
         return redirect('dashboard')
-    vegetables = Vegetable.objects.filter(farmer=request.user, available=True).order_by('-created_at')
+    vegetables = Vegetable.objects.filter(farmer=request.user).order_by('-created_at')
     total_quantity = vegetables.aggregate(total=Sum('quantity'))['total'] or 0
     avg_price = vegetables.aggregate(avg=models.Avg('price_per_unit'))['avg'] or 0
     return render(request, 'dashboard/farmer_stock.html', {
         'vegetables': vegetables,
         'total_quantity': total_quantity,
         'avg_price': avg_price,
+        'new_orders_count': CustomerOrder.objects.filter(vegetable__farmer=request.user, status__in=['pending', 'confirmed'], viewed_by_farmer=False).count(),
     })
 
 @login_required
@@ -401,7 +422,7 @@ def farmer_products(request):
     paginator = Paginator(vegetables, 30)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'dashboard/farmer_products.html', {'vegetables': page_obj, 'paginator': paginator})
+    return render(request, 'dashboard/farmer_products.html', {'vegetables': page_obj, 'paginator': paginator, 'new_orders_count': CustomerOrder.objects.filter(vegetable__farmer=request.user, status__in=['pending', 'confirmed'], viewed_by_farmer=False).count()})
 
 @login_required
 def add_vegetable(request):
@@ -526,11 +547,30 @@ def delete_vegetable(request, pk):
 
 def public_marketplace(request):
     q = request.GET.get('q', '')
-    vegetables = Vegetable.objects.filter(available=True)
-    return render(request, 'marketplace.html', {'vegetables': vegetables, 'search_query': q})
+    category = request.GET.get('category', 'all')
+    
+    vegetables = Vegetable.objects.filter(available=True).select_related('farmer')
+    
+    # Auto-mark as sold out if quantity is 0
+    for v in vegetables:
+        if v.quantity <= 0:
+            v.available = False
+            v.save()
+    
+    vegetables = Vegetable.objects.filter(available=True).select_related('farmer')
+    
+    if category and category != 'all':
+        vegetables = vegetables.filter(category=category)
+    
+    return render(request, 'marketplace.html', {
+        'vegetables': vegetables,
+        'search_query': q,
+        'categories': Vegetable.CATEGORY_CHOICES,
+        'selected_category': category
+    })
 
 def product_detail(request, pk):
-    vegetable = get_object_or_404(Vegetable, pk=pk, available=True)
+    vegetable = get_object_or_404(Vegetable, pk=pk)
     # Check if user is authenticated and is a customer
     is_customer = request.user.is_authenticated and hasattr(request.user, 'userprofile') and request.user.userprofile.role == 'customer'
     
@@ -565,22 +605,10 @@ def place_order(request, pk):
             messages.error(request, f'Only {vegetable.quantity} {vegetable.unit} available')
             return redirect('product_detail', pk=pk)
 
-        # Create a temporary SupplierInventory entry to reuse CustomerOrder model
-        inv, _ = SupplierInventory.objects.get_or_create(
-            supplier=vegetable.farmer,
-            vegetable_name=vegetable.name,
-            defaults={
-                'quantity': vegetable.quantity,
-                'unit': vegetable.unit,
-                'price_per_unit': vegetable.price_per_unit,
-                'image': vegetable.image,
-            }
-        )
-
         total_price = quantity * float(vegetable.price_per_unit)
         CustomerOrder.objects.create(
             customer=request.user,
-            supplier_inventory=inv,
+            vegetable=vegetable,
             quantity=quantity,
             total_price=total_price
         )
@@ -682,6 +710,27 @@ def increase_cart_quantity(request, pk):
     return redirect('cart')
 
 @login_required
+def update_cart_quantity(request, pk):
+    item = get_object_or_404(CartItem, pk=pk, cart__customer=request.user)
+    if request.method == 'POST':
+        try:
+            quantity = Decimal(request.POST.get('quantity', '1').strip())
+        except Exception:
+            messages.error(request, 'Invalid quantity')
+            return redirect('cart')
+        min_qty = item.vegetable.min_order_qty
+        max_qty = item.vegetable.quantity
+        if quantity < min_qty:
+            messages.error(request, f'Minimum order quantity is {min_qty} {item.vegetable.unit}')
+        elif quantity > max_qty:
+            messages.error(request, f'Only {max_qty} {item.vegetable.unit} available')
+        else:
+            item.quantity = quantity
+            item.save()
+            messages.success(request, f'Quantity updated to {quantity} {item.vegetable.unit}')
+    return redirect('cart')
+
+@login_required
 def decrease_cart_quantity(request, pk):
     item = get_object_or_404(CartItem, pk=pk, cart__customer=request.user)
     min_qty = item.vegetable.min_order_qty
@@ -709,15 +758,14 @@ def buy_now_action(request, pk):
 
     if request.method == 'POST':
         try:
-            quantity = Decimal(request.POST.get('quantity', '1').strip())
+            quantity = Decimal(request.POST.get('quantity', str(vegetable.min_order_qty)).strip())
         except (ValueError, TypeError):
             messages.error(request, 'Please enter a valid quantity')
             return redirect('customer_marketplace')
         
-        # Edge case: Validate quantity
-        if quantity <= 0:
-            messages.error(request, 'Quantity must be greater than 0')
-            return redirect('customer_marketplace')
+        # Ensure quantity is at least min_order_qty
+        if quantity < vegetable.min_order_qty:
+            quantity = vegetable.min_order_qty
         
         # Edge case: Check stock availability
         if quantity > vegetable.quantity:
@@ -736,6 +784,9 @@ def buy_now_action(request, pk):
             item.quantity += quantity
         except CartItem.DoesNotExist:
             item = CartItem(cart=cart, vegetable=vegetable, quantity=quantity)
+        # Ensure quantity is at least min_order_qty
+        if item.quantity < vegetable.min_order_qty:
+            item.quantity = vegetable.min_order_qty
         
         item.save()
         messages.success(request, f'{quantity} {vegetable.unit} of {vegetable.name} added!')
@@ -793,16 +844,6 @@ def buy_selected_items(request):
         # Create orders for selected items
         try:
             for item in selected_items:
-                inv, _ = SupplierInventory.objects.get_or_create(
-                    supplier=item.vegetable.farmer,
-                    vegetable_name=item.vegetable.name,
-                    defaults={
-                        'quantity': item.vegetable.quantity,
-                        'unit': item.vegetable.unit,
-                        'price_per_unit': item.vegetable.price_per_unit,
-                        'image': item.vegetable.image,
-                    }
-                )
                 # Get selected address for this order
                 selected_address = request.POST.get('selected_address', 'address')
                 
@@ -826,7 +867,7 @@ def buy_selected_items(request):
                 
                 CustomerOrder.objects.create(
                     customer=request.user,
-                    supplier_inventory=inv,
+                    vegetable=item.vegetable,
                     quantity=item.quantity,
                     total_price=item.quantity * item.vegetable.price_per_unit,
                     status=order_status,
@@ -869,16 +910,6 @@ def checkout_cart(request):
     order_status = 'confirmed' if is_paid else 'pending'
     
     for item in items:
-        inv, _ = SupplierInventory.objects.get_or_create(
-            supplier=item.vegetable.farmer,
-            vegetable_name=item.vegetable.name,
-            defaults={
-                'quantity': item.vegetable.quantity,
-                'unit': item.vegetable.unit,
-                'price_per_unit': item.vegetable.price_per_unit,
-                'image': item.vegetable.image,
-            }
-        )
         # Get selected address for this order
         selected_address = request.POST.get('selected_address', 'address')
         
@@ -900,11 +931,9 @@ def checkout_cart(request):
         
         shipping_address_full = f"{shipping_addr}\nPhone: {shipping_phone}"
         
-        CustomerOrder.objects.get_or_create(customer=request.user) # ensure cart exists (cleanup)
-        
         CustomerOrder.objects.create(
             customer=request.user,
-            supplier_inventory=inv,
+            vegetable=item.vegetable,
             quantity=item.quantity,
             total_price=item.quantity * item.vegetable.price_per_unit,
             status=order_status,
@@ -918,54 +947,6 @@ def checkout_cart(request):
     messages.success(request, 'All orders placed successfully!')
     return redirect('dashboard')
 
-# Supplier Views
-@login_required
-def supplier_marketplace(request):
-    if request.user.userprofile.role != 'supplier':
-        messages.error(request, 'Only suppliers can access this page')
-        return redirect('dashboard')
-    
-    vegetables = Vegetable.objects.filter(available=True)
-    return render(request, 'dashboard/supplier_marketplace.html', {'vegetables': vegetables})
-
-@login_required
-def purchase_from_farmer(request, pk):
-    if request.user.userprofile.role != 'supplier':
-        messages.error(request, 'Only suppliers can purchase')
-        return redirect('dashboard')
-    
-    vegetable = get_object_or_404(Vegetable, pk=pk)
-    
-    if request.method == 'POST':
-        quantity = float(request.POST['quantity'])
-        total_price = quantity * float(vegetable.price_per_unit)
-        
-        SupplierPurchase.objects.create(
-            supplier=request.user,
-            vegetable=vegetable,
-            quantity=quantity,
-            total_price=total_price
-        )
-        
-        SupplierInventory.objects.create(
-            supplier=request.user,
-            vegetable_name=vegetable.name,
-            quantity=quantity,
-            unit=vegetable.unit,
-            price_per_unit=float(vegetable.price_per_unit) * 1.2,
-            image=vegetable.image
-        )
-        
-        vegetable.quantity -= quantity
-        if vegetable.quantity <= 0:
-            vegetable.available = False
-        vegetable.save()
-        
-        messages.success(request, 'Purchase successful')
-        return redirect('supplier_marketplace')
-    
-    return render(request, 'dashboard/purchase_vegetable.html', {'vegetable': vegetable})
-
 # Customer Views
 @login_required
 def customer_marketplace(request):
@@ -976,7 +957,13 @@ def customer_marketplace(request):
     q = request.GET.get('q', '')
     
     # Get all available products from Vegetable (direct from Farmers)
-    vegetables = list(Vegetable.objects.filter(available=True))
+    vegetables = list(Vegetable.objects.all())
+    
+    # Auto-mark as sold out if quantity is 0
+    for v in vegetables:
+        if v.quantity <= 0 and v.available:
+            v.available = False
+            v.save()
     
     # Filter by search query
     if q:
@@ -989,6 +976,9 @@ def customer_marketplace(request):
         v.supplier_first_name = v.farmer.first_name
         v.supplier_last_name = v.farmer.last_name
         v.supplier_id = v.farmer.id
+        # Ensure available is False if quantity is 0
+        if v.quantity <= 0:
+            v.available = False
     
     combined_products = vegetables
     
@@ -1010,7 +1000,7 @@ def customer_orders(request):
         return redirect('dashboard')
     
     # Get all orders for the customer
-    orders = CustomerOrder.objects.filter(customer=request.user).select_related('supplier_inventory').order_by('-ordered_at')
+    orders = CustomerOrder.objects.filter(customer=request.user).select_related('vegetable').order_by('-ordered_at')
     
     from django.utils import timezone
     from datetime import timedelta
@@ -1057,10 +1047,10 @@ def customer_orders(request):
             'date': o.ordered_at.strftime('%b %d, %Y') if o.ordered_at else 'N/A',
             'total': str(o.total_price),
             'status': o.status,
-            'productName': o.supplier_inventory.vegetable_name,
+            'productName': o.vegetable.name,
             'quantity': str(o.quantity),
-            'unitPrice': str(o.supplier_inventory.price_per_unit),
-            'unit': o.supplier_inventory.unit,
+            'unitPrice': str(o.vegetable.price_per_unit),
+            'unit': o.vegetable.unit,
             'buyerName': f"{request.user.first_name} {request.user.last_name}",
             'buyerPhone': request.user.userprofile.phone_number or 'N/A',
             'buyerAddress': o.shipping_address or request.user.userprofile.address or 'Address not provided'
@@ -1071,9 +1061,9 @@ def customer_orders(request):
     
     # Add extra details for modal display in table
     for o in orders_page:
-        o.product_name = o.supplier_inventory.vegetable_name
-        o.unit_price = o.supplier_inventory.price_per_unit
-        o.unit = o.supplier_inventory.unit
+        o.product_name = o.vegetable.name
+        o.unit_price = o.vegetable.price_per_unit
+        o.unit = o.vegetable.unit
         o.buyer_address = o.shipping_address or o.customer.userprofile.address
     
     context = {
@@ -1174,9 +1164,9 @@ def download_order_receipt(request, pk):
         ['Product', 'Quantity', 'Unit Price', 'Subtotal']
     ]
     items_data.append([
-        order.supplier_inventory.vegetable_name,
-        str(order.quantity) + ' ' + order.supplier_inventory.unit,
-        '₹' + str(order.supplier_inventory.price_per_unit),
+        order.vegetable.name,
+        str(order.quantity) + ' ' + order.vegetable.unit,
+        '₹' + str(order.vegetable.price_per_unit),
         '₹' + str(order.total_price)
     ])
     
@@ -1232,23 +1222,23 @@ def order_from_supplier(request, pk):
         messages.error(request, 'Only customers can order')
         return redirect('dashboard')
     
-    inventory = get_object_or_404(SupplierInventory, pk=pk)
+    vegetable = get_object_or_404(Vegetable, pk=pk)
     
     if request.method == 'POST':
         quantity = float(request.POST['quantity'])
-        total_price = quantity * float(inventory.price_per_unit)
+        total_price = quantity * float(vegetable.price_per_unit)
         
         CustomerOrder.objects.create(
             customer=request.user,
-            supplier_inventory=inventory,
+            vegetable=vegetable,
             quantity=quantity,
             total_price=total_price
         )
         
-        inventory.quantity -= quantity
-        if inventory.quantity <= 0:
-            inventory.available = False
-        inventory.save()
+        vegetable.quantity -= quantity
+        if vegetable.quantity <= 0:
+            vegetable.available = False
+        vegetable.save()
         
         messages.success(request, 'Order placed successfully')
         return redirect('customer_marketplace')
@@ -1270,14 +1260,14 @@ def reports_view(request):
     pending_orders = CustomerOrder.objects.filter(status='pending').count()
     confirmed_orders = CustomerOrder.objects.filter(status='confirmed').count()
     delivered_orders = CustomerOrder.objects.filter(status='delivered').count()
-    top_products = CustomerOrder.objects.values('supplier_inventory__vegetable_name').annotate(
-        vegetable_name=models.F('supplier_inventory__vegetable_name'),
+    top_products = CustomerOrder.objects.values('vegetable__name').annotate(
+        vegetable_name=models.F('vegetable__name'),
         total_qty=Sum('quantity')
     ).order_by('-total_qty')[:6]
     max_qty = max((p['total_qty'] for p in top_products), default=1)
     category_stats = Vegetable.objects.values('category').annotate(count=Count('id')).order_by('-count')
     top_farmers = Vegetable.objects.values('farmer__username').annotate(product_count=Count('id')).order_by('-product_count')[:5]
-    recent_orders = CustomerOrder.objects.select_related('customer', 'supplier_inventory').order_by('-ordered_at')[:8]
+    recent_orders = CustomerOrder.objects.select_related('customer', 'vegetable').order_by('-ordered_at')[:8]
     return render(request, 'reports.html', {
         'total_farmers': total_farmers,
         'total_customers': total_customers,
@@ -1294,6 +1284,22 @@ def reports_view(request):
         'top_farmers': top_farmers,
         'recent_orders': recent_orders,
     })
+
+
+@login_required
+def update_order_status(request, pk):
+    from django.http import JsonResponse
+    if request.method == 'POST':
+        try:
+            order = CustomerOrder.objects.get(pk=pk, vegetable__farmer=request.user)
+            status = request.POST.get('status')
+            if status in ['pending', 'confirmed', 'delivered', 'cancelled']:
+                order.status = status
+                order.save(update_fields=['status'])
+                return JsonResponse({'success': True})
+        except CustomerOrder.DoesNotExist:
+            pass
+    return JsonResponse({'success': False})
 
 
 def weather_view(request):
@@ -1392,26 +1398,23 @@ def checkout_page(request):
     esewa_signature = base64.b64encode(hash_obj.digest()).decode('utf-8')
     domain = request.build_absolute_uri('/')[:-1]
     
-    # Handle selected address for display
-    selected_address = request.GET.get('selected_address', 'address')
-    
+    # Handle selected address for display - check URL param first, then session
+    selected_address = request.GET.get('selected_address') or request.session.get('checkout_selected_address', 'address')
+
     # Determine which address to display based on selection
     user_profile = request.user.userprofile
-    if selected_address == 'address':
-        display_address = user_profile.temporary_address or user_profile.address
-        display_phone = user_profile.temp_phone or user_profile.phone_number
-        display_address_type = "DEFAULT"
-    elif selected_address == 'address2':
-        display_address = user_profile.temporary_address or user_profile.address2
-        display_phone = user_profile.temp_phone or user_profile.phone_number
+    if selected_address == 'address2' and user_profile.address2:
+        display_address = user_profile.address2
+        display_phone = user_profile.phone_number
         display_address_type = "ADDRESS 1"
-    elif selected_address == 'address3':
-        display_address = user_profile.temporary_address or user_profile.address3
-        display_phone = user_profile.temp_phone or user_profile.phone_number
+    elif selected_address == 'address3' and user_profile.address3:
+        display_address = user_profile.address3
+        display_phone = user_profile.phone_number
         display_address_type = "ADDRESS 2"
     else:
-        display_address = user_profile.temporary_address or user_profile.address
-        display_phone = user_profile.temp_phone or user_profile.phone_number
+        selected_address = 'address'
+        display_address = user_profile.address
+        display_phone = user_profile.phone_number
         display_address_type = "DEFAULT"
 
     context = {
@@ -1442,8 +1445,11 @@ def update_checkout_address(request):
 
         # Build redirect URL with items parameter if present
         redirect_url = reverse('checkout_page')
+        params = []
         if items_param:
-            redirect_url += f'?items={items_param}'
+            params.append(f'items={items_param}')
+        if params:
+            redirect_url += '?' + '&'.join(params)
 
         user_profile = request.user.userprofile
 
@@ -1457,44 +1463,49 @@ def update_checkout_address(request):
             # Save to the next available address slot in profile
             if not user_profile.address2:
                 user_profile.address2 = new_address
-                user_profile.temporary_address = new_address
-                messages.success(request, 'New address added as Address 1 and saved for this order.')
+                user_profile.save()
+                selected_address = 'address2'
+                request.session['checkout_selected_address'] = 'address2'
+                messages.success(request, 'New address added as Address 1.')
             elif not user_profile.address3:
                 user_profile.address3 = new_address
-                user_profile.temporary_address = new_address
-                messages.success(request, 'New address added as Address 2 and saved for this order.')
+                user_profile.save()
+                selected_address = 'address3'
+                request.session['checkout_selected_address'] = 'address3'
+                messages.success(request, 'New address added as Address 2.')
             else:
                 messages.error(request, 'You already have 3 addresses. Please manage your addresses in your profile.')
                 return HttpResponseRedirect(redirect_url)
 
         elif selected_address in ['address', 'address2', 'address3']:
-            # Handle existing address selection
-            address = request.POST.get('address', '').strip()
-            if not address:
-                messages.error(request, 'Address is required')
-                return HttpResponseRedirect(redirect_url)
-
-            # Save temporarily for this specific order
-            user_profile.temporary_address = address
-
-            # Update the selected address in profile if it was modified
-            if selected_address == 'address':
-                user_profile.address = address
-            elif selected_address == 'address2':
-                user_profile.address2 = address
-            elif selected_address == 'address3':
-                user_profile.address3 = address
-
-            messages.success(request, 'Address updated and saved for this order.')
+            # Just store the selection in session, never modify any address field
+            request.session['checkout_selected_address'] = selected_address
+            messages.success(request, 'Delivery address selected for this order.')
 
         else:
             messages.error(request, 'Please select an address option')
             return HttpResponseRedirect(redirect_url)
 
-        user_profile.save()
-        return HttpResponseRedirect(f"{redirect_url}?selected_address={selected_address}")
+        request.session['checkout_selected_address'] = selected_address
+        return HttpResponseRedirect(f"{redirect_url}&selected_address={selected_address}" if '?' in redirect_url else f"{redirect_url}?selected_address={selected_address}")
 
     return redirect('checkout_page')
+
+
+@login_required
+def cancel_order(request, pk):
+    """Allow customer to cancel a pending order."""
+    from django.http import JsonResponse
+    order = get_object_or_404(CustomerOrder, pk=pk, customer=request.user)
+    if order.status not in ['pending', 'confirmed']:
+        return JsonResponse({'success': False, 'message': 'Order cannot be cancelled.'})
+    # Restore vegetable stock
+    order.vegetable.quantity += order.quantity
+    order.vegetable.available = True
+    order.vegetable.save()
+    order.status = 'cancelled'
+    order.save()
+    return JsonResponse({'success': True, 'message': 'Order cancelled successfully.'})
 
 
 def feedback_view(request):
@@ -1525,34 +1536,24 @@ def farmer_orders(request):
     if request.user.userprofile.role != 'farmer':
         return redirect('dashboard')
     
-    # Get all orders (purchases) made by suppliers from this farmer's vegetables
-    orders = SupplierPurchase.objects.filter(vegetable__farmer=request.user).select_related('supplier', 'vegetable').order_by('-purchased_at')
+    # Mark all unviewed orders as viewed when farmer visits this page
+    CustomerOrder.objects.filter(
+        vegetable__farmer=request.user,
+        viewed_by_farmer=False
+    ).update(viewed_by_farmer=True)
+    
+    # Get all customer orders for this farmer's vegetables
+    orders = CustomerOrder.objects.filter(vegetable__farmer=request.user).select_related('customer', 'vegetable').order_by('-ordered_at')
+    
     for o in orders:
-        o.is_sp = True
         o.product_name = o.vegetable.name
         o.unit_price = o.vegetable.price_per_unit
-        o.buyer_name = f"{o.supplier.first_name} {o.supplier.last_name}"
-        o.buyer_phone = o.supplier.userprofile.phone_number
-        o.buyer_address = o.supplier.userprofile.address
-        o.order_date = o.purchased_at
-
-    # Also get customer orders for this farmer's vegetables (through SupplierInventory)
-    from django.db.models import Q
-    customer_orders = CustomerOrder.objects.filter(
-        supplier_inventory__supplier=request.user
-    ).select_related('customer', 'supplier_inventory').order_by('-ordered_at')
-    for o in customer_orders:
-        o.is_sp = False
-        o.product_name = o.supplier_inventory.vegetable_name
-        o.unit_price = o.supplier_inventory.price_per_unit
         o.buyer_name = f"{o.customer.first_name} {o.customer.last_name}"
         o.buyer_phone = o.customer.userprofile.phone_number
         o.buyer_address = o.shipping_address or o.customer.userprofile.address
         o.order_date = o.ordered_at
     
-    # Combine both types of orders
-    all_orders = list(orders) + list(customer_orders)
-    all_orders.sort(key=lambda o: getattr(o, 'order_date', None), reverse=True)
+    all_orders = orders
     
     # Get status filter from query params
     status_filter = request.GET.get('status', '')
@@ -1560,21 +1561,17 @@ def farmer_orders(request):
         all_orders = [o for o in all_orders if o.status == status_filter]
     
     # Calculate summary stats
-    sp_orders = SupplierPurchase.objects.filter(vegetable__farmer=request.user).count()
-    co_orders = CustomerOrder.objects.filter(supplier_inventory__supplier=request.user).count()
-    total_orders = sp_orders + co_orders
+    co_orders = CustomerOrder.objects.filter(vegetable__farmer=request.user).count()
+    total_orders = co_orders
     
-    sp_revenue = SupplierPurchase.objects.filter(vegetable__farmer=request.user, status__in=['confirmed', 'completed']).aggregate(total=Sum('total_price'))['total'] or 0
-    co_revenue = CustomerOrder.objects.filter(supplier_inventory__supplier=request.user, status__in=['confirmed', 'delivered']).aggregate(total=Sum('total_price'))['total'] or 0
-    total_revenue = sp_revenue + co_revenue
+    co_revenue = CustomerOrder.objects.filter(vegetable__farmer=request.user, status__in=['confirmed', 'delivered']).aggregate(total=Sum('total_price'))['total'] or 0
+    total_revenue = co_revenue
     
-    sp_pending = SupplierPurchase.objects.filter(vegetable__farmer=request.user, status='pending').count()
-    co_pending = CustomerOrder.objects.filter(supplier_inventory__supplier=request.user, status='pending').count()
-    pending_orders_count = sp_pending + co_pending
+    co_pending = CustomerOrder.objects.filter(vegetable__farmer=request.user, status='pending').count()
+    pending_orders_count = co_pending
     
-    sp_conf = SupplierPurchase.objects.filter(vegetable__farmer=request.user, status='confirmed').count()
-    co_conf = CustomerOrder.objects.filter(supplier_inventory__supplier=request.user, status='confirmed').count()
-    confirmed_orders_count = sp_conf + co_conf
+    co_conf = CustomerOrder.objects.filter(vegetable__farmer=request.user, status='confirmed').count()
+    confirmed_orders_count = co_conf
     
     context = {
         'orders': all_orders,
@@ -1583,11 +1580,12 @@ def farmer_orders(request):
         'pending_orders': pending_orders_count,
         'confirmed_orders': confirmed_orders_count,
         'status_filter': status_filter,
+        'new_orders_count': CustomerOrder.objects.filter(vegetable__farmer=request.user, status__in=['pending', 'confirmed'], viewed_by_farmer=False).count(),
     }
     return render(request, 'dashboard/farmer_orders.html', context)
 
 
-def download_farmer_order_receipt(request, order_type, pk):
+def download_farmer_order_receipt(request, pk):
     """Generate and download farmer order receipt as PDF."""
     from reportlab.lib.pagesizes import letter
     from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
@@ -1597,19 +1595,12 @@ def download_farmer_order_receipt(request, order_type, pk):
     from io import BytesIO
     from django.http import HttpResponse
     
-    # Get the order based on type
-    if order_type == 'SP':
-        order = get_object_or_404(SupplierPurchase, id=pk, vegetable__farmer=request.user)
-        buyer_name = f"{order.supplier.first_name} {order.supplier.last_name}"
-        order_date = order.purchased_at
-        product_name = order.vegetable.name
-        buyer_role = "Supplier"
-    else:
-        order = get_object_or_404(CustomerOrder, id=pk, supplier_inventory__supplier=request.user)
-        buyer_name = f"{order.customer.first_name} {order.customer.last_name}"
-        order_date = order.ordered_at
-        product_name = order.supplier_inventory.vegetable_name
-        buyer_role = "Customer"
+    # Get the order
+    order = get_object_or_404(CustomerOrder, id=pk, vegetable__farmer=request.user)
+    buyer_name = f"{order.customer.first_name} {order.customer.last_name}"
+    order_date = order.ordered_at
+    product_name = order.vegetable.name
+    buyer_role = "Customer"
         
     # Create PDF in memory
     buffer = BytesIO()
@@ -1666,3 +1657,101 @@ def download_farmer_order_receipt(request, order_type, pk):
     response['Content-Disposition'] = f'attachment; filename="receipt_{order_type}{pk}.pdf"'
     response.write(file_data)
     return response
+
+
+@login_required
+def farmer_analytics(request):
+    if request.user.userprofile.role != 'farmer':
+        return redirect('dashboard')
+    from django.db.models import Count
+    vegetables = Vegetable.objects.filter(farmer=request.user)
+    orders = CustomerOrder.objects.filter(vegetable__farmer=request.user)
+    total_earnings = orders.aggregate(total=Sum('total_price'))['total'] or 0
+    total_orders = orders.count()
+    total_products = vegetables.count()
+    available_products = vegetables.filter(available=True).count()
+    top_products = list(orders.values('vegetable__name').annotate(total_qty=Sum('quantity'), total_revenue=Sum('total_price')).order_by('-total_revenue')[:5])
+    category_breakdown = list(vegetables.values('category').annotate(count=Count('id')).order_by('-count'))
+    context = {
+        'total_earnings': total_earnings,
+        'total_orders': total_orders,
+        'total_products': total_products,
+        'available_products': available_products,
+        'top_products': top_products,
+        'category_breakdown': category_breakdown,
+    }
+    return render(request, 'dashboard/farmer_analytics.html', context)
+
+
+@login_required
+def customer_analytics(request):
+    if request.user.userprofile.role != 'customer':
+        return redirect('customer_dashboard')
+    from django.db.models import Count
+    orders = CustomerOrder.objects.filter(customer=request.user)
+    total_spent = orders.aggregate(total=Sum('total_price'))['total'] or 0
+    total_orders = orders.count()
+    pending = orders.filter(status='pending').count()
+    confirmed = orders.filter(status='confirmed').count()
+    delivered = orders.filter(status='delivered').count()
+    top_products = list(orders.values('vegetable__name').annotate(total_qty=Sum('quantity'), total_spent=Sum('total_price')).order_by('-total_spent')[:5])
+    category_spending = list(orders.values('vegetable__category').annotate(total=Sum('total_price')).order_by('-total'))
+    cart, _ = Cart.objects.get_or_create(customer=request.user)
+    context = {
+        'total_spent': total_spent,
+        'total_orders': total_orders,
+        'pending': pending,
+        'confirmed': confirmed,
+        'delivered': delivered,
+        'top_products': top_products,
+        'category_spending': category_spending,
+        'cart': cart,
+    }
+    return render(request, 'dashboard/customer_analytics.html', context)
+
+
+def custom_password_reset(request):
+    from django.contrib.auth.forms import PasswordResetForm
+    from django.contrib.auth.tokens import default_token_generator
+    from django.utils.http import urlsafe_base64_encode
+    from django.utils.encoding import force_bytes
+    from django.core.mail import send_mail
+    from django.template.loader import render_to_string
+    from django.contrib.auth.models import User
+
+    if request.method == 'POST':
+        username_or_email = request.POST.get('email', '').strip()
+        print(f'DEBUG: email entered = {username_or_email}')
+
+        # Find user by username or email
+        user = None
+        try:
+            user = User.objects.get(email=username_or_email)
+        except User.DoesNotExist:
+            try:
+                user = User.objects.get(username=username_or_email)
+            except User.DoesNotExist:
+                pass
+
+        print(f'DEBUG: user found = {user}')
+
+        if user:
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            domain = request.get_host()
+            protocol = 'https' if request.is_secure() else 'http'
+            reset_url = f"{protocol}://{domain}/password-reset-confirm/{uid}/{token}/"
+            print(f'DEBUG: sending email to {settings.EMAIL_HOST_USER}')
+
+            send_mail(
+                subject='Reset Password - Krishi Connect',
+                message=f'Hello {user.username},\n\nReset your password here:\n{reset_url}\n\nExpires in 24 hours.\n\n- Krishi Connect Team',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.EMAIL_HOST_USER],
+                fail_silently=False,
+            )
+            print('DEBUG: email sent successfully')
+
+        return redirect('password_reset_done')
+
+    return render(request, 'registration/password_reset.html')

@@ -77,14 +77,43 @@
             background: #cbd5e1;
             border-radius: 10px;
         }
+
+        /* Responsive Sidebar Mobile */
+        @media (max-width: 768px) {
+            #sidebar {
+                position: fixed !important;
+                left: 0;
+                top: 0;
+                width: 100%;
+                max-width: 340px;
+                height: 100vh;
+                z-index: 50;
+            }
+
+            #sidebar.-translate-x-full {
+                transform: translateX(-100%);
+            }
+
+            #overlay {
+                position: fixed;
+                z-index: 40;
+            }
+
+            #overlay.hidden {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 
 <body class="min-h-screen font-sans">
+    <!-- Mobile Overlay -->
+    <div id="overlay" onclick="closeSidebar()" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-all duration-300 opacity-0"></div>
+
     <div class="flex h-screen overflow-hidden">
 
         <!-- Sidebar -->
-        <aside class="w-72 h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0">
+        <aside id="sidebar" class="fixed md:static z-50 w-full sm:w-80 md:w-auto h-full sidebar text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0 transition-transform duration-300 ease-out">
             <div class="px-8 py-8">
                 <div class="flex items-center gap-4">
                     <div
@@ -124,11 +153,11 @@
 
             <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto pb-6">
                 <p class="text-brand-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mb-2">Main Menu</p>
-                <a href="{% url 'dashboard' %}"
+                <a href="{% url 'customer_dashboard' %}"
                     class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
-                    <i class="fas fa-th-large w-5 text-center text-lg"></i><span>Dashboard</span>
+                    <i class="fas fa-chart-line w-5 text-center text-lg"></i><span>Dashboard</span>
                 </a>
-                <a href="{% url 'public_marketplace' %}"
+                <a href="{% url 'customer_marketplace' %}"
                     class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
                     <i class="fas fa-store w-5 text-center text-lg"></i><span>Marketplace</span>
                 </a>
@@ -136,7 +165,11 @@
                     class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
                     <i class="fas fa-shopping-basket w-5 text-center text-lg"></i><span>My Cart</span>
                 </a>
-                <p class="text-brand-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Tools</p>
+                <a href="{% url 'customer_orders' %}"
+                    class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-300 font-medium">
+                    <i class="fas fa-box-open w-5 text-center text-lg"></i><span>My Orders</span>
+                </a>
+                <p class="text-brand-300 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 mt-6 mb-2">Others</p>
                 <a href="{% url 'customer_profile' %}"
                     class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-white">
                     <i class="fas fa-cog w-5 text-center text-lg"></i><span>Settings</span>
@@ -164,11 +197,17 @@
             <!-- Top Bar -->
             <header
                 class="bg-white/80 backdrop-blur border-b border-gray-100 px-8 py-5 flex items-center justify-between shadow-sm flex-shrink-0">
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-800">My Profile</h1>
-                    <p class="text-gray-400 text-sm mt-0.5">Manage your account information and security</p>
+                <div class="flex items-center gap-4">
+                    <button onclick="openSidebar()"
+                        class="md:hidden w-10 h-10 flex items-center justify-center bg-brand-50 text-brand-600 rounded-xl hover:bg-brand-100 transition-colors">
+                        <i class="fas fa-bars text-lg"></i>
+                    </button>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">My Profile</h1>
+                        <p class="text-gray-400 text-sm mt-0.5">Manage your account information and security</p>
+                    </div>
                 </div>
-                <a href="{% url 'dashboard' %}"
+                <a href="{% url 'customer_dashboard' %}"
                     class="flex items-center gap-2 text-sm text-brand-600 hover:text-brand-700 font-semibold bg-brand-50 hover:bg-brand-100 px-4 py-2 rounded-xl transition-all">
                     <i class="fas fa-arrow-left"></i> Back to Dashboard
                 </a>
@@ -245,65 +284,50 @@
                                 </label>
 
                                 <!-- Default Address Field -->
-                                <div
-                                    class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:border-brand-300 transition-all mb-4">
+                                <div class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:border-brand-300 transition-all mb-4">
                                     <div class="flex items-center justify-between mb-3">
                                         <label class="text-sm font-semibold text-gray-700">Default Address</label>
-                                        <div class="flex items-center gap-2">
-                                            <span
-                                                class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-semibold">PRIMARY</span>
-                                            <button type="button" onclick="clearAddress('address')"
-                                                class="text-red-500 hover:text-red-700 transition-colors"
-                                                title="Clear this address">
-                                                <i class="fas fa-trash-alt text-sm"></i>
-                                            </button>
-                                        </div>
+                                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-semibold">PRIMARY</span>
                                     </div>
                                     <textarea name="address" rows="3" placeholder="Enter your primary delivery address"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white focus:bg-white transition-all resize-none">{{ profile.address|default:'' }}</textarea>
-                                    <p class="text-xs text-gray-500 mt-2">This is your primary address and will be used
-                                        as default for deliveries</p>
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white resize-none">{{ profile.address|default:'' }}</textarea>
                                 </div>
 
-                                <!-- Address 1 Field -->
-                                <div
-                                    class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:border-brand-300 transition-all mb-4">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <label class="text-sm font-semibold text-gray-700">Address 1</label>
-                                        <div class="flex items-center gap-2">
-                                            <span
-                                                class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full font-semibold">ADDITIONAL</span>
-                                            <button type="button" onclick="clearAddress('address2')"
-                                                class="text-red-500 hover:text-red-700 transition-colors"
-                                                title="Clear this address">
+                                <!-- Dynamic Additional Addresses -->
+                                <div id="additionalAddresses">
+                                    {% if profile.address2 %}
+                                    <div class="address-entry bg-blue-50 border-2 border-blue-200 rounded-xl p-4 mb-4">
+                                        <div class="flex items-center justify-between mb-3">
+                                            <label class="text-sm font-semibold text-gray-700">Address 1</label>
+                                            <button type="button" onclick="removeAddress(this, 'address2')" class="text-red-500 hover:text-red-700 transition-colors">
                                                 <i class="fas fa-trash-alt text-sm"></i>
                                             </button>
                                         </div>
+                                        <textarea name="address2" rows="2" placeholder="Address 1"
+                                            class="w-full px-4 py-3 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white resize-none">{{ profile.address2 }}</textarea>
                                     </div>
-                                    <textarea name="address2" rows="3" placeholder="Enter additional delivery address"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white focus:bg-white transition-all resize-none">{{ profile.address2|default:'' }}</textarea>
-                                    <p class="text-xs text-gray-500 mt-2">Additional address for deliveries</p>
-                                </div>
-
-                                <!-- Address 2 Field -->
-                                <div
-                                    class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:border-brand-300 transition-all">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <label class="text-sm font-semibold text-gray-700">Address 2</label>
-                                        <div class="flex items-center gap-2">
-                                            <span
-                                                class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-semibold">ADDITIONAL</span>
-                                            <button type="button" onclick="clearAddress('address3')"
-                                                class="text-red-500 hover:text-red-700 transition-colors"
-                                                title="Clear this address">
+                                    {% endif %}
+                                    {% if profile.address3 %}
+                                    <div class="address-entry bg-purple-50 border-2 border-purple-200 rounded-xl p-4 mb-4">
+                                        <div class="flex items-center justify-between mb-3">
+                                            <label class="text-sm font-semibold text-gray-700">Address 2</label>
+                                            <button type="button" onclick="removeAddress(this, 'address3')" class="text-red-500 hover:text-red-700 transition-colors">
                                                 <i class="fas fa-trash-alt text-sm"></i>
                                             </button>
                                         </div>
+                                        <textarea name="address3" rows="2" placeholder="Address 2"
+                                            class="w-full px-4 py-3 rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white resize-none">{{ profile.address3 }}</textarea>
                                     </div>
-                                    <textarea name="address3" rows="3" placeholder="Enter another delivery address"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white focus:bg-white transition-all resize-none">{{ profile.address3|default:'' }}</textarea>
-                                    <p class="text-xs text-gray-500 mt-2">Another additional address for deliveries</p>
+                                    {% endif %}
                                 </div>
+
+                                <!-- Add Address Button -->
+                                {% if not profile.address2 or not profile.address3 %}
+                                <button type="button" onclick="addAddress()" id="addAddressBtn"
+                                    class="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-brand-300 text-brand-600 hover:bg-brand-50 rounded-xl font-semibold text-sm transition-all">
+                                    <i class="fas fa-plus-circle"></i> Add Another Address
+                                </button>
+                                {% endif %}
                             </div>
                             <div class="mt-4">
                                 <label class="block text-sm font-semibold text-gray-600 mb-1.5">Username</label>
@@ -365,42 +389,86 @@
     </div>
 
     <script>
-        function clearAddress(fieldName) {
-            if (confirm('Are you sure you want to clear this address?')) {
-                // Create a form to submit the clear address action
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '{% url "customer_profile" %}';
+        const hasAddress2 = {{ profile.address2|yesno:'true,false' }};
+        const hasAddress3 = {{ profile.address3|yesno:'true,false' }};
 
-                // Add CSRF token
-                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
-                if (csrfToken) {
-                    const csrfInput = document.createElement('input');
-                    csrfInput.type = 'hidden';
-                    csrfInput.name = 'csrfmiddlewaretoken';
-                    csrfInput.value = csrfToken.value;
-                    form.appendChild(csrfInput);
-                }
+        function addAddress() {
+            const container = document.getElementById('additionalAddresses');
+            const btn = document.getElementById('addAddressBtn');
+            const count = container.querySelectorAll('.address-entry').length;
 
-                // Add action
-                const actionInput = document.createElement('input');
-                actionInput.type = 'hidden';
-                actionInput.name = 'action';
-                actionInput.value = 'clear_address';
-                form.appendChild(actionInput);
+            if (count >= 2) { btn.style.display = 'none'; return; }
 
-                // Add address field
-                const fieldInput = document.createElement('input');
-                fieldInput.type = 'hidden';
-                fieldInput.name = 'address_field';
-                fieldInput.value = fieldName;
-                form.appendChild(fieldInput);
+            const fieldName = count === 0 ? 'address2' : 'address3';
+            const label = count === 0 ? 'Address 1' : 'Address 2';
+            const colors = count === 0 ? 'bg-blue-50 border-blue-200' : 'bg-purple-50 border-purple-200';
 
-                // Submit the form
-                document.body.appendChild(form);
-                form.submit();
-            }
+            const div = document.createElement('div');
+            div.className = `address-entry ${colors} border-2 rounded-xl p-4 mb-4`;
+            div.innerHTML = `
+                <div class="flex items-center justify-between mb-3">
+                    <label class="text-sm font-semibold text-gray-700">${label}</label>
+                    <button type="button" onclick="removeAddress(this, '${fieldName}')" class="text-red-500 hover:text-red-700">
+                        <i class="fas fa-trash-alt text-sm"></i>
+                    </button>
+                </div>
+                <textarea name="${fieldName}" rows="2" placeholder="${label}"
+                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm bg-white resize-none"></textarea>
+            `;
+            container.appendChild(div);
+            if (container.querySelectorAll('.address-entry').length >= 2) btn.style.display = 'none';
         }
+
+        function removeAddress(btn, fieldName) {
+            if (!confirm('Remove this address?')) return;
+            const entry = btn.closest('.address-entry');
+            entry.remove();
+            // Add hidden input to clear it on save
+            const hidden = document.createElement('input');
+            hidden.type = 'hidden';
+            hidden.name = fieldName;
+            hidden.value = '';
+            document.querySelector('form').appendChild(hidden);
+            document.getElementById('addAddressBtn').style.display = 'flex';
+        }
+
+        // Sidebar Mobile Toggle
+        function openSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+            overlay.classList.add('opacity-100');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.remove('opacity-100');
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 300);
+        }
+
+        // Initialize: Hide sidebar on mobile on page load & close on link click
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+
+            // Close sidebar when clicking any link
+            const navLinks = sidebar.querySelectorAll('nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    closeSidebar();
+                });
+            });
+        });
     </script>
 </body>
 
